@@ -83,7 +83,7 @@ export default function Home() {
         "99.9% uptime",
         "24/7 support"
       ],
-      image: "/hosting.jpg"
+      image: "services\network installation.jpg"
     },
     {
       title: "Database Solutions",

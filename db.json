@@ -10,8 +10,8 @@
       "sku": "PRN123",
       "rating": 4.5,
       "images": [
-        "\\src\\images\\printer.png",
-        "\\src\\images\\printer.png"
+        "public\\images\\printer.png",
+        "public\\images\\printer.png"
       ],
       "specs": [
         {
@@ -37,7 +37,7 @@
       "rating": 5,
       "reviews": 8,
       "images": [
-        "src\\images\\G7.1-600x600.jpeg"
+        "\\images\\G7.1-600x600.jpeg"
       ],
       "specs": [],
       "featured": true,
@@ -55,7 +55,7 @@
       "rating": 4.5,
       "reviews": 32,
       "images": [
-        "src\\images\\SANDISK 32GB FLASDISK ULTRA.jpg"
+        "\\images\\SANDISK 32GB FLASDISK ULTRA.jpg"
       ],
       "specs": [],
       "featured": false,
@@ -72,7 +72,7 @@
       "rating": 4.1,
       "reviews": 6,
       "images": [
-        "src\\images\\KYOCERA TK 1170.webp"
+        "\\images\\KYOCERA TK 1170.webp"
       ],
       "specs": [],
       "featured": false,
@@ -89,7 +89,7 @@
       "rating": 5,
       "reviews": 7,
       "images": [
-        "src\\images\\HHD DESKTOP 1TB.webp"
+        "\\images\\HHD DESKTOP 1TB.webp"
       ],
       "specs": [],
       "featured": false,
@@ -106,8 +106,8 @@
       "rating": 5,
       "reviews": 12,
       "images": [
-        "src\\images\\SAMSUNG 22'' DESKTOP MONITOR 1.webp",
-        "src\\images\\SAMSUNG 22'' DESKTOP MONITOR 2.webp"
+        "\\images\\SAMSUNG 22'' DESKTOP MONITOR 1.webp",
+        "\\images\\SAMSUNG 22'' DESKTOP MONITOR 2.webp"
       ],
       "specs": [],
       "featured": false,
