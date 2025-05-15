@@ -12,5 +12,5 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../dist/index.html"));
 });
 
-// Start the server
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+// Bind to 0.0.0.0 for Render
+app.listen(PORT, "0.0.0.0", () => console.log(`Server is running on port ${PORT}`));
