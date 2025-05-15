@@ -1,0 +1,130 @@
+{
+  "products": [
+    {
+      "id": "1",
+      "name": "Laser Printer Pro",
+      "price": 15000,
+      "category": "printers",
+      "description": "High-speed laser printer with duplex printing",
+      "stock": 10,
+      "sku": "PRN123",
+      "rating": 4.5,
+      "images": [
+        "\\src\\images\\printer.png",
+        "\\src\\images\\printer.png"
+      ],
+      "specs": [
+        {
+          "label": "Print Speed",
+          "value": "30ppm"
+        },
+        {
+          "label": "Resolution",
+          "value": "1200x1200dpi"
+        }
+      ],
+      "featured": true,
+      "reviews": 0
+    },
+    {
+      "id": "prod-1747298115536",
+      "name": "HP ELITEBBOK 830 G6 CI5 8GB/256",
+      "price": 39000,
+      "category": "laptops",
+      "description": "⚡ INTEL CORE i5 – Reliable performance for business tasks.\n💾 8GB RAM & 256GB SSD – Smooth multitasking and fast storage.\n🖥️ 13.3″ FULL HD DISPLAY – Crisp visuals with anti-glare.\n🔋 LONG BATTERY LIFE – Stay productive all day.\n💼 LIGHTWEIGHT & DURABLE – Perfect for professionals on the go.\n🔒 ENHANCED SECURITY – Fingerprint scanner & HP Sure Start.\n🌐 VERSATILE CONNECTIVITY – USB-C, HDMI, Wi-Fi, Bluetooth.",
+      "stock": 1,
+      "sku": "Hp-001",
+      "rating": 5,
+      "reviews": 8,
+      "images": [
+        "src\\images\\G7.1-600x600.jpeg"
+      ],
+      "specs": [],
+      "featured": true,
+      "createdAt": "2025-05-15"
+    },
+    {
+      "id": "prod-1747298613234",
+      "name": "SANDISK 64GB USB FLASDISK CRUZR",
+      "price": 2400,
+      "originalPrice": 2500,
+      "category": "storage",
+      "description": "",
+      "stock": 0,
+      "sku": "Fls-001",
+      "rating": 4.5,
+      "reviews": 32,
+      "images": [
+        "src\\images\\SANDISK 32GB FLASDISK ULTRA.jpg"
+      ],
+      "specs": [],
+      "featured": false,
+      "createdAt": "2025-05-15"
+    },
+    {
+      "id": "prod-1747298863810",
+      "name": "KYOCERA TK 1170",
+      "price": 4200,
+      "category": "toners",
+      "description": "",
+      "stock": 3,
+      "sku": "Ton-001",
+      "rating": 4.1,
+      "reviews": 6,
+      "images": [
+        "src\\images\\KYOCERA TK 1170.webp"
+      ],
+      "specs": [],
+      "featured": false,
+      "createdAt": "2025-05-15"
+    },
+    {
+      "id": "prod-1747299093833",
+      "name": "HHD DESKTOP 1TB",
+      "price": 3500,
+      "category": "storage",
+      "description": "",
+      "stock": 2,
+      "sku": "Hdd-001",
+      "rating": 5,
+      "reviews": 7,
+      "images": [
+        "src\\images\\HHD DESKTOP 1TB.webp"
+      ],
+      "specs": [],
+      "featured": false,
+      "createdAt": "2025-05-15"
+    },
+    {
+      "id": "prod-1747300352858",
+      "name": "SAMSUNG 22'' DESKTOP MONITOR",
+      "price": 6800,
+      "category": "monitors",
+      "description": "",
+      "stock": 3,
+      "sku": "Mon-001",
+      "rating": 5,
+      "reviews": 12,
+      "images": [
+        "src\\images\\SAMSUNG 22'' DESKTOP MONITOR 1.webp",
+        "src\\images\\SAMSUNG 22'' DESKTOP MONITOR 2.webp"
+      ],
+      "specs": [],
+      "featured": false,
+      "createdAt": "2025-05-15"
+    }
+  ],
+  "cart": [
+    {
+      "id": "cart-1747297725191",
+      "productId": "1",
+      "quantity": 4
+    }
+  ],
+  "wishlist": [
+    {
+      "id": "wishlist-1",
+      "productId": null
+    }
+  ]
+}
