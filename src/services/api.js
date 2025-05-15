@@ -3,7 +3,7 @@ import axios from 'axios';
 const baseURL =
   window.location.hostname === 'localhost'
     ? 'http://localhost:3001'
-    : 'https://your-production-api.onrender.com';
+    : 'https://adit-investment.onrender.com/api';
 
 const api = axios.create({
   baseURL,

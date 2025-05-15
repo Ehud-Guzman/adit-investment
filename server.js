@@ -9,12 +9,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
+const PORT = 3001;
 
 // CORS Configuration
 app.use(cors({
   origin: ["http://localhost:5173", "https://adit-investment.onrender.com"],
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
 }));
 
 // JSON Server setup
@@ -22,14 +24,13 @@ const router = jsonServer.router('db.json');
 const middlewares = jsonServer.defaults();
 app.use('/api', middlewares, router);
 
-// Serve React frontend
+// Serve React frontend (dist folder)
 app.use(express.static(join(__dirname, 'dist')));
 app.get('*', (req, res) => {
   res.sendFile(join(__dirname, 'dist', 'index.html'));
 });
 
-// Set port for local and Render environments
-const port = 3001;
-app.listen(port, '0.0.0.0', () => {
-  console.log(`Server running on port ${port}`);
+// Start the server
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server is running on port ${PORT}`);
 });
