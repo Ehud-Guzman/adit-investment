@@ -1,7 +1,12 @@
 import axios from 'axios';
 
+const baseURL =
+  window.location.hostname === 'localhost'
+    ? 'http://localhost:3001'
+    : 'https://your-production-api.onrender.com';
+
 const api = axios.create({
-  baseURL: 'http://localhost:3001',
+  baseURL,
   headers: {
     'Content-Type': 'application/json',
   },
