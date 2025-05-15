@@ -7,9 +7,9 @@ import cors from 'cors';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+const PORT = 3001;
 
 const app = express();
-const PORT = 3001;
 
 // CORS Configuration
 app.use(cors({
@@ -21,7 +21,9 @@ app.use(cors({
 
 // JSON Server setup
 const router = jsonServer.router('db.json');
-const middlewares = jsonServer.defaults();
+const middlewares = jsonServer.defaults({
+  static: join(__dirname, 'dist')
+});
 app.use('/api', middlewares, router);
 
 // Serve React frontend (dist folder)
