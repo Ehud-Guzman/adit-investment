@@ -20,7 +20,7 @@ import {
   FiTruck,
   FiShield,
   FiCreditCard,
-  FiChevronDown  // ✅ Make sure this is included
+  FiChevronDown
 } from 'react-icons/fi';
 
 import debounce from 'lodash/debounce';
@@ -219,54 +219,54 @@ export default function Products() {
   });
 
   // Add to Cart
-const addToCartMutation = useMutation({
-  mutationFn: api.addToCart,
-  onSuccess: () => {
-    queryClient.invalidateQueries(['cart']);
-    toast.success('Added to cart');
-  },
-  onError: (error) => toast.error(error?.response?.data?.message || 'Failed to add to cart'),
-});
+  const addToCartMutation = useMutation({
+    mutationFn: api.addToCart,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['cart']);
+      toast.success('Added to cart');
+    },
+    onError: (error) => toast.error(error?.response?.data?.message || 'Failed to add to cart'),
+  });
 
-// Update Cart
-const updateCartMutation = useMutation({
-  mutationFn: ({ id, item }) => api.updateCartItem(id, item),
-  onSuccess: () => {
-    queryClient.invalidateQueries(['cart']);
-    toast.success('Cart updated');
-  },
-  onError: (error) => toast.error(error?.response?.data?.message || 'Failed to update cart'),
-});
+  // Update Cart
+  const updateCartMutation = useMutation({
+    mutationFn: ({ id, item }) => api.updateCartItem(id, item),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['cart']);
+      toast.success('Cart updated');
+    },
+    onError: (error) => toast.error(error?.response?.data?.message || 'Failed to update cart'),
+  });
 
-// Remove from Cart
-const removeFromCartMutation = useMutation({
-  mutationFn: api.removeFromCart,
-  onSuccess: () => {
-    queryClient.invalidateQueries(['cart']);
-    toast.info('Removed from cart');
-  },
-  onError: (error) => toast.error(error?.response?.data?.message || 'Failed to remove from cart'),
-});
+  // Remove from Cart
+  const removeFromCartMutation = useMutation({
+    mutationFn: api.removeFromCart,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['cart']);
+      toast.info('Removed from cart');
+    },
+    onError: (error) => toast.error(error?.response?.data?.message || 'Failed to remove from cart'),
+  });
 
-// Add to Wishlist
-const addToWishlistMutation = useMutation({
-  mutationFn: api.addToWishlist,
-  onSuccess: () => {
-    queryClient.invalidateQueries(['wishlist']);
-    toast.success('Added to wishlist');
-  },
-  onError: (error) => toast.error(error?.response?.data?.message || 'Failed to add to wishlist'),
-});
+  // Add to Wishlist
+  const addToWishlistMutation = useMutation({
+    mutationFn: api.addToWishlist,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['wishlist']);
+      toast.success('Added to wishlist');
+    },
+    onError: (error) => toast.error(error?.response?.data?.message || 'Failed to add to wishlist'),
+  });
 
-// Remove from Wishlist
-const removeFromWishlistMutation = useMutation({
-  mutationFn: api.removeFromWishlist,
-  onSuccess: () => {
-    queryClient.invalidateQueries(['wishlist']);
-    toast.info('Removed from wishlist');
-  },
-  onError: (error) => toast.error(error?.response?.data?.message || 'Failed to remove from wishlist'),
-});
+  // Remove from Wishlist
+  const removeFromWishlistMutation = useMutation({
+    mutationFn: api.removeFromWishlist,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['wishlist']);
+      toast.info('Removed from wishlist');
+    },
+    onError: (error) => toast.error(error?.response?.data?.message || 'Failed to remove from wishlist'),
+  });
 
   // Debounced search handler
   const debouncedSearch = useCallback(
@@ -318,58 +318,58 @@ const removeFromWishlistMutation = useMutation({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Cart operations (same as before)
   const addToCart = (productId, quantity = 1) => {
-    const product = products.find(p => p.id === productId);
-    if (!product) return;
+  const product = products.find(p => p.id === productId);
+  if (!product) return;
 
-    const existingItem = cart.find(item => item.productId === productId);
-    if (existingItem) {
-      const newQuantity = existingItem.quantity + quantity;
-      if (newQuantity > product.stock) {
-        toast.error(`Only ${product.stock - existingItem.quantity} more available`);
-        return;
-      }
-      updateCartMutation.mutate({
-        id: existingItem.id,
-        item: { ...existingItem, quantity: newQuantity },
-      });
-    } else {
-      if (quantity > product.stock) {
-        toast.error(`Only ${product.stock} available`);
-        return;
-      }
-      addToCartMutation.mutate({
-        productId,
-        quantity,
-        id: `cart-${Date.now()}`,
-      });
-    }
-  };
-
-  const removeFromCart = (cartItemId) => {
-    removeFromCartMutation.mutate(cartItemId);
-  };
-
-  const updateCartQuantity = (productId, newQuantity) => {
-    const cartItem = cart.find(item => item.productId === productId);
-    const product = products.find(p => p.id === productId);
-    if (!cartItem || !product) return;
-
-    if (newQuantity <= 0) {
-      removeFromCart(cartItem.id);
-      return;
-    }
+  const existingItem = cart.find(item => item.productId === productId);
+  if (existingItem) {
+    const newQuantity = existingItem.quantity + quantity;
     if (newQuantity > product.stock) {
-      toast.error(`Only ${product.stock} available`);
+      toast.error(`Only ${product.stock - existingItem.quantity} more available`);
       return;
     }
     updateCartMutation.mutate({
-      id: cartItem.id,
-      item: { ...cartItem, quantity: newQuantity },
+      id: existingItem.id,
+      item: { ...existingItem, quantity: newQuantity },
     });
-  };
+  } else {
+    if (quantity > product.stock) {
+      toast.error(`Only ${product.stock} available`);
+      return;
+    }
+    addToCartMutation.mutate({
+      productId,
+      quantity,
+      id: `cart-${Date.now()}`, // unique id
+    });
+  }
+};
 
+// Remove item from cart
+const removeFromCart = (cartItemId) => {
+  removeFromCartMutation.mutate(cartItemId);
+};
+
+// Update cart quantity with proper remove logic when quantity is zero or less
+const updateCartQuantity = (productId, newQuantity) => {
+  const cartItem = cart.find(item => item.productId === productId);
+  const product = products.find(p => p.id === productId);
+  if (!cartItem || !product) return;
+
+  if (newQuantity <= 0) {
+    removeFromCart(cartItem.id); // remove item if quantity zero or less
+    return;
+  }
+  if (newQuantity > product.stock) {
+    toast.error(`Only ${product.stock} available`);
+    return;
+  }
+  updateCartMutation.mutate({
+    id: cartItem.id,
+    item: { ...cartItem, quantity: newQuantity },
+  });
+};
   // Wishlist operations
   const toggleWishlist = (productId) => {
     const existingItem = wishlist.find(item => item.productId === productId);
@@ -443,63 +443,63 @@ const removeFromWishlistMutation = useMutation({
   }
 
   return (
-    <div className="bg-gray-50 min-h-screen">
-      {/* Sticky Header */}
-      <motion.header 
-        className={`sticky top-0 z-40 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-2' : 'bg-transparent py-4'}`}
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        <div className="container mx-auto px-4 flex justify-between items-center">
-          <motion.h1 
-            className="text-2xl font-bold text-blue-600"
-            whileHover={{ scale: 1.05 }}
-          >
-            TechHub
-          </motion.h1>
-          
-          <div className="flex items-center gap-4">
-            <div className="relative hidden md:block">
-              <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search products..."
-                onChange={(e) => debouncedSearch(e.target.value)}
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-full w-64 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                aria-label="Search products"
-              />
-            </div>
-            
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setCartOpen(true)}
-              className="relative p-2 rounded-full hover:bg-gray-100"
-              aria-label={`View cart with ${cartCount} items`}
-            >
-              <FiShoppingCart size={20} className="text-gray-700" />
-              {cartCount > 0 && (
-                <motion.span 
-                  className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                >
-                  {cartCount}
-                </motion.span>
-              )}
-            </motion.button>
+    <div className="bg-gray-50 min-h-screen overflow-x-hidden">
+          <motion.header 
+      className={`sticky top-16 md:top-20 z-40 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-2' : 'bg-transparent py-4'}`}
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      style={{ overflow: 'visible' }}
+    >
+      <div className="container mx-auto px-4 flex justify-between items-center">
+        <motion.h1 
+          className="text-xl sm:text-2xl font-bold text-blue-600"
+          whileHover={{ scale: 1.05 }}
+        >
+          TechHub
+        </motion.h1>
+        
+        <div className="flex items-center gap-2 sm:gap-4">
+          <div className="relative hidden md:block">
+            <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search products..."
+              onChange={(e) => debouncedSearch(e.target.value)}
+              className="pl-10 pr-4 py-2 border border-gray-300 rounded-full w-64 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              aria-label="Search products"
+            />
           </div>
+          
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setCartOpen(true)}
+            className="relative p-2 rounded-full hover:bg-gray-100"
+            aria-label={`View cart with ${cartCount} items`}
+          >
+            <FiShoppingCart size={20} className="text-gray-700" />
+            {cartCount > 0 && (
+              <motion.span 
+                className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+              >
+                {cartCount}
+              </motion.span>
+            )}
+          </motion.button>
         </div>
-      </motion.header>
+      </div>
+    </motion.header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-12 max-w-7xl">
+          <main className="container mx-auto px-2 sm:px-4 py-8 sm:py-12 max-w-7xl mt-28 md:mt-36">
         {/* Hero Section */}
-        <div className="relative bg-gradient-to-r from-blue-600 to-blue-800 rounded-2xl overflow-hidden mb-12">
+       <div className="relative bg-gradient-to-r from-blue-600 to-blue-800 rounded-2xl overflow-hidden mb-8 sm:mb-12">
           <div className="absolute inset-0 bg-gradient-to-r from-blue-600/90 to-blue-800/90"></div>
-          <div className="relative z-10 px-8 py-12 md:py-16 text-center">
+          <div className="relative z-10 px-6 sm:px-8 py-10 sm:py-12 md:py-16 text-center">
             <motion.h1 
-              className="text-4xl md:text-5xl font-bold text-white mb-4"
+              className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
@@ -507,7 +507,7 @@ const removeFromWishlistMutation = useMutation({
               Premium Tech Products
             </motion.h1>
             <motion.p 
-              className="text-xl text-blue-100 max-w-3xl mx-auto mb-8"
+              className="text-lg sm:text-xl text-blue-100 max-w-3xl mx-auto mb-6 sm:mb-8"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
@@ -521,7 +521,7 @@ const removeFromWishlistMutation = useMutation({
             >
               <button 
                 onClick={() => window.scrollTo({ top: document.querySelector('#products').offsetTop - 100, behavior: 'smooth' })}
-                className="bg-white text-blue-600 px-6 py-3 rounded-lg font-medium hover:bg-blue-50 transition-colors"
+                className="bg-white text-blue-600 px-5 sm:px-6 py-2 sm:py-3 rounded-lg font-medium hover:bg-blue-50 transition-colors text-sm sm:text-base"
               >
                 Shop Now
               </button>
@@ -530,32 +530,32 @@ const removeFromWishlistMutation = useMutation({
         </div>
 
         {/* Benefits Bar */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8 sm:mb-12">
           {BENEFITS.map((benefit, index) => (
             <motion.div 
               key={index}
-              className="bg-white p-4 rounded-xl shadow-sm flex items-center gap-3"
+              className="bg-white p-3 sm:p-4 rounded-xl shadow-sm flex items-center gap-3"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 + index * 0.1 }}
             >
-              <div className="bg-blue-100 p-3 rounded-full">
+              <div className="bg-blue-100 p-2 sm:p-3 rounded-full">
                 {benefit.icon}
               </div>
-              <span className="text-sm font-medium text-gray-700">{benefit.text}</span>
+              <span className="text-xs sm:text-sm font-medium text-gray-700">{benefit.text}</span>
             </motion.div>
           ))}
         </div>
 
         {/* Products Section */}
-        <section id="products" className="mb-16">
+        <section id="products" className="mb-12 sm:mb-16">
           {/* Filters Section */}
-          <div className="bg-white rounded-2xl shadow-sm p-6 mb-8">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+          <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6 mb-6 sm:mb-8">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 sm:gap-6">
               {/* Mobile Filters Toggle */}
               <button
                 onClick={() => setFiltersOpen(!filtersOpen)}
-                className="md:hidden flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg"
+                className="md:hidden flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm sm:text-base"
                 aria-label={filtersOpen ? 'Hide filters' : 'Show filters'}
               >
                 {filtersOpen ? 'Hide Filters' : 'Filters'}
@@ -563,8 +563,8 @@ const removeFromWishlistMutation = useMutation({
               </button>
 
               {/* Category Chips */}
-              <div className="flex-1 overflow-x-auto pb-2">
-                <div className="flex gap-2">
+              <div className="flex-1 w-full overflow-x-auto pb-2">
+                <div className="flex gap-2 min-w-max">
                   {CATEGORIES.map((cat) => (
                     <button
                       key={cat.value}
@@ -572,7 +572,7 @@ const removeFromWishlistMutation = useMutation({
                         setCategory(cat.value);
                         setCurrentPage(1);
                       }}
-                      className={`whitespace-nowrap px-4 py-2 rounded-full flex items-center gap-2 transition-colors ${
+                      className={`whitespace-nowrap px-3 sm:px-4 py-1 sm:py-2 rounded-full flex items-center gap-1 sm:gap-2 transition-colors text-sm sm:text-base ${
                         category === cat.value
                           ? 'bg-blue-600 text-white'
                           : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -587,14 +587,14 @@ const removeFromWishlistMutation = useMutation({
               </div>
 
               {/* Sort Dropdown */}
-              <div className="relative">
+              <div className="relative w-full md:w-auto">
                 <select
                   value={sortBy}
                   onChange={(e) => {
                     setSortBy(e.target.value);
                     setCurrentPage(1);
                   }}
-                  className="appearance-none pl-4 pr-10 py-2 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                  className="appearance-none pl-4 pr-10 py-2 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white w-full md:w-auto text-sm sm:text-base"
                   aria-label="Sort products"
                 >
                   {SORT_OPTIONS.map(option => (
@@ -610,13 +610,13 @@ const removeFromWishlistMutation = useMutation({
             </div>
 
             {/* Mobile Search */}
-            <div className="relative mt-4 md:hidden">
+            <div className="relative mt-4 md:hidden w-full">
               <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
                 placeholder="Search products..."
                 onChange={(e) => debouncedSearch(e.target.value)}
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-full w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="pl-10 pr-4 py-2 border border-gray-300 rounded-full w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
                 aria-label="Search products"
               />
             </div>
@@ -624,9 +624,9 @@ const removeFromWishlistMutation = useMutation({
 
           {/* Product Grid */}
           {filteredProducts.length === 0 ? (
-            <div className="text-center py-16 bg-white rounded-2xl shadow-sm">
+            <div className="text-center py-12 sm:py-16 bg-white rounded-2xl shadow-sm">
               <div className="text-6xl mb-4">🔍</div>
-              <h3 className="text-2xl font-semibold text-gray-800 mb-2">No products found</h3>
+              <h3 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-2">No products found</h3>
               <p className="text-gray-600 mb-6">Try adjusting your search or filter criteria</p>
               <button
                 onClick={() => {
@@ -634,7 +634,7 @@ const removeFromWishlistMutation = useMutation({
                   setSearchTerm('');
                   setSortBy('featured');
                 }}
-                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                className="bg-blue-600 text-white px-5 sm:px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
               >
                 Reset Filters
               </button>
@@ -642,7 +642,7 @@ const removeFromWishlistMutation = useMutation({
           ) : (
             <>
               <LayoutGroup>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
                   {paginatedProducts.map(product => (
                     <motion.div
                       key={product.id}
@@ -726,12 +726,12 @@ const removeFromWishlistMutation = useMutation({
                       </div>
 
                       {/* Product Info */}
-                      <div className="p-5 flex-1 flex flex-col">
-                        <h3 className="text-lg font-semibold text-gray-800 mb-2 line-clamp-2">
+                      <div className="p-4 sm:p-5 flex-1 flex flex-col">
+                        <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-2 line-clamp-2">
                           {product.name}
                         </h3>
                         
-                        <div className="mb-3">
+                        <div className="mb-2 sm:mb-3">
                           <RatingStars rating={product.rating} />
                         </div>
                         
@@ -739,14 +739,14 @@ const removeFromWishlistMutation = useMutation({
                           price={product.price} 
                           originalPrice={product.originalPrice} 
                           size="lg" 
-                          className="mb-4"
+                          className="mb-3 sm:mb-4"
                         />
                         
                         <div className="mt-auto">
                           <button
                             onClick={() => addToCart(product.id)}
                             disabled={product.stock <= 0}
-                            className={`w-full flex items-center justify-center gap-2 py-3 rounded-lg transition-colors ${
+                            className={`w-full flex items-center justify-center gap-2 py-2 sm:py-3 rounded-lg transition-colors text-sm sm:text-base ${
                               product.stock <= 0 
                                 ? 'bg-gray-400 cursor-not-allowed' 
                                 : 'bg-blue-600 text-white hover:bg-blue-700'
@@ -765,15 +765,15 @@ const removeFromWishlistMutation = useMutation({
 
               {/* Pagination */}
               {totalPages > 1 && (
-                <div className="mt-12 flex flex-col sm:flex-row justify-between items-center gap-4">
-                  <div className="text-gray-600">
+                <div className="mt-8 sm:mt-12 flex flex-col sm:flex-row justify-between items-center gap-4">
+                  <div className="text-sm sm:text-base text-gray-600">
                     Showing {startIndex + 1}-{Math.min(startIndex + PRODUCTS_PER_PAGE, filteredProducts.length)} of {filteredProducts.length} products
                   </div>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => goToPage(currentPage - 1)}
                       disabled={currentPage === 1}
-                      className="px-4 py-2 border rounded-full disabled:opacity-50 flex items-center gap-2 hover:bg-gray-100 transition-colors"
+                      className="px-3 sm:px-4 py-1 sm:py-2 border rounded-full disabled:opacity-50 flex items-center gap-2 hover:bg-gray-100 transition-colors text-sm sm:text-base"
                       aria-label="Previous page"
                     >
                       <FiChevronLeft size={18} />
@@ -796,7 +796,7 @@ const removeFromWishlistMutation = useMutation({
                           <button
                             key={page}
                             onClick={() => goToPage(page)}
-                            className={`w-10 h-10 flex items-center justify-center border rounded-full transition-colors ${
+                            className={`w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center border rounded-full transition-colors text-sm sm:text-base ${
                               currentPage === page 
                                 ? 'bg-blue-600 text-white border-blue-600' 
                                 : 'hover:bg-gray-100'
@@ -809,13 +809,13 @@ const removeFromWishlistMutation = useMutation({
                       })}
                       
                       {totalPages > 5 && currentPage < totalPages - 2 && (
-                        <span className="w-10 h-10 flex items-center justify-center">...</span>
+                        <span className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center">...</span>
                       )}
                       
                       {totalPages > 5 && currentPage < totalPages - 2 && (
                         <button
                           onClick={() => goToPage(totalPages)}
-                          className="w-10 h-10 flex items-center justify-center border rounded-full hover:bg-gray-100 transition-colors"
+                          className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center border rounded-full hover:bg-gray-100 transition-colors text-sm sm:text-base"
                           aria-label={`Go to page ${totalPages}`}
                         >
                           {totalPages}
@@ -826,7 +826,7 @@ const removeFromWishlistMutation = useMutation({
                     <button
                       onClick={() => goToPage(currentPage + 1)}
                       disabled={currentPage === totalPages}
-                      className="px-4 py-2 border rounded-full disabled:opacity-50 flex items-center gap-2 hover:bg-gray-100 transition-colors"
+                      className="px-3 sm:px-4 py-1 sm:py-2 border rounded-full disabled:opacity-50 flex items-center gap-2 hover:bg-gray-100 transition-colors text-sm sm:text-base"
                       aria-label="Next page"
                     >
                       Next
@@ -840,19 +840,19 @@ const removeFromWishlistMutation = useMutation({
         </section>
 
         {/* Newsletter Section */}
-        <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-2xl p-8 md:p-12 text-center text-white mb-12">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">Stay Updated</h2>
-          <p className="text-blue-100 max-w-2xl mx-auto mb-6">
+        <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-2xl p-6 sm:p-8 md:p-12 text-center text-white mb-8 sm:mb-12">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4">Stay Updated</h2>
+          <p className="text-blue-100 max-w-2xl mx-auto mb-4 sm:mb-6 text-sm sm:text-base">
             Subscribe to our newsletter for the latest products, deals, and tech news
           </p>
           <div className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto">
             <input
               type="email"
               placeholder="Your email address"
-              className="flex-1 px-4 py-3 rounded-full text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="flex-1 px-4 py-2 sm:py-3 rounded-full text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-300 text-sm sm:text-base"
               aria-label="Email for newsletter subscription"
             />
-            <button className="bg-white text-blue-600 px-6 py-3 rounded-full font-medium hover:bg-blue-50 transition-colors">
+                       <button className="bg-white text-blue-600 px-4 sm:px-6 py-2 sm:py-3 rounded-full font-medium hover:bg-blue-50 transition-colors text-sm sm:text-base">
               Subscribe
             </button>
           </div>
@@ -866,28 +866,28 @@ const removeFromWishlistMutation = useMutation({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4"
             onClick={closeQuickView}
           >
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-white rounded-2xl p-6 max-w-6xl w-full max-h-[90vh] overflow-y-auto"
+              className="bg-white rounded-2xl p-4 sm:p-6 max-w-6xl w-full max-h-[90vh] overflow-y-auto"
               onClick={e => e.stopPropagation()}
             >
               <button
                 onClick={closeQuickView}
-                className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 transition-colors"
+                className="absolute top-2 right-2 sm:top-4 sm:right-4 text-gray-600 hover:text-gray-800 transition-colors"
                 aria-label="Close product details"
               >
                 <FiX size={24} />
               </button>
               
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8">
                 {/* Product Images */}
                 <div>
-                  <div className="relative h-96 rounded-xl overflow-hidden mb-4 bg-gray-100">
+                  <div className="relative h-64 sm:h-80 md:h-96 rounded-xl overflow-hidden mb-3 sm:mb-4 bg-gray-100">
                     <motion.img
                       key={selectedImageIndex}
                       src={quickViewProduct.images[selectedImageIndex] || '/placeholder.jpg'}
@@ -895,309 +895,309 @@ const removeFromWishlistMutation = useMutation({
                       className="w-full h-full object-contain"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                                        transition={{ duration: 0.3 }}
-                  onError={(e) => (e.target.src = '/placeholder.jpg')}
-                />
-              </div>
-              <div className="flex gap-3 overflow-x-auto pb-2">
-                {(quickViewProduct.images || []).map((image, index) => (
-                  <motion.button
-                    key={index}
-                    onClick={() => changeImage(index)}
-                    className={`flex-shrink-0 w-20 h-20 rounded-lg border-2 overflow-hidden transition-all ${
-                      selectedImageIndex === index 
-                        ? 'border-blue-500 ring-2 ring-blue-200' 
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                    whileHover={{ scale: 1.05 }}
-                    aria-label={`View image ${index + 1} of ${quickViewProduct.name}`}
-                  >
-                    <img
-                      src={image}
-                      alt={`${quickViewProduct.name} thumbnail ${index}`}
-                      className="w-full h-full object-cover"
+                      transition={{ duration: 0.3 }}
+                      onError={(e) => (e.target.src = '/placeholder.jpg')}
                     />
-                  </motion.button>
-                ))}
-              </div>
-            </div>
-
-            {/* Product Details */}
-            <div>
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-1">{quickViewProduct.name}</h2>
-                  <div className="flex items-center gap-2">
-                    <RatingStars rating={quickViewProduct.rating} />
-                    <span className="text-sm text-gray-500">
-                      ({quickViewProduct.reviews || 0} reviews)
-                    </span>
+                  </div>
+                  <div className="flex gap-2 overflow-x-auto pb-2">
+                    {(quickViewProduct.images || []).map((image, index) => (
+                      <motion.button
+                        key={index}
+                        onClick={() => changeImage(index)}
+                        className={`flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-lg border-2 overflow-hidden transition-all ${
+                          selectedImageIndex === index 
+                            ? 'border-blue-500 ring-2 ring-blue-200' 
+                            : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                        whileHover={{ scale: 1.05 }}
+                        aria-label={`View image ${index + 1} of ${quickViewProduct.name}`}
+                      >
+                        <img
+                          src={image}
+                          alt={`${quickViewProduct.name} thumbnail ${index}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </motion.button>
+                    ))}
                   </div>
                 </div>
-                <button
-                  onClick={() => toggleWishlist(quickViewProduct.id)}
-                  className={`p-2 rounded-full ${
-                    wishlist.some(i => i.productId === quickViewProduct.id) 
-                      ? 'bg-red-500 text-white' 
-                      : 'bg-gray-200 hover:bg-gray-300'
-                  }`}
-                  aria-label={
-                    wishlist.some(i => i.productId === quickViewProduct.id) 
-                      ? `Remove ${quickViewProduct.name} from wishlist` 
-                      : `Add ${quickViewProduct.name} to wishlist`
-                  }
-                >
-                  <FiHeart 
-                    size={20} 
-                    fill={wishlist.some(i => i.productId === quickViewProduct.id) ? 'white' : 'none'} 
+
+                {/* Product Details */}
+                <div>
+                  <div className="flex justify-between items-start mb-3 sm:mb-4">
+                    <div>
+                      <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">{quickViewProduct.name}</h2>
+                      <div className="flex items-center gap-2">
+                        <RatingStars rating={quickViewProduct.rating} />
+                        <span className="text-sm text-gray-500">
+                          ({quickViewProduct.reviews || 0} reviews)
+                        </span>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => toggleWishlist(quickViewProduct.id)}
+                      className={`p-2 rounded-full ${
+                        wishlist.some(i => i.productId === quickViewProduct.id) 
+                          ? 'bg-red-500 text-white' 
+                          : 'bg-gray-200 hover:bg-gray-300'
+                      }`}
+                      aria-label={
+                        wishlist.some(i => i.productId === quickViewProduct.id) 
+                          ? `Remove ${quickViewProduct.name} from wishlist` 
+                          : `Add ${quickViewProduct.name} to wishlist`
+                      }
+                    >
+                      <FiHeart 
+                        size={20} 
+                        fill={wishlist.some(i => i.productId === quickViewProduct.id) ? 'white' : 'none'} 
+                      />
+                    </button>
+                  </div>
+                  
+                  <PriceDisplay 
+                    price={quickViewProduct.price} 
+                    originalPrice={quickViewProduct.originalPrice} 
+                    size="xl" 
+                    className="mb-4 sm:mb-6"
                   />
+                  
+                  <div className="mb-4 sm:mb-6">
+                    <div className="flex items-center gap-3 mb-3 sm:mb-4">
+                      <span className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${
+                        quickViewProduct.stock > 0 
+                          ? 'bg-green-100 text-green-800' 
+                          : 'bg-red-100 text-red-800'
+                      }`}>
+                        {quickViewProduct.stock > 0 ? 'In Stock' : 'Out of Stock'}
+                      </span>
+                      {quickViewProduct.stock > 0 && (
+                        <span className="text-xs sm:text-sm text-gray-600">
+                          {quickViewProduct.stock} units available
+                        </span>
+                      )}
+                    </div>
+                    
+                    <p className="text-sm sm:text-base text-gray-700 mb-4 sm:mb-6">
+                      {quickViewProduct.description || 'No description available'}
+                    </p>
+                    
+                    {(quickViewProduct.specs || []).length > 0 && (
+                      <div className="mb-4 sm:mb-6">
+                        <h3 className="font-semibold text-lg mb-2 sm:mb-3">Specifications</h3>
+                        <div className="space-y-2 sm:space-y-3">
+                          {quickViewProduct.specs.map((spec, index) => (
+                            <div key={index} className="grid grid-cols-3 gap-2 sm:gap-4 text-sm sm:text-base">
+                              <span className="col-span-1 text-gray-600">{spec.label}</span>
+                              <span className="col-span-2 font-medium">{spec.value}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <QuantitySelector
+                      quantity={cart.find(i => i.productId === quickViewProduct.id)?.quantity || 1}
+                      onIncrease={() => addToCart(quickViewProduct.id, 1)}
+                      onDecrease={() => updateCartQuantity(
+                        quickViewProduct.id, 
+                        (cart.find(i => i.productId === quickViewProduct.id)?.quantity || 1) - 1
+                      )}
+                      max={quickViewProduct.stock}
+                      size="lg"
+                    />
+                    <motion.button
+                      onClick={() => addToCart(quickViewProduct.id)}
+                      disabled={quickViewProduct.stock <= 0}
+                      className={`flex-1 min-w-[200px] flex items-center justify-center gap-2 py-3 rounded-lg ${
+                        quickViewProduct.stock <= 0 
+                          ? 'bg-gray-400 cursor-not-allowed' 
+                          : 'bg-blue-600 text-white hover:bg-blue-700'
+                      }`}
+                      whileHover={quickViewProduct.stock > 0 ? { scale: 1.02 } : {}}
+                      whileTap={quickViewProduct.stock > 0 ? { scale: 0.98 } : {}}
+                      aria-label={`Add ${quickViewProduct.name} to cart`}
+                    >
+                      <FiShoppingCart size={20} />
+                      Add to Cart
+                    </motion.button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Cart Sidebar */}
+      <AnimatePresence>
+        {cartOpen && (
+          <motion.div
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'spring', damping: 30 }}
+            className="fixed inset-y-0 right-0 w-full max-w-md bg-white shadow-xl z-50 flex flex-col"
+          >
+            <div className="p-4 sm:p-6 flex-1 flex flex-col">
+              <div className="flex justify-between items-center mb-4 sm:mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold">Your Cart</h2>
+                <button
+                  onClick={() => setCartOpen(false)}
+                  className="text-gray-600 hover:text-gray-800 transition-colors"
+                  aria-label="Close cart"
+                >
+                  <FiX size={24} />
                 </button>
               </div>
               
-              <PriceDisplay 
-                price={quickViewProduct.price} 
-                originalPrice={quickViewProduct.originalPrice} 
-                size="xl" 
-                className="mb-6"
-              />
-              
-              <div className="mb-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    quickViewProduct.stock > 0 
-                      ? 'bg-green-100 text-green-800' 
-                      : 'bg-red-100 text-red-800'
-                  }`}>
-                    {quickViewProduct.stock > 0 ? 'In Stock' : 'Out of Stock'}
-                  </span>
-                  {quickViewProduct.stock > 0 && (
-                    <span className="text-sm text-gray-600">
-                      {quickViewProduct.stock} units available
-                    </span>
-                  )}
-                </div>
-                
-                <p className="text-gray-700 mb-6">
-                  {quickViewProduct.description || 'No description available'}
-                </p>
-                
-                {(quickViewProduct.specs || []).length > 0 && (
-                  <div className="mb-6">
-                    <h3 className="font-semibold text-lg mb-3">Specifications</h3>
-                    <div className="space-y-3">
-                      {quickViewProduct.specs.map((spec, index) => (
-                        <div key={index} className="grid grid-cols-3 gap-4">
-                          <span className="col-span-1 text-gray-600">{spec.label}</span>
-                          <span className="col-span-2 font-medium">{spec.value}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-              
-              <div className="flex items-center gap-4">
-                <QuantitySelector
-                  quantity={cart.find(i => i.productId === quickViewProduct.id)?.quantity || 1}
-                  onIncrease={() => addToCart(quickViewProduct.id, 1)}
-                  onDecrease={() => updateCartQuantity(
-                    quickViewProduct.id, 
-                    (cart.find(i => i.productId === quickViewProduct.id)?.quantity || 1) - 1
-                  )}
-                  max={quickViewProduct.stock}
-                  size="lg"
-                />
-                <motion.button
-                  onClick={() => addToCart(quickViewProduct.id)}
-                  disabled={quickViewProduct.stock <= 0}
-                  className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-lg ${
-                    quickViewProduct.stock <= 0 
-                      ? 'bg-gray-400 cursor-not-allowed' 
-                      : 'bg-blue-600 text-white hover:bg-blue-700'
-                  }`}
-                  whileHover={quickViewProduct.stock > 0 ? { scale: 1.02 } : {}}
-                  whileTap={quickViewProduct.stock > 0 ? { scale: 0.98 } : {}}
-                  aria-label={`Add ${quickViewProduct.name} to cart`}
-                >
-                  <FiShoppingCart size={20} />
-                  Add to Cart
-                </motion.button>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      </motion.div>
-    )}
-  </AnimatePresence>
-
-  {/* Cart Sidebar */}
-  <AnimatePresence>
-    {cartOpen && (
-      <motion.div
-        initial={{ x: '100%' }}
-        animate={{ x: 0 }}
-        exit={{ x: '100%' }}
-        transition={{ type: 'spring', damping: 30 }}
-        className="fixed inset-y-0 right-0 w-full sm:w-96 bg-white shadow-xl z-50 flex flex-col"
-      >
-        <div className="p-6 flex-1 flex flex-col">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold">Your Cart</h2>
-            <button
-              onClick={() => setCartOpen(false)}
-              className="text-gray-600 hover:text-gray-800 transition-colors"
-              aria-label="Close cart"
-            >
-              <FiX size={24} />
-            </button>
-          </div>
-          
-          {cart.length === 0 ? (
-            <div className="flex-1 flex flex-col items-center justify-center text-center">
-              <FiShoppingCart className="text-5xl text-gray-300 mb-4" />
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">Your cart is empty</h3>
-              <p className="text-gray-600 mb-6">Start shopping to add items to your cart</p>
-              <button
-                onClick={() => setCartOpen(false)}
-                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Continue Shopping
-              </button>
-            </div>
-          ) : (
-            <>
-              <div className="flex-1 overflow-y-auto">
-                {cart.map(item => {
-                  const product = products.find(p => p.id === item.productId);
-                  if (!product) return null;
-                  return (
-                    <motion.div 
-                      key={item.id}
-                      layout
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
-                      className="flex gap-4 py-4 border-b"
-                    >
-                      <div className="w-20 h-20 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden">
-                        <img
-                          src={product.images[0] || '/placeholder.jpg'}
-                          alt={product.name}
-                          className="w-full h-full object-contain"
-                          onError={(e) => (e.target.src = '/placeholder.jpg')}
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex justify-between">
-                          <h4 className="font-medium text-gray-800 line-clamp-1">{product.name}</h4>
-                          <button
-                            onClick={() => removeFromCart(item.id)}
-                            className="text-red-500 hover:text-red-700 text-sm"
-                            aria-label={`Remove ${product.name} from cart`}
-                          >
-                            <FiX size={18} />
-                          </button>
-                        </div>
-                        <PriceDisplay 
-                          price={product.price} 
-                          originalPrice={product.originalPrice}
-                          size="sm"
-                          className="my-2"
-                        />
-                        <div className="flex items-center justify-between">
-                          <QuantitySelector
-                            quantity={item.quantity}
-                            onIncrease={() => updateCartQuantity(product.id, item.quantity + 1)}
-                            onDecrease={() => updateCartQuantity(product.id, item.quantity - 1)}
-                            max={product.stock}
-                            size="sm"
-                          />
-                          <span className="font-medium">
-                            KSh {(product.price * item.quantity).toLocaleString()}
-                          </span>
-                        </div>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
-
-              {/* Cart Summary */}
-              <div className="border-t pt-4">
-                <div className="space-y-3 mb-4">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Subtotal:</span>
-                    <span className="font-medium">KSh {subtotal.toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Shipping:</span>
-                    <span className="font-medium">
-                      {subtotal > 10000 ? 'FREE' : 'KSh 500'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between font-bold text-lg pt-2 border-t">
-                    <span>Total:</span>
-                    <span>
-                      KSh {(subtotal > 10000 ? subtotal : subtotal + 500).toLocaleString()}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Promo Code */}
-                <div className="mb-4">
-                  <div className="relative">
-                    <input
-                      type="text"
-                      placeholder="Promo code"
-                      className="w-full pl-4 pr-20 py-2 border rounded-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      aria-label="Enter promo code"
-                    />
-                    <button
-                      onClick={() => toast.info('Promo code functionality coming soon')}
-                      className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white px-3 py-1 rounded-full text-sm hover:bg-blue-700 transition-colors"
-                    >
-                      Apply
-                    </button>
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="grid gap-3">
-                  <motion.button
-                    onClick={() => {
-                      if (cart.length === 0) {
-                        toast.error('Your cart is empty');
-                        return;
-                      }
-                      toast.success('Proceeding to checkout');
-                    }}
-                    className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors"
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.99 }}
-                    aria-label="Proceed to checkout"
-                  >
-                    Proceed to Checkout
-                  </motion.button>
+              {cart.length === 0 ? (
+                <div className="flex-1 flex flex-col items-center justify-center text-center">
+                  <FiShoppingCart className="text-5xl text-gray-300 mb-4" />
+                  <h3 className="text-xl font-semibold text-gray-800 mb-2">Your cart is empty</h3>
+                  <p className="text-gray-600 mb-6">Start shopping to add items to your cart</p>
                   <button
                     onClick={() => setCartOpen(false)}
-                    className="w-full bg-gray-200 text-gray-800 py-3 rounded-lg hover:bg-gray-300 transition-colors"
-                    aria-label="Continue shopping"
+                    className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
                   >
                     Continue Shopping
                   </button>
                 </div>
-              </div>
-            </>
-          )}
-        </div>
-      </motion.div>
-    )}
-  </AnimatePresence>
+              ) : (
+                <>
+                  <div className="flex-1 overflow-y-auto">
+                    {cart.map(item => {
+                      const product = products.find(p => p.id === item.productId);
+                      if (!product) return null;
+                      return (
+                        <motion.div 
+                          key={item.id}
+                          layout
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, scale: 0.9 }}
+                          className="flex gap-3 sm:gap-4 py-3 sm:py-4 border-b"
+                        >
+                          <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden">
+                            <img
+                              src={product.images[0] || '/placeholder.jpg'}
+                              alt={product.name}
+                              className="w-full h-full object-contain"
+                              onError={(e) => (e.target.src = '/placeholder.jpg')}
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex justify-between">
+                              <h4 className="font-medium text-gray-800 line-clamp-1 text-sm sm:text-base">{product.name}</h4>
+                              <button
+                                onClick={() => removeFromCart(item.id)}
+                                className="text-red-500 hover:text-red-700 text-sm"
+                                aria-label={`Remove ${product.name} from cart`}
+                              >
+                                <FiX size={18} />
+                              </button>
+                            </div>
+                            <PriceDisplay 
+                              price={product.price} 
+                              originalPrice={product.originalPrice}
+                              size="sm"
+                              className="my-1 sm:my-2"
+                            />
+                            <div className="flex items-center justify-between">
+                              <QuantitySelector
+                                quantity={item.quantity}
+                                onIncrease={() => updateCartQuantity(product.id, item.quantity + 1)}
+                                onDecrease={() => updateCartQuantity(product.id, item.quantity - 1)}
+                                max={product.stock}
+                                size="sm"
+                              />
+                              <span className="font-medium text-sm sm:text-base">
+                                KSh {(product.price * item.quantity).toLocaleString()}
+                              </span>
+                            </div>
+                          </div>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
 
-  {/* Toast Notifications Container */}
-  <div className="fixed bottom-4 right-4 z-50">
-    <div className="space-y-2"></div>
-  </div>
-</div>
+                  {/* Cart Summary */}
+                  <div className="border-t pt-3 sm:pt-4">
+                    <div className="space-y-2 sm:space-y-3 mb-3 sm:mb-4">
+                      <div className="flex justify-between text-sm sm:text-base">
+                        <span className="text-gray-600">Subtotal:</span>
+                        <span className="font-medium">KSh {subtotal.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between text-sm sm:text-base">
+                        <span className="text-gray-600">Shipping:</span>
+                        <span className="font-medium">
+                          {subtotal > 10000 ? 'FREE' : 'KSh 500'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between font-bold text-base sm:text-lg pt-2 border-t">
+                        <span>Total:</span>
+                        <span>
+                          KSh {(subtotal > 10000 ? subtotal : subtotal + 500).toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Promo Code */}
+                    <div className="mb-3 sm:mb-4">
+                      <div className="relative">
+                        <input
+                          type="text"
+                          placeholder="Promo code"
+                          className="w-full pl-4 pr-20 py-2 border rounded-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
+                          aria-label="Enter promo code"
+                        />
+                        <button
+                          onClick={() => toast.info('Promo code functionality coming soon')}
+                          className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white px-3 py-1 rounded-full text-xs sm:text-sm hover:bg-blue-700 transition-colors"
+                        >
+                          Apply
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="grid gap-2 sm:gap-3">
+                      <motion.button
+                        onClick={() => {
+                          if (cart.length === 0) {
+                            toast.error('Your cart is empty');
+                            return;
+                          }
+                          toast.success('Proceeding to checkout');
+                        }}
+                        className="w-full bg-blue-600 text-white py-2 sm:py-3 rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
+                        whileHover={{ scale: 1.01 }}
+                        whileTap={{ scale: 0.99 }}
+                        aria-label="Proceed to checkout"
+                      >
+                        Proceed to Checkout
+                      </motion.button>
+                      <button
+                        onClick={() => setCartOpen(false)}
+                        className="w-full bg-gray-200 text-gray-800 py-2 sm:py-3 rounded-lg hover:bg-gray-300 transition-colors text-sm sm:text-base"
+                        aria-label="Continue shopping"
+                      >
+                        Continue Shopping
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Toast Notifications Container */}
+      <div className="fixed bottom-4 right-4 z-50">
+        <div className="space-y-2"></div>
+      </div>
+    </div>
   );
 }

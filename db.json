@@ -115,13 +115,7 @@
       "createdAt": "2025-05-15"
     }
   ],
-  "cart": [
-    {
-      "id": "cart-1747297725191",
-      "productId": "1",
-      "quantity": 4
-    }
-  ],
+  "cart": [],
   "wishlist": [
     {
       "id": "wishlist-1",
