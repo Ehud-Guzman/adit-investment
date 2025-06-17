@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+/* Modal Styling */
+.modal-content {
+  position: relative;
+}
+
+.modal-close {
+  font-size: 1.5rem;
+}
+
+.thumbnail {
+  transition: border-color 0.3s;
+}
+
+.thumbnail.active {
+  border-color: #1e90ff;
+}
+
+/* Cart Sidebar */
+#cart-sidebar {
+  overflow-y: auto;
+}
+
+.cart-close {
+  font-size: 1.5rem;
+}
+
+.cart-items::-webkit-scrollbar {
+  width: 8px;
+}
+
+.cart-items::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 4px;
+}
+
+.cart-items::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+/* Product Card Hover Effects */
+.product-card {
+  position: relative;
+}
+
+.product-actions {
+  transition: opacity 0.3s;
+}
+
+.product-card:hover .product-actions {
+  opacity: 1 !important;
+}
+
+/* Pagination */
+.pagination-btn:disabled {
+  cursor: not-allowed;
+}
+
+.page-btn {
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.page-btn:hover {
+  background-color: #e2e8f0;
+}
