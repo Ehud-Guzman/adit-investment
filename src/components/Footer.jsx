@@ -150,8 +150,9 @@ export default function Footer() {
             <ul className="space-y-2 text-gray-200">
               <li>📍 Busia County, Kenya</li>
               <li>📞 +254 733 681 921</li>
+              <li>📞 +254 704 746 482</li>
               <li>📧 info@aditinvestment.com</li>
-              <li>🕒 Mon-Fri: 8AM - 5PM</li>
+              <li>🕒 Mon-Sat: 8AM - 7PM</li>
             </ul>
           </div>
         </div>
