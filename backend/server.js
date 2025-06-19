@@ -19,7 +19,7 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Connect to MongoDB
+// MongoDB setup
 const client = new MongoClient(process.env.MONGO_URI);
 let db, products, users, cart, wishlist;
 
@@ -36,7 +36,6 @@ try {
   process.exit(1);
 }
 
-// 🔧 Helper: handle both Mongo ObjectId and custom _id
 const getQueryId = (id) => /^[0-9a-fA-F]{24}$/.test(id)
   ? { _id: new ObjectId(id) }
   : { _id: id };
@@ -56,21 +55,30 @@ app.get('/api/products', async (req, res) => {
   const data = await products.find().toArray();
   res.json(data);
 });
+
 app.get('/api/products/:id', async (req, res) => {
   const item = await products.findOne(getQueryId(req.params.id));
   item ? res.json(item) : res.status(404).json({ message: 'Not found' });
 });
+
 app.post('/api/products', async (req, res) => {
   const result = await products.insertOne(req.body);
   res.status(201).json(result);
 });
+
 app.put('/api/products/:id', async (req, res) => {
   const result = await products.updateOne(getQueryId(req.params.id), { $set: req.body });
   res.json(result);
 });
+
 app.delete('/api/products/:id', async (req, res) => {
-  const result = await products.deleteOne(getQueryId(req.params.id));
-  res.json(result);
+  try {
+    const result = await products.deleteOne(getQueryId(req.params.id));
+    if (result.deletedCount === 0) return res.status(404).json({ message: 'Product not found' });
+    res.json({ message: 'Product deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ message: 'Error deleting product', error: err.message });
+  }
 });
 
 // ===== USERS =====
@@ -78,6 +86,7 @@ app.get('/api/users', async (req, res) => {
   const data = await users.find().toArray();
   res.json(data);
 });
+
 app.post('/api/users', async (req, res) => {
   const result = await users.insertOne(req.body);
   res.status(201).json(result);
@@ -88,37 +97,46 @@ app.get('/api/cart', async (req, res) => {
   const data = await cart.find().toArray();
   res.json(data);
 });
+
 app.post('/api/cart', async (req, res) => {
   const result = await cart.insertOne(req.body);
   res.status(201).json(result);
 });
+
 app.put('/api/cart/:id', async (req, res) => {
   const result = await cart.updateOne(getQueryId(req.params.id), { $set: req.body });
   res.json(result);
 });
-app.delete('/api/products/:id', async (req, res) => {
-  const id = req.params.id;
 
-  // Try to use ObjectId if valid, else use plain string
-  const query = ObjectId.isValid(id) ? { _id: new ObjectId(id) } : { _id: id };
-
-  const result = await products.deleteOne(query);
-  res.json(result);
+app.delete('/api/cart/:id', async (req, res) => {
+  try {
+    const result = await cart.deleteOne(getQueryId(req.params.id));
+    if (result.deletedCount === 0) return res.status(404).json({ message: 'Cart item not found' });
+    res.json({ message: 'Cart item removed successfully' });
+  } catch (err) {
+    res.status(500).json({ message: 'Error deleting cart item', error: err.message });
+  }
 });
-
 
 // ===== WISHLIST =====
 app.get('/api/wishlist', async (req, res) => {
   const data = await wishlist.find().toArray();
   res.json(data);
 });
+
 app.post('/api/wishlist', async (req, res) => {
   const result = await wishlist.insertOne(req.body);
   res.status(201).json(result);
 });
+
 app.delete('/api/wishlist/:id', async (req, res) => {
-  const result = await wishlist.deleteOne(getQueryId(req.params.id));
-  res.json(result);
+  try {
+    const result = await wishlist.deleteOne(getQueryId(req.params.id));
+    if (result.deletedCount === 0) return res.status(404).json({ message: 'Wishlist item not found' });
+    res.json({ message: 'Wishlist item removed successfully' });
+  } catch (err) {
+    res.status(500).json({ message: 'Error deleting wishlist item', error: err.message });
+  }
 });
 
 // Start the server
