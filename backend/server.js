@@ -13,8 +13,9 @@ const PORT = process.env.PORT || 8080;
 app.use(cors({
   origin: [
     'http://localhost:5173',
-    'https://adit-investment.onrender.com',
-    'https://adit-investment-frontend.onrender.com'
+    'https://adit-investment.netlify.app', // ✅ Add this
+    'https://adit-investment-1.onrender.coms',
+    
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
@@ -116,3 +117,4 @@ app.delete('/api/wishlist/:id', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 ADIT backend live on port ${PORT}`);
 });
+
