@@ -2,10 +2,12 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { MongoClient, ObjectId } from 'mongodb';
+console.log('🧪 [DEBUG] Render PORT:', process.env.PORT);
+console.log('🧪 [DEBUG] Render MONGO_URI:', process.env.MONGO_URI);
 
 dotenv.config();
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8080;
 
 // Middleware
 app.use(cors({
