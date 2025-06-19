@@ -1,11 +1,21 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    viteStaticCopy({
+      targets: [
+        {
+          src: 'public/_redirects',
+          dest: '.', // copy to root of dist
+        },
+      ],
+    }),
+  ],
   build: {
-    outDir: 'dist', // this is what Render will deploy
+    outDir: 'dist', // Render deploys this folder
   },
   server: {
     port: 5173,
