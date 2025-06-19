@@ -15,7 +15,7 @@ app.use(cors({
     'http://localhost:5173',
     'https://adit-investment.netlify.app', // If still using Netlify
     'https://adit-investment.onrender.com', // This is your own backend domain
-    'https://adit-investment-frontend.onrender.com' // ⬅️ Just in case your frontend is also on Render under a separate subdomain
+    
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
