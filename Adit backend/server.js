@@ -5,7 +5,7 @@ import { MongoClient, ObjectId } from 'mongodb';
 
 dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 
 // Middleware
 app.use(cors({
