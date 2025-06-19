@@ -96,10 +96,16 @@ app.put('/api/cart/:id', async (req, res) => {
   const result = await cart.updateOne(getQueryId(req.params.id), { $set: req.body });
   res.json(result);
 });
-app.delete('/api/cart/:id', async (req, res) => {
-  const result = await cart.deleteOne(getQueryId(req.params.id));
+app.delete('/api/products/:id', async (req, res) => {
+  const id = req.params.id;
+
+  // Try to use ObjectId if valid, else use plain string
+  const query = ObjectId.isValid(id) ? { _id: new ObjectId(id) } : { _id: id };
+
+  const result = await products.deleteOne(query);
   res.json(result);
 });
+
 
 // ===== WISHLIST =====
 app.get('/api/wishlist', async (req, res) => {
