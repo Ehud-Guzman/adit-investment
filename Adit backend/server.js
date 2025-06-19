@@ -1,47 +1,42 @@
-// server.js
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { MongoClient, ObjectId } from 'mongodb';
 
 dotenv.config();
-
 const app = express();
-const PORT = process.env.PORT || 8080; // ✅ Render picks this up automatically
+const PORT = process.env.PORT || 8080;
 
-// === MIDDLEWARE ===
+// Middleware
 app.use(cors({
   origin: [
     'http://localhost:5173',
-    'https://adit-investment.netlify.app', // If still using Netlify
-    'https://adit-investment.onrender.com', // This is your own backend domain
-    
+    'https://adit-investment.onrender.com',
+    'https://adit-investment-frontend.onrender.com'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true
+  credentials: true,
 }));
 app.use(express.json());
 
-// === DATABASE CONNECTION ===
+// Connect to MongoDB
 const client = new MongoClient(process.env.MONGO_URI);
-
-let db, products, users;
+let db, products, users, cart, wishlist;
 
 try {
   await client.connect();
   console.log('🧠 Connected to MongoDB');
-
   db = client.db('ADIT-website');
   products = db.collection('products');
   users = db.collection('users');
+  cart = db.collection('cart');
+  wishlist = db.collection('wishlist');
 } catch (err) {
   console.error('❌ MongoDB connection failed:', err.message);
   process.exit(1);
 }
 
-// === ROUTES ===
-
-// Health check
+// Health Check
 app.get('/api/ping', async (req, res) => {
   try {
     const status = await db.command({ ping: 1 });
@@ -51,76 +46,71 @@ app.get('/api/ping', async (req, res) => {
   }
 });
 
-// ==== PRODUCTS ====
+// PRODUCTS
 app.get('/api/products', async (req, res) => {
-  try {
-    const all = await products.find({}).toArray();
-    res.json(all);
-  } catch (err) {
-    res.status(500).json({ message: '❌ Failed to fetch products', error: err.message });
-  }
+  const data = await products.find().toArray();
+  res.json(data);
 });
-
 app.get('/api/products/:id', async (req, res) => {
-  try {
-    const product = await products.findOne({ _id: new ObjectId(req.params.id) });
-    if (!product) return res.status(404).json({ message: 'Product not found' });
-    res.json(product);
-  } catch (err) {
-    res.status(500).json({ message: '❌ Failed to fetch product', error: err.message });
-  }
+  const item = await products.findOne({ _id: new ObjectId(req.params.id) });
+  item ? res.json(item) : res.status(404).json({ message: 'Not found' });
 });
-
 app.post('/api/products', async (req, res) => {
-  try {
-    const result = await products.insertOne(req.body);
-    res.status(201).json(result);
-  } catch (err) {
-    res.status(500).json({ message: '❌ Failed to add product', error: err.message });
-  }
+  const result = await products.insertOne(req.body);
+  res.status(201).json(result);
 });
-
 app.put('/api/products/:id', async (req, res) => {
-  try {
-    const result = await products.updateOne(
-      { _id: new ObjectId(req.params.id) },
-      { $set: req.body }
-    );
-    res.json(result);
-  } catch (err) {
-    res.status(500).json({ message: '❌ Failed to update product', error: err.message });
-  }
+  const result = await products.updateOne({ _id: new ObjectId(req.params.id) }, { $set: req.body });
+  res.json(result);
 });
-
 app.delete('/api/products/:id', async (req, res) => {
-  try {
-    const result = await products.deleteOne({ _id: new ObjectId(req.params.id) });
-    res.json(result);
-  } catch (err) {
-    res.status(500).json({ message: '❌ Failed to delete product', error: err.message });
-  }
+  const result = await products.deleteOne({ _id: new ObjectId(req.params.id) });
+  res.json(result);
 });
 
-// ==== USERS ====
+// USERS
 app.post('/api/users', async (req, res) => {
-  try {
-    const result = await users.insertOne(req.body);
-    res.status(201).json(result);
-  } catch (err) {
-    res.status(500).json({ message: '❌ Failed to add user', error: err.message });
-  }
+  const result = await users.insertOne(req.body);
+  res.status(201).json(result);
 });
-
 app.get('/api/users', async (req, res) => {
-  try {
-    const all = await users.find({}).toArray();
-    res.json(all);
-  } catch (err) {
-    res.status(500).json({ message: '❌ Failed to fetch users', error: err.message });
-  }
+  const all = await users.find().toArray();
+  res.json(all);
 });
 
-// === START SERVER ===
+// CART
+app.get('/api/cart', async (req, res) => {
+  const data = await cart.find().toArray();
+  res.json(data);
+});
+app.post('/api/cart', async (req, res) => {
+  const result = await cart.insertOne(req.body);
+  res.status(201).json(result);
+});
+app.put('/api/cart/:id', async (req, res) => {
+  const result = await cart.updateOne({ _id: new ObjectId(req.params.id) }, { $set: req.body });
+  res.json(result);
+});
+app.delete('/api/cart/:id', async (req, res) => {
+  const result = await cart.deleteOne({ _id: new ObjectId(req.params.id) });
+  res.json(result);
+});
+
+// WISHLIST
+app.get('/api/wishlist', async (req, res) => {
+  const data = await wishlist.find().toArray();
+  res.json(data);
+});
+app.post('/api/wishlist', async (req, res) => {
+  const result = await wishlist.insertOne(req.body);
+  res.status(201).json(result);
+});
+app.delete('/api/wishlist/:id', async (req, res) => {
+  const result = await wishlist.deleteOne({ _id: new ObjectId(req.params.id) });
+  res.json(result);
+});
+
+// START SERVER
 app.listen(PORT, () => {
   console.log(`🚀 ADIT backend live on port ${PORT}`);
 });
