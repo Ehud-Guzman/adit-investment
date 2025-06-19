@@ -2,8 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { MongoClient, ObjectId } from 'mongodb';
-console.log('🧪 [DEBUG] Render PORT:', process.env.PORT);
-console.log('🧪 [DEBUG] Render MONGO_URI:', process.env.MONGO_URI);
 
 dotenv.config();
 const app = express();
@@ -13,9 +11,8 @@ const PORT = process.env.PORT || 8080;
 app.use(cors({
   origin: [
     'http://localhost:5173',
-    'https://adit-investment.netlify.app', // ✅ Add this
-    'https://adit-investment-1.onrender.coms',
-    
+    'https://adit-investment.netlify.app',
+    'https://adit-investment-1.onrender.com'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
@@ -39,6 +36,11 @@ try {
   process.exit(1);
 }
 
+// 🔧 Helper: handle both Mongo ObjectId and custom _id
+const getQueryId = (id) => /^[0-9a-fA-F]{24}$/.test(id)
+  ? { _id: new ObjectId(id) }
+  : { _id: id };
+
 // Health Check
 app.get('/api/ping', async (req, res) => {
   try {
@@ -49,13 +51,13 @@ app.get('/api/ping', async (req, res) => {
   }
 });
 
-// PRODUCTS
+// ===== PRODUCTS =====
 app.get('/api/products', async (req, res) => {
   const data = await products.find().toArray();
   res.json(data);
 });
 app.get('/api/products/:id', async (req, res) => {
-  const item = await products.findOne({ _id: new ObjectId(req.params.id) });
+  const item = await products.findOne(getQueryId(req.params.id));
   item ? res.json(item) : res.status(404).json({ message: 'Not found' });
 });
 app.post('/api/products', async (req, res) => {
@@ -63,25 +65,25 @@ app.post('/api/products', async (req, res) => {
   res.status(201).json(result);
 });
 app.put('/api/products/:id', async (req, res) => {
-  const result = await products.updateOne({ _id: new ObjectId(req.params.id) }, { $set: req.body });
+  const result = await products.updateOne(getQueryId(req.params.id), { $set: req.body });
   res.json(result);
 });
 app.delete('/api/products/:id', async (req, res) => {
-  const result = await products.deleteOne({ _id: new ObjectId(req.params.id) });
+  const result = await products.deleteOne(getQueryId(req.params.id));
   res.json(result);
 });
 
-// USERS
+// ===== USERS =====
+app.get('/api/users', async (req, res) => {
+  const data = await users.find().toArray();
+  res.json(data);
+});
 app.post('/api/users', async (req, res) => {
   const result = await users.insertOne(req.body);
   res.status(201).json(result);
 });
-app.get('/api/users', async (req, res) => {
-  const all = await users.find().toArray();
-  res.json(all);
-});
 
-// CART
+// ===== CART =====
 app.get('/api/cart', async (req, res) => {
   const data = await cart.find().toArray();
   res.json(data);
@@ -91,15 +93,15 @@ app.post('/api/cart', async (req, res) => {
   res.status(201).json(result);
 });
 app.put('/api/cart/:id', async (req, res) => {
-  const result = await cart.updateOne({ _id: new ObjectId(req.params.id) }, { $set: req.body });
+  const result = await cart.updateOne(getQueryId(req.params.id), { $set: req.body });
   res.json(result);
 });
 app.delete('/api/cart/:id', async (req, res) => {
-  const result = await cart.deleteOne({ _id: new ObjectId(req.params.id) });
+  const result = await cart.deleteOne(getQueryId(req.params.id));
   res.json(result);
 });
 
-// WISHLIST
+// ===== WISHLIST =====
 app.get('/api/wishlist', async (req, res) => {
   const data = await wishlist.find().toArray();
   res.json(data);
@@ -109,12 +111,11 @@ app.post('/api/wishlist', async (req, res) => {
   res.status(201).json(result);
 });
 app.delete('/api/wishlist/:id', async (req, res) => {
-  const result = await wishlist.deleteOne({ _id: new ObjectId(req.params.id) });
+  const result = await wishlist.deleteOne(getQueryId(req.params.id));
   res.json(result);
 });
 
-// START SERVER
+// Start the server
 app.listen(PORT, () => {
   console.log(`🚀 ADIT backend live on port ${PORT}`);
 });
-
