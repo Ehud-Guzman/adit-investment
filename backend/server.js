@@ -38,7 +38,7 @@ try {
 
 const getQueryId = (id) => /^[0-9a-fA-F]{24}$/.test(id)
   ? { _id: new ObjectId(id) }
-  : { _id: id };
+  : { id };
 
 // Health Check
 app.get('/api/ping', async (req, res) => {
