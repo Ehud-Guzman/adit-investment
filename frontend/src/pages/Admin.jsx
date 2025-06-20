@@ -187,7 +187,7 @@ export default function Admin() {
       specs: product.specs.length ? product.specs : [{ label: '', value: '' }],
     });
     setShowAddForm(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+   
   };
 
   const toggleExpandProduct = (id) => {
