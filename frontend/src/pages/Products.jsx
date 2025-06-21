@@ -210,12 +210,15 @@ export default function Products() {
     queryKey: ['cart'],
     queryFn: api.getCart,
     staleTime: 1000 * 60 * 5,
+     select: (cart) => cart.filter(item => products.some(p => p._id === item.productId)),
   });
 
   const { data: wishlist = [], isLoading: wishlistLoading } = useQuery({
     queryKey: ['wishlist'],
     queryFn: api.getWishlist,
     staleTime: 1000 * 60 * 5,
+     select: (wishlist) => wishlist.filter(item => products.some(p => p._id === item.productId)),
+     
   });
 
   // Add to Cart
