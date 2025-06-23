@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "start": "node server.js",
+    "postbuild": "cp public/_redirects dist/_redirects",
     "json-server": "json-server --watch db.json --port 3001",
     "lint": "eslint ."
   },
