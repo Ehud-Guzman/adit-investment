@@ -1,16 +1,15 @@
-// adit-backend.js
+// server.js
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { MongoClient, ObjectId } from 'mongodb';
-import { upload } from './cloudinary.js'; // adjust path as needed
-
+import { upload } from './cloudinary.js'; // Adjust path as needed
 
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// Middleware
+// ===== MIDDLEWARE =====
 app.use(cors({
   origin: [
     'http://localhost:5173',
@@ -20,10 +19,10 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 }));
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
-// MongoDB setup
+// ===== DATABASE SETUP =====
 const client = new MongoClient(process.env.MONGO_URI);
 let db, products, users, cart, wishlist;
 
@@ -40,7 +39,9 @@ try {
   process.exit(1);
 }
 
-const getQueryId = (id) => /^[0-9a-fA-F]{24}$/.test(id) ? { _id: new ObjectId(id) } : { id };
+const getQueryId = (id) => /^[0-9a-fA-F]{24}$/.test(id)
+  ? { _id: new ObjectId(id) }
+  : { id };
 
 // ===== HEALTH CHECK =====
 app.get('/api/ping', async (req, res) => {
@@ -65,7 +66,9 @@ app.get('/api/products', async (req, res) => {
 app.get('/api/products/:id', async (req, res) => {
   try {
     const item = await products.findOne(getQueryId(req.params.id));
-    item ? res.json(item) : res.status(404).json({ message: 'Product not found' });
+    item
+      ? res.json(item)
+      : res.status(404).json({ message: 'Product not found' });
   } catch (err) {
     res.status(500).json({ message: '❌ Error fetching product', error: err.message });
   }
@@ -73,9 +76,17 @@ app.get('/api/products/:id', async (req, res) => {
 
 app.post('/api/products', async (req, res) => {
   try {
-    const result = await products.insertOne(req.body);
-    res.status(201).json(result);
+    const body = req.body;
+    if (!body || Object.keys(body).length === 0) {
+      return res.status(400).json({ message: '⚠️ Request body is empty' });
+    }
+
+    const result = await products.insertOne(body);
+    const insertedProduct = await products.findOne({ _id: result.insertedId });
+
+    res.status(201).json(insertedProduct);
   } catch (err) {
+    console.error('❌ POST /products error:', err.message);
     res.status(500).json({ message: '❌ Error creating product', error: err.message });
   }
 });
@@ -110,8 +121,10 @@ app.delete('/api/products/:id', async (req, res) => {
   }
 });
 
+// ===== IMAGE UPLOAD =====
 app.post('/api/upload', upload.single('image'), (req, res) => {
   try {
+    if (!req.file?.path) throw new Error('No image returned from Cloudinary');
     res.status(201).json({ url: req.file.path });
   } catch (err) {
     res.status(500).json({ message: '❌ Upload failed', error: err.message });
@@ -168,7 +181,9 @@ app.put('/api/cart/:id', async (req, res) => {
 app.delete('/api/cart/:id', async (req, res) => {
   try {
     const result = await cart.deleteOne(getQueryId(req.params.id));
-    if (result.deletedCount === 0) return res.status(404).json({ message: 'Cart item not found' });
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: 'Cart item not found' });
+    }
     res.json({ message: '🗑️ Cart item removed successfully' });
   } catch (err) {
     res.status(500).json({ message: '❌ Error deleting cart item', error: err.message });
@@ -197,7 +212,9 @@ app.post('/api/wishlist', async (req, res) => {
 app.delete('/api/wishlist/:id', async (req, res) => {
   try {
     const result = await wishlist.deleteOne(getQueryId(req.params.id));
-    if (result.deletedCount === 0) return res.status(404).json({ message: 'Wishlist item not found' });
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: 'Wishlist item not found' });
+    }
     res.json({ message: '🗑️ Wishlist item removed successfully' });
   } catch (err) {
     res.status(500).json({ message: '❌ Error deleting wishlist item', error: err.message });
@@ -223,7 +240,7 @@ app.delete('/api/cleanup', async (req, res) => {
   }
 });
 
-// ===== SERVER =====
+// ===== START SERVER =====
 app.listen(PORT, () => {
   console.log(`🚀 ADIT backend live on port ${PORT}`);
 });
