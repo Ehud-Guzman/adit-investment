@@ -1,157 +1,202 @@
-import { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { toast } from 'react-toastify';
-import { 
-  FiPlus, FiEdit, FiTrash, FiX, FiLock, FiLoader, 
-  FiChevronDown, FiChevronUp, FiLogOut, FiEye, FiCheck, FiCopy
-} from 'react-icons/fi';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import * as api from '../services/api';
+// Admin.jsx
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "react-toastify";
+import {
+  FiPlus,
+  FiEdit,
+  FiTrash,
+  FiX,
+  FiLock,
+  FiLoader,
+  FiChevronDown,
+  FiChevronUp,
+  FiLogOut,
+  FiEye,
+  FiCheck,
+  FiCopy,
+} from "react-icons/fi";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import * as api from "../services/api";
+import axios from "axios";
 
-const CATEGORIES = ['printers', 'computers', 'laptops', 'monitors', 'accessories', 'storage', 'toners'];
+const CATEGORIES = [
+  "printers",
+  "computers",
+  "laptops",
+  "monitors",
+  "accessories",
+  "storage",
+  "toners",
+];
 
 export default function Admin() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState("");
   const [showAddForm, setShowAddForm] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
-  const [formData, setFormData] = useState({
-    name: '',
-    price: '',
-    originalPrice: '',
-    category: CATEGORIES[0],
-    description: '',
-    stock: '',
-    sku: '',
-    rating: '',
-    reviews: '',
-    images: [''],
-    specs: [{ label: '', value: '' }],
-    featured: false,
-    createdAt: new Date().toISOString().split('T')[0],
-  });
+  const [selectedFile, setSelectedFile] = useState(null);
   const [expandedProduct, setExpandedProduct] = useState(null);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    price: "",
+    originalPrice: "",
+    category: CATEGORIES[0],
+    description: "",
+    stock: "",
+    sku: "",
+    rating: "",
+    reviews: "",
+    images: [""],
+    specs: [{ label: "", value: "" }],
+    featured: false,
+    createdAt: new Date().toISOString().split("T")[0],
+  });
 
   const queryClient = useQueryClient();
 
-  // Fetch products
-  const { data: products = [], isLoading, isError } = useQuery({
-    queryKey: ['products'],
+  const {
+    data: products = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["products"],
     queryFn: api.getProducts,
     staleTime: 1000 * 60 * 5,
-    onError: () => toast.error('Failed to load products.'),
+    onError: () => toast.error("Failed to load products."),
   });
 
-  // Mutations
+ const uploadImage = async (file) => {
+  try {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const response = await axios.post("/api/upload", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    return response.data; // 👈 Expected: { url: '...' }
+  } catch (error) {
+    console.error("Image upload failed:", error);
+    throw new Error("Failed to upload image.");
+  }
+};
+
+
   const addProductMutation = useMutation({
-    mutationFn: api.addProduct,
+    mutationFn: async (productData) => {
+      let imageUrl = "";
+      if (selectedFile) {
+        const uploadRes = await uploadImage(selectedFile);
+        imageUrl = uploadRes.url;
+        productData.images = [imageUrl];
+      }
+      return api.addProduct(productData);
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries(['products']);
-      toast.success('Product added successfully');
+      queryClient.invalidateQueries(["products"]);
+      toast.success("Product added successfully");
       setShowAddForm(false);
       resetForm();
     },
-    onError: () => toast.error('Failed to add product.'),
+    onError: () => toast.error("Failed to add product."),
   });
 
   const updateProductMutation = useMutation({
     mutationFn: ({ id, product }) => api.updateProduct(id, product),
     onSuccess: () => {
-      queryClient.invalidateQueries(['products']);
-      toast.success('Product updated successfully');
+      queryClient.invalidateQueries(["products"]);
+      toast.success("Product updated successfully");
       setEditProduct(null);
       resetForm();
     },
-    onError: () => toast.error('Failed to update product.'),
+    onError: () => toast.error("Failed to update product."),
   });
 
   const deleteProductMutation = useMutation({
     mutationFn: api.deleteProduct,
     onSuccess: () => {
-      queryClient.invalidateQueries(['products']);
-      toast.success('Product deleted successfully');
+      queryClient.invalidateQueries(["products"]);
+      toast.success("Product deleted successfully");
     },
-    onError: () => toast.error('Failed to delete product.'),
+    onError: () => toast.error("Failed to delete product."),
   });
 
-  // Authentication
   const handleLogin = () => {
-    if (password === 'adit2025') {
+    if (password === "adit2025") {
       setIsAuthenticated(true);
-      setPassword('');
-      toast.success('Logged in successfully');
+      setPassword("");
+      toast.success("Logged in successfully");
     } else {
-      toast.error('Invalid password');
+      toast.error("Invalid password");
     }
   };
 
   const handleLogout = () => {
     setIsAuthenticated(false);
-    toast.info('Logged out successfully');
+    toast.info("Logged out successfully");
   };
 
-  // Form handling
   const resetForm = () => {
     setFormData({
-      name: '',
-      price: '',
-      originalPrice: '',
+      name: "",
+      price: "",
+      originalPrice: "",
       category: CATEGORIES[0],
-      description: '',
-      stock: '',
-      sku: '',
-      rating: '',
-      reviews: '',
-      images: [''],
-      specs: [{ label: '', value: '' }],
+      description: "",
+      stock: "",
+      sku: "",
+      rating: "",
+      reviews: "",
+      images: [""],
+      specs: [{ label: "", value: "" }],
       featured: false,
-      createdAt: new Date().toISOString().split('T')[0],
+      createdAt: new Date().toISOString().split("T")[0],
     });
+    setSelectedFile(null);
   };
 
   const handleInputChange = (e, index = null, field = null) => {
     const { name, value, type, checked } = e.target;
-    
-    if (name === 'images') {
+
+    if (name === "images") {
       const images = [...formData.images];
       images[index] = value;
       setFormData({ ...formData, images });
-    } else if (name === 'specLabel' || name === 'specValue') {
+    } else if (name === "specLabel" || name === "specValue") {
       const specs = [...formData.specs];
-      specs[index][name === 'specLabel' ? 'label' : 'value'] = value;
+      specs[index][name === "specLabel" ? "label" : "value"] = value;
       setFormData({ ...formData, specs });
     } else {
       setFormData({
         ...formData,
-        [name]: type === 'checkbox' ? checked : value,
+        [name]: type === "checkbox" ? checked : value,
       });
     }
   };
 
-  const addImageField = () => {
-    setFormData({ ...formData, images: [...formData.images, ''] });
+  const handleFileChange = (e) => {
+    setSelectedFile(e.target.files[0]);
   };
 
-  const removeImageField = (index) => {
+  const addImageField = () =>
+    setFormData({ ...formData, images: [...formData.images, ""] });
+  const removeImageField = (index) =>
     setFormData({
       ...formData,
       images: formData.images.filter((_, i) => i !== index),
     });
-  };
-
-  const addSpecField = () => {
+  const addSpecField = () =>
     setFormData({
       ...formData,
-      specs: [...formData.specs, { label: '', value: '' }],
+      specs: [...formData.specs, { label: "", value: "" }],
     });
-  };
-
-  const removeSpecField = (index) => {
+  const removeSpecField = (index) =>
     setFormData({
       ...formData,
       specs: formData.specs.filter((_, i) => i !== index),
     });
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -162,13 +207,20 @@ export default function Admin() {
       stock: parseInt(formData.stock) || 0,
       rating: parseFloat(formData.rating) || 0,
       reviews: parseInt(formData.reviews) || 0,
-      images: formData.images.filter(img => img.trim() !== ''),
-      specs: formData.specs.filter(spec => spec.label.trim() !== '' && spec.value.trim() !== ''),
+      images: formData.images.filter((img) => img.trim() !== ""),
+      specs: formData.specs.filter((spec) => spec.label && spec.value),
       id: editProduct ? editProduct.id : `prod-${Date.now()}`,
     };
 
-    if (!product.name || !product.price || !product.category || product.stock < 0) {
-      toast.error('Please fill all required fields (Name, Price, Category, Stock).');
+    if (
+      !product.name ||
+      !product.price ||
+      !product.category ||
+      product.stock < 0
+    ) {
+      toast.error(
+        "Please fill all required fields (Name, Price, Category, Stock)."
+      );
       return;
     }
 
@@ -183,20 +235,18 @@ export default function Admin() {
     setEditProduct(product);
     setFormData({
       ...product,
-      images: product.images.length ? product.images : [''],
-      specs: product.specs.length ? product.specs : [{ label: '', value: '' }],
+      images: product.images.length ? product.images : [""],
+      specs: product.specs.length ? product.specs : [{ label: "", value: "" }],
     });
     setShowAddForm(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const toggleExpandProduct = (id) => {
+  const toggleExpandProduct = (id) =>
     setExpandedProduct(expandedProduct === id ? null : id);
-  };
-
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
-    toast.success('Copied to clipboard');
+    toast.success("Copied to clipboard");
   };
 
   // Loading state
@@ -211,8 +261,12 @@ export default function Admin() {
   if (isError) {
     return (
       <div className="text-center py-12">
-        <h2 className="text-2xl font-bold text-red-600 mb-2">Error Loading Products</h2>
-        <p className="text-gray-600">Please refresh the page or try again later.</p>
+        <h2 className="text-2xl font-bold text-red-600 mb-2">
+          Error Loading Products
+        </h2>
+        <p className="text-gray-600">
+          Please refresh the page or try again later.
+        </p>
       </div>
     );
   }
@@ -227,18 +281,24 @@ export default function Admin() {
           className="bg-white p-8 rounded-xl shadow-lg max-w-md w-full"
         >
           <div className="text-center mb-6">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Admin Login</h2>
-            <p className="text-gray-600">Enter your credentials to access the dashboard</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">
+              Admin Login
+            </h2>
+            <p className="text-gray-600">
+              Enter your credentials to access the dashboard
+            </p>
           </div>
           <div className="mb-6">
-            <label className="block text-gray-700 mb-2 font-medium">Password</label>
+            <label className="block text-gray-700 mb-2 font-medium">
+              Password
+            </label>
             <div className="relative">
               <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+                onKeyPress={(e) => e.key === "Enter" && handleLogin()}
                 className="pl-10 pr-4 py-3 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Enter admin password"
                 aria-label="Admin password"
@@ -261,7 +321,9 @@ export default function Admin() {
       {/* Admin Header */}
       <header className="bg-white shadow-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-900">Product Admin Dashboard</h1>
+          <h1 className="text-2xl font-bold text-gray-900">
+            Product Admin Dashboard
+          </h1>
           <button
             onClick={handleLogout}
             className="flex items-center gap-2 text-gray-600 hover:text-red-600"
@@ -275,8 +337,12 @@ export default function Admin() {
         {/* Dashboard Controls */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>
-            <h2 className="text-xl font-semibold text-gray-900">Manage Products</h2>
-            <p className="text-gray-600">{products.length} products in inventory</p>
+            <h2 className="text-xl font-semibold text-gray-900">
+              Manage Products
+            </h2>
+            <p className="text-gray-600">
+              {products.length} products in inventory
+            </p>
           </div>
           <button
             onClick={() => {
@@ -286,7 +352,7 @@ export default function Admin() {
             }}
             className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
           >
-            <FiPlus /> {showAddForm ? 'Cancel' : 'Add Product'}
+            <FiPlus /> {showAddForm ? "Cancel" : "Add Product"}
           </button>
         </div>
 
@@ -295,14 +361,14 @@ export default function Admin() {
           {showAddForm && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
+              animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               className="bg-white rounded-xl shadow-md overflow-hidden mb-8"
             >
               <div className="p-6">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-xl font-bold text-gray-900">
-                    {editProduct ? 'Edit Product' : 'Add New Product'}
+                    {editProduct ? "Edit Product" : "Add New Product"}
                   </h2>
                   {editProduct && (
                     <button
@@ -317,11 +383,16 @@ export default function Admin() {
                   )}
                 </div>
 
-                <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <form
+                  onSubmit={handleSubmit}
+                  className="grid grid-cols-1 md:grid-cols-2 gap-6"
+                >
                   {/* Basic Info */}
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-gray-700 mb-2 font-medium">Name *</label>
+                      <label className="block text-gray-700 mb-2 font-medium">
+                        Name *
+                      </label>
                       <input
                         type="text"
                         name="name"
@@ -334,7 +405,9 @@ export default function Admin() {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-gray-700 mb-2 font-medium">Price (KSh) *</label>
+                        <label className="block text-gray-700 mb-2 font-medium">
+                          Price (KSh) *
+                        </label>
                         <input
                           type="number"
                           name="price"
@@ -347,7 +420,9 @@ export default function Admin() {
                         />
                       </div>
                       <div>
-                        <label className="block text-gray-700 mb-2 font-medium">Original Price</label>
+                        <label className="block text-gray-700 mb-2 font-medium">
+                          Original Price
+                        </label>
                         <input
                           type="number"
                           name="originalPrice"
@@ -362,7 +437,9 @@ export default function Admin() {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-gray-700 mb-2 font-medium">Category *</label>
+                        <label className="block text-gray-700 mb-2 font-medium">
+                          Category *
+                        </label>
                         <select
                           name="category"
                           value={formData.category}
@@ -370,7 +447,7 @@ export default function Admin() {
                           className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                           required
                         >
-                          {CATEGORIES.map(cat => (
+                          {CATEGORIES.map((cat) => (
                             <option key={cat} value={cat}>
                               {cat.charAt(0).toUpperCase() + cat.slice(1)}
                             </option>
@@ -378,7 +455,9 @@ export default function Admin() {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-gray-700 mb-2 font-medium">Stock *</label>
+                        <label className="block text-gray-700 mb-2 font-medium">
+                          Stock *
+                        </label>
                         <input
                           type="number"
                           name="stock"
@@ -392,7 +471,9 @@ export default function Admin() {
                     </div>
 
                     <div>
-                      <label className="block text-gray-700 mb-2 font-medium">SKU</label>
+                      <label className="block text-gray-700 mb-2 font-medium">
+                        SKU
+                      </label>
                       <input
                         type="text"
                         name="sku"
@@ -407,7 +488,9 @@ export default function Admin() {
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-gray-700 mb-2 font-medium">Rating (0-5)</label>
+                        <label className="block text-gray-700 mb-2 font-medium">
+                          Rating (0-5)
+                        </label>
                         <input
                           type="number"
                           name="rating"
@@ -420,7 +503,9 @@ export default function Admin() {
                         />
                       </div>
                       <div>
-                        <label className="block text-gray-700 mb-2 font-medium">Reviews</label>
+                        <label className="block text-gray-700 mb-2 font-medium">
+                          Reviews
+                        </label>
                         <input
                           type="number"
                           name="reviews"
@@ -441,12 +526,16 @@ export default function Admin() {
                           onChange={handleInputChange}
                           className="h-5 w-5 text-blue-600 focus:ring-blue-500 rounded"
                         />
-                        <span className="text-gray-700 font-medium">Featured Product</span>
+                        <span className="text-gray-700 font-medium">
+                          Featured Product
+                        </span>
                       </label>
                     </div>
 
                     <div>
-                      <label className="block text-gray-700 mb-2 font-medium">Created At</label>
+                      <label className="block text-gray-700 mb-2 font-medium">
+                        Created At
+                      </label>
                       <input
                         type="date"
                         name="createdAt"
@@ -460,7 +549,9 @@ export default function Admin() {
 
                   {/* Description */}
                   <div className="md:col-span-2">
-                    <label className="block text-gray-700 mb-2 font-medium">Description</label>
+                    <label className="block text-gray-700 mb-2 font-medium">
+                      Description
+                    </label>
                     <textarea
                       name="description"
                       value={formData.description}
@@ -471,71 +562,122 @@ export default function Admin() {
                     />
                   </div>
 
-                  {/* Images */}
-                  <div className="md:col-span-2">
-                    <label className="block text-gray-700 mb-2 font-medium">Product Images</label>
-                    <div className="space-y-3">
-                      {formData.images.map((img, index) => (
-                        <div key={index} className="flex gap-3 items-start">
-                          <div className="flex-1 flex gap-3">
-                            <div className="w-24 h-24 flex-shrink-0 border rounded-lg overflow-hidden bg-gray-100">
-                              {img ? (
-                                <img
-                                  src={img}
-                                  alt={`Preview ${index}`}
-                                  className="w-full h-full object-cover"
-                                  onError={(e) => (e.target.src = '/placeholder.jpg')}
-                                />
-                              ) : (
-                                <div className="w-full h-full flex items-center justify-center text-gray-400">
-                                  <FiEye size={24} />
-                                </div>
-                              )}
-                            </div>
-                            <div className="flex-1">
-                              <input
-                                type="text"
-                                name="images"
-                                value={img}
-                                onChange={(e) => handleInputChange(e, index)}
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 mb-2"
-                                placeholder="Enter image URL"
-                              />
-                              {img && (
-                                <button
-                                  type="button"
-                                  onClick={() => copyToClipboard(img)}
-                                  className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-lg text-sm"
-                                >
-                                  <FiCopy /> Copy URL
-                                </button>
-                              )}
-                            </div>
-                          </div>
-                          {formData.images.length > 1 && (
-                            <button
-                              type="button"
-                              onClick={() => removeImageField(index)}
-                              className="p-2 text-red-500 hover:text-red-700 mt-1"
-                            >
-                              <FiX />
-                            </button>
-                          )}
-                        </div>
-                      ))}
-                      <button
-                        type="button"
-                        onClick={addImageField}
-                        className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-2"
-                      >
-                        <FiPlus /> Add Another Image
-                      </button>
-                    </div>
-                  </div>
+                 {/* Images */}
+<div className="md:col-span-2">
+  <label className="inline-block bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-lg cursor-pointer shadow-sm transition bg-red-500">
+  Upload Image
+
+    Product Images
+  </label>
+  <div className="space-y-4">
+    {formData.images.map((img, index) => (
+      <div key={index} className="flex gap-3 items-start">
+        {/* Image Preview */}
+        <div className="w-24 h-24 flex-shrink-0 border rounded-lg overflow-hidden bg-gray-100">
+          {img ? (
+            <img
+              src={img}
+              alt={`Preview ${index}`}
+              className="w-full h-full object-cover"
+              onError={(e) => (e.target.src = "/placeholder.jpg")}
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-gray-400">
+              <FiEye size={24} />
+            </div>
+          )}
+        </div>
+
+        {/* Text or file input */}
+        <div className="flex-1 space-y-2">
+          {/* Optional: text input to allow direct URL */}
+          <input
+            type="text"
+            value={img}
+            onChange={(e) => {
+              const images = [...formData.images];
+              images[index] = e.target.value;
+              setFormData({ ...formData, images });
+            }}
+            placeholder="Enter image URL (or upload)"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          />
+
+          {/* Styled Upload Button */}
+          <label className="inline-block bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-lg cursor-pointer transition duration-200 ease-in-out shadow-sm">
+            Upload Image
+            <input
+              type="file"
+              accept="image/*"
+              onChange={async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                try {
+                  const formDataUpload = new FormData();
+                  formDataUpload.append("image", file);
+
+                  const res = await axios.post("/api/upload", formDataUpload, {
+                    headers: {
+                      "Content-Type": "multipart/form-data",
+                    },
+                  });
+
+                  const uploadedUrl = res.data.url;
+                  const updatedImages = [...formData.images];
+                  updatedImages[index] = uploadedUrl;
+                  setFormData({ ...formData, images: updatedImages });
+
+                  toast.success("✅ Image uploaded to Cloudinary");
+                } catch (err) {
+                  toast.error("❌ Image upload failed");
+                  console.error(err);
+                }
+              }}
+              className="hidden"
+            />
+          </label>
+
+          {img && (
+            <button
+              type="button"
+              onClick={() => copyToClipboard(img)}
+              className="text-sm text-gray-600 hover:text-gray-800 flex items-center gap-2"
+            >
+              <FiCopy /> Copy Image URL
+            </button>
+          )}
+        </div>
+
+        {/* Remove button */}
+        {formData.images.length > 1 && (
+          <button
+            type="button"
+            onClick={() => removeImageField(index)}
+            className="p-2 text-red-500 hover:text-red-700 mt-1"
+          >
+            <FiX />
+          </button>
+        )}
+      </div>
+    ))}
+
+    {/* Add Image Field */}
+    <button
+      type="button"
+      onClick={addImageField}
+      className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-2"
+    >
+      <FiPlus /> Add Another Image
+    </button>
+  </div>
+</div>
 
                   {/* Specifications */}
                   <div className="md:col-span-2">
-                    <label className="block text-gray-700 mb-2 font-medium">Specifications</label>
+                    <label className="block text-gray-700 mb-2 font-medium">
+                      Specifications
+                    </label>
                     <div className="space-y-3">
                       {formData.specs.map((spec, index) => (
                         <div key={index} className="flex gap-3">
@@ -587,16 +729,20 @@ export default function Admin() {
                     <button
                       type="submit"
                       className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
-                      disabled={addProductMutation.isLoading || updateProductMutation.isLoading}
+                      disabled={
+                        addProductMutation.isLoading ||
+                        updateProductMutation.isLoading
+                      }
                     >
-                      {addProductMutation.isLoading || updateProductMutation.isLoading ? (
+                      {addProductMutation.isLoading ||
+                      updateProductMutation.isLoading ? (
                         <span className="flex items-center justify-center gap-2">
                           <FiLoader className="animate-spin" /> Processing...
                         </span>
                       ) : editProduct ? (
-                        'Update Product'
+                        "Update Product"
                       ) : (
-                        'Add Product'
+                        "Add Product"
                       )}
                     </button>
                   </div>
@@ -612,16 +758,28 @@ export default function Admin() {
             <table className="w-full">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="p-4 text-left font-medium text-gray-700">Product</th>
-                  <th className="p-4 text-left font-medium text-gray-700">Price</th>
-                  <th className="p-4 text-left font-medium text-gray-700">Category</th>
-                  <th className="p-4 text-left font-medium text-gray-700">Stock</th>
-                  <th className="p-4 text-left font-medium text-gray-700">Status</th>
-                  <th className="p-4 text-right font-medium text-gray-700">Actions</th>
+                  <th className="p-4 text-left font-medium text-gray-700">
+                    Product
+                  </th>
+                  <th className="p-4 text-left font-medium text-gray-700">
+                    Price
+                  </th>
+                  <th className="p-4 text-left font-medium text-gray-700">
+                    Category
+                  </th>
+                  <th className="p-4 text-left font-medium text-gray-700">
+                    Stock
+                  </th>
+                  <th className="p-4 text-left font-medium text-gray-700">
+                    Status
+                  </th>
+                  <th className="p-4 text-right font-medium text-gray-700">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                {products.map(product => (
+                {products.map((product) => (
                   <>
                     <tr key={product.id} className="border-t hover:bg-gray-50">
                       <td className="p-4">
@@ -632,7 +790,9 @@ export default function Admin() {
                                 src={product.images[0]}
                                 alt={product.name}
                                 className="w-full h-full object-cover"
-                                onError={(e) => (e.target.src = '/placeholder.jpg')}
+                                onError={(e) =>
+                                  (e.target.src = "/placeholder.jpg")
+                                }
                               />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center text-gray-400">
@@ -641,13 +801,19 @@ export default function Admin() {
                             )}
                           </div>
                           <div>
-                            <div className="font-medium text-gray-900">{product.name}</div>
-                            <div className="text-sm text-gray-500">{product.sku || 'No SKU'}</div>
+                            <div className="font-medium text-gray-900">
+                              {product.name}
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              {product.sku || "No SKU"}
+                            </div>
                           </div>
                         </div>
                       </td>
                       <td className="p-4">
-                        <div className="font-medium">KSh {product.price.toLocaleString()}</div>
+                        <div className="font-medium">
+                          KSh {product.price.toLocaleString()}
+                        </div>
                         {product.originalPrice && (
                           <div className="text-sm text-gray-500 line-through">
                             KSh {product.originalPrice.toLocaleString()}
@@ -656,13 +822,15 @@ export default function Admin() {
                       </td>
                       <td className="p-4 capitalize">{product.category}</td>
                       <td className="p-4">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          product.stock > 10 
-                            ? 'bg-green-100 text-green-800' 
-                            : product.stock > 0 
-                              ? 'bg-yellow-100 text-yellow-800' 
-                              : 'bg-red-100 text-red-800'
-                        }`}>
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            product.stock > 10
+                              ? "bg-green-100 text-green-800"
+                              : product.stock > 0
+                              ? "bg-yellow-100 text-yellow-800"
+                              : "bg-red-100 text-red-800"
+                          }`}
+                        >
                           {product.stock} in stock
                         </span>
                       </td>
@@ -678,9 +846,17 @@ export default function Admin() {
                           <button
                             onClick={() => toggleExpandProduct(product.id)}
                             className="p-2 text-gray-600 hover:text-blue-600"
-                            aria-label={`${expandedProduct === product.id ? 'Collapse' : 'Expand'} product details`}
+                            aria-label={`${
+                              expandedProduct === product.id
+                                ? "Collapse"
+                                : "Expand"
+                            } product details`}
                           >
-                            {expandedProduct === product.id ? <FiChevronUp /> : <FiChevronDown />}
+                            {expandedProduct === product.id ? (
+                              <FiChevronUp />
+                            ) : (
+                              <FiChevronDown />
+                            )}
                           </button>
                           <button
                             onClick={() => handleEdit(product)}
@@ -691,7 +867,11 @@ export default function Admin() {
                           </button>
                           <button
                             onClick={() => {
-                              if (window.confirm(`Are you sure you want to delete "${product.name}"?`)) {
+                              if (
+                                window.confirm(
+                                  `Are you sure you want to delete "${product.name}"?`
+                                )
+                              ) {
                                 deleteProductMutation.mutate(product.id);
                               }
                             }}
@@ -703,28 +883,38 @@ export default function Admin() {
                         </div>
                       </td>
                     </tr>
-                    
+
                     {/* Expanded Details */}
                     {expandedProduct === product.id && (
                       <tr className="border-t bg-gray-50">
                         <td colSpan="6" className="p-4">
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                              <h3 className="font-medium text-gray-900 mb-2">Description</h3>
+                              <h3 className="font-medium text-gray-900 mb-2">
+                                Description
+                              </h3>
                               <p className="text-gray-600">
-                                {product.description || 'No description available'}
+                                {product.description ||
+                                  "No description available"}
                               </p>
-                              
-                              <h3 className="font-medium text-gray-900 mt-4 mb-2">Images</h3>
+
+                              <h3 className="font-medium text-gray-900 mt-4 mb-2">
+                                Images
+                              </h3>
                               <div className="flex flex-wrap gap-2">
                                 {product.images.length > 0 ? (
                                   product.images.map((img, index) => (
-                                    <div key={index} className="w-20 h-20 border rounded overflow-hidden">
+                                    <div
+                                      key={index}
+                                      className="w-20 h-20 border rounded overflow-hidden"
+                                    >
                                       <img
                                         src={img}
                                         alt={`${product.name} ${index + 1}`}
                                         className="w-full h-full object-cover"
-                                        onError={(e) => (e.target.src = '/placeholder.jpg')}
+                                        onError={(e) =>
+                                          (e.target.src = "/placeholder.jpg")
+                                        }
                                       />
                                     </div>
                                   ))
@@ -733,38 +923,52 @@ export default function Admin() {
                                 )}
                               </div>
                             </div>
-                            
+
                             <div>
-                              <h3 className="font-medium text-gray-900 mb-2">Specifications</h3>
+                              <h3 className="font-medium text-gray-900 mb-2">
+                                Specifications
+                              </h3>
                               {product.specs.length > 0 ? (
                                 <ul className="space-y-2">
                                   {product.specs.map((spec, index) => (
                                     <li key={index} className="flex">
-                                      <span className="font-medium text-gray-700 w-1/3">{spec.label}:</span>
-                                      <span className="text-gray-600 flex-1">{spec.value}</span>
+                                      <span className="font-medium text-gray-700 w-1/3">
+                                        {spec.label}:
+                                      </span>
+                                      <span className="text-gray-600 flex-1">
+                                        {spec.value}
+                                      </span>
                                     </li>
                                   ))}
                                 </ul>
                               ) : (
-                                <div className="text-gray-500">No specifications</div>
+                                <div className="text-gray-500">
+                                  No specifications
+                                </div>
                               )}
-                              
+
                               <div className="mt-4 grid grid-cols-2 gap-4">
                                 <div>
-                                  <h3 className="font-medium text-gray-900 mb-2">Rating</h3>
+                                  <h3 className="font-medium text-gray-900 mb-2">
+                                    Rating
+                                  </h3>
                                   <div className="flex items-center gap-1">
                                     <span className="text-yellow-400">★</span>
-                                    <span>{product.rating || '0'}/5</span>
+                                    <span>{product.rating || "0"}/5</span>
                                     <span className="text-gray-500 ml-2">
-                                      ({product.reviews || '0'} reviews)
+                                      ({product.reviews || "0"} reviews)
                                     </span>
                                   </div>
                                 </div>
-                                
+
                                 <div>
-                                  <h3 className="font-medium text-gray-900 mb-2">Created</h3>
+                                  <h3 className="font-medium text-gray-900 mb-2">
+                                    Created
+                                  </h3>
                                   <div className="text-gray-600">
-                                    {new Date(product.createdAt).toLocaleDateString()}
+                                    {new Date(
+                                      product.createdAt
+                                    ).toLocaleDateString()}
                                   </div>
                                 </div>
                               </div>
@@ -778,12 +982,16 @@ export default function Admin() {
               </tbody>
             </table>
           </div>
-          
+
           {products.length === 0 && (
             <div className="p-8 text-center">
               <FiEye className="mx-auto text-4xl text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No Products Found</h3>
-              <p className="text-gray-600 mb-4">Add your first product to get started</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                No Products Found
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Add your first product to get started
+              </p>
               <button
                 onClick={() => setShowAddForm(true)}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"

@@ -3,6 +3,8 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { MongoClient, ObjectId } from 'mongodb';
+import { upload } from './cloudinary.js'; // adjust path as needed
+
 
 dotenv.config();
 const app = express();
@@ -18,7 +20,8 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 }));
-app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 
 // MongoDB setup
 const client = new MongoClient(process.env.MONGO_URI);
@@ -104,6 +107,14 @@ app.delete('/api/products/:id', async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({ message: '❌ Error deleting product', error: err.message });
+  }
+});
+
+app.post('/api/upload', upload.single('image'), (req, res) => {
+  try {
+    res.status(201).json({ url: req.file.path });
+  } catch (err) {
+    res.status(500).json({ message: '❌ Upload failed', error: err.message });
   }
 });
 
