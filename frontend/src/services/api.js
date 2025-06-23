@@ -5,7 +5,7 @@ import axios from 'axios';
 const isLocalhost = window.location.hostname === 'localhost';
 
 const baseURL = isLocalhost
-  ? 'http://localhost:8080/api'
+  ? 'http://localhost:10000/api'
   : 'https://adit-investment-1.onrender.com/api';
 
 const api = axios.create({
