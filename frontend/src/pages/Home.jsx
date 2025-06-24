@@ -208,14 +208,7 @@ export default function Home() {
               Empowering businesses in Kenya and East Africa with cutting-edge technology services tailored to your needs
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 rounded-lg font-bold text-white shadow-lg"
-                style={{ background: colors.gradient }}
-              >
-                Get Started Today
-              </motion.button>
+           
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -464,13 +457,7 @@ export default function Home() {
 
           {/* View More button */}
           <div className="text-center mt-12">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-3 rounded-lg font-bold text-white bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 transition-colors"
-            >
-              View More Projects
-            </motion.button>
+        
           </div>
         </div>
       </section>
