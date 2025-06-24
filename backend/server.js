@@ -7,7 +7,7 @@ import { upload } from './cloudinary.js'; // Adjust path as needed
 
 dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 10000;
+const PORT = process.env.PORT || 8080;
 
 // ===== MIDDLEWARE =====
 app.use(cors({

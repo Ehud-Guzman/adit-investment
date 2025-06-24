@@ -93,17 +93,7 @@ export default function Navbar() {
                 </Link>
               </motion.div>
             ))}
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="ml-4 px-4 py-2 rounded-md text-sm font-medium text-white"
-              style={{
-                background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.secondary} 100%)`,
-                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
-              }}
-            >
-              Get Started
-            </motion.button>
+           
           </div>
 
           {/* Mobile menu button */}
