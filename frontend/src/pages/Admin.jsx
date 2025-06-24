@@ -289,38 +289,39 @@ export default function Admin() {
   }
 
   return (
-    <div className="bg-gray-50 min-h-screen">
-      {/* Admin Header */}
-      <header className="bg-white shadow-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-900">Product Admin Dashboard</h1>
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 text-gray-600 hover:text-red-600"
-          >
-            <FiLogOut /> Logout
-          </button>
-        </div>
-      </header>
+  <div className="bg-gray-50 min-h-screen pt-20"> {/* Add pt-20 to avoid being hidden behind nav */}
+    {/* Admin Header */}
+    <header className="bg-white shadow-sm sticky top-0 z-10">
+      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+        <h1 className="text-2xl font-bold text-gray-900">Product Admin Dashboard</h1>
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2 text-gray-600 hover:text-red-600"
+        >
+          <FiLogOut /> Logout
+        </button>
+      </div>
+    </header>
 
-      <main className="container mx-auto px-4 py-8 max-w-7xl">
-        {/* Dashboard Controls */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-          <div>
-            <h2 className="text-xl font-semibold text-gray-900">Manage Products</h2>
-            <p className="text-gray-600">{products.length} products in inventory</p>
-          </div>
-          <button
-            onClick={() => {
-              setShowAddForm(!showAddForm);
-              setEditProduct(null);
-              resetForm();
-            }}
-            className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            <FiPlus /> {showAddForm ? 'Cancel' : 'Add Product'}
-          </button>
+    <main className="container mx-auto px-4 py-8 max-w-7xl">
+      {/* Dashboard Controls */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <div>
+          <h2 className="text-xl font-semibold text-gray-900">Manage Products</h2>
+          <p className="text-gray-600">{products.length} products in inventory</p>
         </div>
+        <button
+          onClick={() => {
+            setShowAddForm(!showAddForm);
+            setEditProduct(null);
+            resetForm();
+          }}
+          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          <FiPlus /> {showAddForm ? 'Cancel' : 'Add Product'}
+        </button>
+      </div>
+
 
         {/* Add/Edit Form */}
         <AnimatePresence>
