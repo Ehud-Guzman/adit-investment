@@ -7,10 +7,12 @@ import Services from './pages/Services';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import Admin from './pages/Admin';
+import ScrollToTop from '@/components/ScrollToTop';
 
 export default function App() {
   return (
     <Router>
+       <ScrollToTop />
       <div className="flex flex-col min-h-screen">
         <Navbar />
         <main className="flex-grow">
