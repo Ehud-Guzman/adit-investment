@@ -58,48 +58,7 @@ export default function Home() {
   };
 
   // Services data
-  const coreServices = [
-    {
-      title: "Web Development",
-      icon: <FiGlobe className="w-6 h-6" />,
-      description: "Responsive, modern websites that convert visitors to customers",
-      features: [
-        "Custom website design",
-        "E-commerce solutions",
-        "CMS integration",
-        "SEO optimization",
-        "Mobile-responsive"
-      ],
-      image: "/assets/images/services/web design.jpg"
-    },
-    {
-      title: "Domain & Hosting",
-      icon: <FiServer className="w-6 h-6" />,
-      description: "Complete online presence solutions",
-      features: [
-        ".com, .co.ke, .org domains",
-        "Email hosting",
-        "SSL certificates",
-        "99.9% uptime",
-        "24/7 support"
-      ],
-      image: "services\network installation.jpg"
-    },
-    {
-      title: "Database Solutions",
-      icon: <FiDatabase className="w-6 h-6" />,
-      description: "Custom database systems for your business",
-      features: [
-        "Inventory systems",
-        "Client management",
-        "School systems",
-        "Data migration",
-        "API integration"
-      ],
-      image: "/database.jpg"
-    }
-  ];
-
+ 
   const hardwareServices = [
     {
       title: "ICT Equipment Sales",
@@ -141,6 +100,49 @@ export default function Home() {
       image: "/networking.jpg"
     }
   ];
+
+   const coreServices = [
+    {
+      title: "Web Development",
+      icon: <FiGlobe className="w-6 h-6" />,
+      description: "Responsive, modern websites that convert visitors to customers",
+      features: [
+        "Custom website design",
+        "E-commerce solutions",
+        "CMS integration",
+        "SEO optimization",
+        "Mobile-responsive"
+      ],
+      image: "/assets/images/services/web design.jpg"
+    },
+    {
+      title: "Domain & Hosting",
+      icon: <FiServer className="w-6 h-6" />,
+      description: "Complete online presence solutions",
+      features: [
+        ".com, .co.ke, .org domains",
+        "Email hosting",
+        "SSL certificates",
+        "99.9% uptime",
+        "24/7 support"
+      ],
+      image: "services\network installation.jpg"
+    },
+    {
+      title: "Database Solutions",
+      icon: <FiDatabase className="w-6 h-6" />,
+      description: "Custom database systems for your business",
+      features: [
+        "Inventory systems",
+        "Client management",
+        "School systems",
+        "Data migration",
+        "API integration"
+      ],
+      image: "/database.jpg"
+    }
+  ];
+
 
   const securityServices = [
     {
@@ -291,39 +293,7 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Software Services */}
-          <div className="mb-20">
-            <h3 className="text-2xl font-bold mb-8 text-white">
-              Software & Digital Solutions
-            </h3>
-            <div className="grid md:grid-cols-3 gap-8">
-              {coreServices.map((service, index) => (
-                <motion.div
-                  key={index}
-                  whileHover={{ y: -10 }}
-                  className="bg-gray-800 rounded-xl overflow-hidden border border-gray-700 hover:border-green-500 transition-all"
-                >
-                  <div className="p-8">
-                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-green-500 to-blue-500 flex items-center justify-center mb-6">
-                      {service.icon}
-                    </div>
-                    <h4 className="text-xl font-bold text-white mb-4">{service.title}</h4>
-                    <p className="text-gray-300 mb-6">{service.description}</p>
-                    <ul className="space-y-3">
-                      {service.features.map((feature, i) => (
-                        <li key={i} className="flex items-start">
-                          <svg className="w-5 h-5 text-green-400 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                          </svg>
-                          <span className="text-gray-300">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
+         
 
           {/* Hardware Services */}
           <div className="mb-20">
@@ -347,6 +317,40 @@ export default function Home() {
                       {service.features.map((feature, i) => (
                         <li key={i} className="flex items-start">
                           <svg className="w-5 h-5 text-blue-400 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                          </svg>
+                          <span className="text-gray-300">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+           {/* Software Services */}
+          <div className="mb-20">
+            <h3 className="text-2xl font-bold mb-8 text-white">
+              Software & Digital Solutions
+            </h3>
+            <div className="grid md:grid-cols-3 gap-8">
+              {coreServices.map((service, index) => (
+                <motion.div
+                  key={index}
+                  whileHover={{ y: -10 }}
+                  className="bg-gray-800 rounded-xl overflow-hidden border border-gray-700 hover:border-green-500 transition-all"
+                >
+                  <div className="p-8">
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-green-500 to-blue-500 flex items-center justify-center mb-6">
+                      {service.icon}
+                    </div>
+                    <h4 className="text-xl font-bold text-white mb-4">{service.title}</h4>
+                    <p className="text-gray-300 mb-6">{service.description}</p>
+                    <ul className="space-y-3">
+                      {service.features.map((feature, i) => (
+                        <li key={i} className="flex items-start">
+                          <svg className="w-5 h-5 text-green-400 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                           </svg>
                           <span className="text-gray-300">{feature}</span>
