@@ -15,6 +15,7 @@ import {
   FiArrowRight
 } from "react-icons/fi";
 import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram, FaWhatsapp } from "react-icons/fa";
+import emailjs from '@emailjs/browser';
 
 export default function Contact() {
   // Techy gradient colors
@@ -38,12 +39,20 @@ export default function Contact() {
     setIsSubmitting(true);
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // EmailJS configuration
+      await emailjs.sendForm(
+        'service_your_service_id', // Replace with your EmailJS service ID
+        'template_your_template_id', // Replace with your EmailJS template ID
+        formRef.current,
+        'your_user_id' // Replace with your EmailJS user ID
+      );
+      
       setSubmitStatus("success");
+      setFormData({ name: "", email: "", message: "", subject: "" });
       formRef.current.reset();
       setTimeout(() => setSubmitStatus(null), 5000);
     } catch (error) {
+      console.error('Error sending email:', error);
       setSubmitStatus("error");
       setTimeout(() => setSubmitStatus(null), 5000);
     } finally {
@@ -54,8 +63,6 @@ export default function Contact() {
   const toggleFAQ = (index) => {
     setActiveFAQ(activeFAQ === index ? null : index);
   };
-
-
 
   const faqs = [
     {
@@ -222,7 +229,7 @@ export default function Contact() {
                       <div className="ml-4">
                         <h3 className="text-xl font-bold text-white">Call Us</h3>
                         <p className="text-gray-300 mt-1">+254 733 681 921</p>
-                          <p className="text-gray-300 mt-1">+254 704 970 535</p>
+                        <p className="text-gray-300 mt-1">+254 704 970 535</p>
                         <a 
                           href="tel:+254733681921" 
                           className="inline-block mt-3 text-sm font-medium hover:underline text-blue-400"
@@ -280,9 +287,6 @@ export default function Contact() {
                         <span className="font-medium">8:00 AM - 5:00 PM</span>
                       </li>
                       <li className="flex justify-between">
-                    
-                      </li>
-                      <li className="flex justify-between">
                         <span>Sunday</span>
                         <span className="font-medium">Closed</span>
                       </li>
@@ -313,6 +317,7 @@ export default function Contact() {
                       id="name"
                       name="name"
                       required
+                      value={formData.name}
                       className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:outline-none transition-all focus:border-cyan-400 focus:ring-cyan-400/30"
                       placeholder="Your full name"
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -326,6 +331,7 @@ export default function Contact() {
                       id="email"
                       name="email"
                       required
+                      value={formData.email}
                       className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:outline-none transition-all focus:border-cyan-400 focus:ring-cyan-400/30"
                       placeholder="your.email@example.com"
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -337,6 +343,7 @@ export default function Contact() {
                     <select
                       id="subject"
                       name="subject"
+                      value={formData.subject}
                       className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:outline-none transition-all focus:border-cyan-400 focus:ring-cyan-400/30"
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                     >
@@ -355,6 +362,7 @@ export default function Contact() {
                       name="message"
                       rows="5"
                       required
+                      value={formData.message}
                       className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:outline-none transition-all focus:border-cyan-400 focus:ring-cyan-400/30"
                       placeholder="How can we help you?"
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
@@ -393,8 +401,6 @@ export default function Contact() {
           </div>
         </div>
       </section>
-
-     
 
       {/* FAQ Section */}
       <section className="relative py-28 px-4 sm:px-6 lg:px-8 bg-gray-900/50 backdrop-blur-sm">
@@ -497,7 +503,7 @@ export default function Contact() {
                   <p className="text-gray-300">Busia Town, Kenya</p>
                 </div>
                 <motion.a
-                  href="https://maps.google.com?q=ADIT+Investment+Limited,Busia+Town"
+                  href="https://maps.app.goo.gl/XnqS6nW3ja3Fi3iM7"
                   target="_blank"
                   rel="noopener noreferrer"
                   whileHover={{ scale: 1.05 }}

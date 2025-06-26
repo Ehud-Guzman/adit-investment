@@ -193,42 +193,148 @@ export default function Home() {
     : galleryItems.filter(item => item.category === activeFilter);
 
   return (
-    <div className="relative bg-gray-900">
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <motion.div 
-            className="text-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+   <div className="relative bg-gray-900 overflow-hidden">
+  {/* Floating background elements */}
+  <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    {[...Array(15)].map((_, i) => (
+      <motion.div
+        key={i}
+        className="absolute rounded-full bg-gradient-to-r from-green-500/10 to-blue-500/10"
+        initial={{
+          x: Math.random() * 100,
+          y: Math.random() * 100,
+          width: Math.random() * 8 + 4,
+          height: Math.random() * 8 + 4,
+          opacity: Math.random() * 0.2 + 0.1
+        }}
+        animate={{
+          y: [0, Math.random() * 40 - 20],
+          x: [0, Math.random() * 40 - 20],
+          transition: {
+            duration: Math.random() * 15 + 10,
+            repeat: Infinity,
+            repeatType: 'reverse',
+            ease: "easeInOut"
+          }
+        }}
+      />
+    ))}
+  </div>
+
+  {/* Gradient spheres */}
+  <motion.div 
+    className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-gradient-to-r from-green-500/20 to-blue-500/20 filter blur-3xl opacity-10"
+    animate={{
+      y: [0, 40, 0],
+      x: [0, 20, 0],
+    }}
+    transition={{
+      duration: 15,
+      repeat: Infinity,
+      repeatType: 'reverse',
+      ease: "easeInOut"
+    }}
+  />
+  <motion.div 
+    className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 filter blur-3xl opacity-10"
+    animate={{
+      y: [0, -30, 0],
+      x: [0, -20, 0],
+    }}
+    transition={{
+      duration: 20,
+      delay: 5,
+      repeat: Infinity,
+      repeatType: 'reverse',
+      ease: "easeInOut"
+    }}
+  />
+
+  {/* Hero Section */}
+  <section className="relative pt-32 pb-28 px-4 sm:px-6 lg:px-8 min-h-[80vh] flex items-center">
+    {/* Subtle grid background */}
+    <div className="absolute inset-0 opacity-5">
+      <div className="absolute inset-0 bg-[url('/grid-pattern.svg')]"></div>
+    </div>
+    
+    <div className="max-w-7xl mx-auto relative z-10">
+      <motion.div 
+        className="text-center"
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        {/* Animated badge */}
+        <motion.div
+          className="inline-flex items-center mb-6 px-4 py-2 rounded-full bg-gray-800/50 border border-gray-700 backdrop-blur-sm"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
+          <span className="text-green-400 font-medium tracking-wider">YOUR TRUSTED ICT PARTNER</span>
+        </motion.div>
+
+        <motion.h1
+          className="text-5xl md:text-7xl font-bold mb-6 text-white leading-tight"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.3 }}
+        >
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-400">
+            Next-Gen ICT Solutions
+          </span>
+          <br />
+          <span className="text-3xl md:text-4xl font-medium text-gray-300">For The Digital Future</span>
+        </motion.h1>
+
+        <motion.p
+          className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-10 leading-relaxed"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5, duration: 0.8 }}
+        >
+          Empowering businesses across Kenya and East Africa with enterprise-grade technology solutions and unparalleled support.
+        </motion.p>
+
+        <motion.div
+          className="flex flex-col sm:flex-row justify-center gap-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7, duration: 0.8 }}
+        >
+          <motion.a
+            href="tel:+254733681921"
+            whileHover={{ 
+              y: -5, 
+              boxShadow: "0 10px 25px -5px rgba(0, 122, 61, 0.3)",
+              background: "linear-gradient(135deg, #007A3D 0%, #0056B3 100%)"
+            }}
+            whileTap={{ scale: 0.95 }}
+            className="px-8 py-4 rounded-xl font-bold bg-gradient-to-r from-green-600 to-blue-600 text-white shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-3"
           >
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">
-              Innovative ICT Solutions
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto mb-10">
-              Empowering businesses in Kenya and East Africa with cutting-edge technology services tailored to your needs
-            </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-           
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 rounded-lg font-bold border-2 border-white border-opacity-30 hover:border-opacity-60 text-white transition-all"
-              >
-                Call: +254 733 681 921
-              </motion.button>
-                <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 rounded-lg font-bold border-2 border-white border-opacity-30 hover:border-opacity-60 text-blue-500 transition-all"
-              >
-                Call: +254 704 970 535
-              </motion.button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+            <FiPhone className="w-5 h-5" />
+            Call: +254 733 681 921
+          </motion.a>
+          
+          <motion.a
+            href="tel:+254704970535"
+            whileHover={{ 
+              y: -5,
+              backgroundColor: "rgba(255, 255, 255, 0.1)"
+            }}
+            whileTap={{ scale: 0.95 }}
+            className="px-8 py-4 rounded-xl font-bold border-2 border-white border-opacity-30 hover:border-opacity-100 text-white transition-all flex items-center justify-center gap-3"
+          >
+            <FiPhone className="w-5 h-5" />
+            Call: +254 704 970 535
+          </motion.a>
+        </motion.div>
+      </motion.div>
+
+     
+    </div>
+  </section>
+
 
       {/* About Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-900">
