@@ -218,6 +218,13 @@ export default function Home() {
               >
                 Call: +254 733 681 921
               </motion.button>
+                <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-8 py-4 rounded-lg font-bold border-2 border-white border-opacity-30 hover:border-opacity-60 text-blue-500 transition-all"
+              >
+                Call: +254 704 970 535
+              </motion.button>
             </div>
           </motion.div>
         </div>
@@ -476,18 +483,12 @@ export default function Home() {
             Contact us today for a free consultation and discover the perfect ICT solutions for your needs.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
+     
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 rounded-lg font-bold text-white shadow-lg"
-              style={{ background: colors.gradient }}
-            >
-              Request Consultation
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 rounded-lg font-bold border-2 border-white border-opacity-30 hover:border-opacity-60 text-white transition-all"
+             className="px-8 py-4 rounded-lg font-bold border-2 border-white border-opacity-30 hover:border-opacity-60 bg-gradient-to-r from-green-400 to-orange-500 text-transparent bg-clip-text transition-all"
+
             >
               Email: adit.investmentlimited@gmail.com
             </motion.button>

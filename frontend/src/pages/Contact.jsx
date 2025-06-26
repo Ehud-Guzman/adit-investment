@@ -60,7 +60,7 @@ export default function Contact() {
   const faqs = [
     {
       question: "What are your business hours?",
-      answer: "Our team is available Monday to Friday from 8:00 AM to 5:00 PM EAT. We're closed on weekends and public holidays."
+      answer: "Our team is available Monday to Friday from 8:00 AM to 7:00 PM EAT. We're closed on Sundays and major public holidays."
     },
     {
       question: "How quickly can I expect a response?",
@@ -68,11 +68,11 @@ export default function Contact() {
     },
     {
       question: "Do you offer on-site consultations?",
-      answer: "Yes, we provide on-site consultations for businesses in Nairobi and surrounding areas. Remote consultations are available for other locations."
+      answer: "Yes, we provide on-site consultations for businesses in Busia and surrounding areas. Remote consultations are available for other locations."
     },
     {
       question: "What payment methods do you accept?",
-      answer: "We accept all major credit cards, M-Pesa, bank transfers, and cheques. International clients can pay via wire transfer."
+      answer: "We accept all major credit cards, M-Pesa, bank transfers, and cheques. Payment details will be provided upon project agreement."
     }
   ];
 
@@ -222,6 +222,7 @@ export default function Contact() {
                       <div className="ml-4">
                         <h3 className="text-xl font-bold text-white">Call Us</h3>
                         <p className="text-gray-300 mt-1">+254 733 681 921</p>
+                          <p className="text-gray-300 mt-1">+254 704 970 535</p>
                         <a 
                           href="tel:+254733681921" 
                           className="inline-block mt-3 text-sm font-medium hover:underline text-blue-400"
@@ -275,12 +276,11 @@ export default function Contact() {
                     <h3 className="text-xl font-bold text-white mb-2">Business Hours</h3>
                     <ul className="space-y-2 text-gray-300">
                       <li className="flex justify-between">
-                        <span>Monday - Friday</span>
+                        <span>Monday - Saturday</span>
                         <span className="font-medium">8:00 AM - 5:00 PM</span>
                       </li>
                       <li className="flex justify-between">
-                        <span>Saturday</span>
-                        <span className="font-medium">Closed</span>
+                    
                       </li>
                       <li className="flex justify-between">
                         <span>Sunday</span>
