@@ -39,7 +39,10 @@ export const deleteProduct = (id) =>
   api.delete(`/products/${id}`).then(res => res.data);
 
 // ======== 🛒 CART ===========
-export const getCart = () => api.get('/cart').then(res => res.data);
+// ======== 🛒 CART ===========
+export const getCart = () => {
+  return api.get('/cart').then(res => res.data);
+};
 
 export const addToCart = (item) =>
   api.post('/cart', stripMongoMeta(item)).then(res => res.data);

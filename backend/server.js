@@ -3,7 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { MongoClient, ObjectId } from 'mongodb';
-import { upload } from './cloudinary.js'; // Adjust path as needed
+import { upload } from './cloudinary.js'; // Adjust path if needed
 
 dotenv.config();
 const app = express();
@@ -150,10 +150,12 @@ app.post('/api/users', async (req, res) => {
   }
 });
 
-// ===== CART =====
+// ===== CART (Improved) =====
 app.get('/api/cart', async (req, res) => {
   try {
-    const data = await cart.find().toArray();
+    const { userId } = req.query;
+    const filter = userId ? { userId } : {};
+    const data = await cart.find(filter).toArray();
     res.json(data);
   } catch (err) {
     res.status(500).json({ message: '❌ Failed to fetch cart', error: err.message });
@@ -162,8 +164,22 @@ app.get('/api/cart', async (req, res) => {
 
 app.post('/api/cart', async (req, res) => {
   try {
-    const result = await cart.insertOne(req.body);
-    res.status(201).json(result);
+    const { userId, productId, quantity = 1 } = req.body;
+    if (!userId || !productId) {
+      return res.status(400).json({ message: '⚠️ Missing required fields' });
+    }
+
+    const existingItem = await cart.findOne({ userId, productId });
+    if (existingItem) {
+      const updated = await cart.updateOne(
+        { _id: existingItem._id },
+        { $inc: { quantity } }
+      );
+      return res.json({ message: '🛒 Cart updated', updated });
+    }
+
+    const result = await cart.insertOne({ userId, productId, quantity, addedAt: new Date() });
+    res.status(201).json({ message: '🛒 Added to cart', result });
   } catch (err) {
     res.status(500).json({ message: '❌ Failed to add to cart', error: err.message });
   }

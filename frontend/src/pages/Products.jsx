@@ -205,6 +205,7 @@ export default function Products() {
     staleTime: 1000 * 60 * 5,
     onError: () => toast.error('Failed to load products. Please try again later.'),
   });
+  
 
   const { data: cart = [], isLoading: cartLoading } = useQuery({
     queryKey: ['cart'],
