@@ -290,10 +290,10 @@ export default function Footer() {
               >
                 <FiMail className="text-cyan-400" />
                 <a
-                  href="mailto:info@aditinvestment.com"
+                  href="mailto:adit.investmentlimited@gmail.comitinvestment.com"
                   className="hover:text-cyan-300 transition-colors"
                 >
-                  info@aditinvestment.com
+                  adit.investmentlimited@gmail.comitinvestment.com
                 </a>
               </motion.li>
               <motion.li
