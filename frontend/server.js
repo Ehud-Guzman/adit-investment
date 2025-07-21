@@ -13,11 +13,12 @@ const app = express();
 
 // CORS Configuration
 app.use(cors({
-  origin: ["http://localhost:5173", "https://adit-investment.onrender.com"],
+  origin: ["http://localhost:5173", "https://adit-investment.netlify.app"],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,
+  credentials: true, // IMPORTANT: This allows cookies to be sent!
 }));
+
 
 // Serve static frontend assets
 app.use(express.static(join(__dirname, 'dist')));

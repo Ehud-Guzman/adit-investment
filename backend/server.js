@@ -74,22 +74,34 @@ app.use((req, _res, next) => {
 });
 
 // 🌐 CORS Configuration
-const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(",") || [
+const allowedOrigins = [
   "http://localhost:5173",
   "https://adit-investment.netlify.app",
   "https://adit-investment-1.onrender.com",
 ];
 
+// CORS setup with clear logging
 app.use(
   cors({
     origin: (origin, cb) => {
-      if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
-      cb(new Error("CORS not allowed for origin: " + origin));
+      if (!origin) {
+        // 🧪 Allow tools like Postman or curl (no origin)
+        return cb(null, true);
+      }
+
+      if (allowedOrigins.includes(origin)) {
+        return cb(null, true);
+      }
+
+      console.warn("⛔️ Blocked CORS origin:", origin);
+      return cb(new Error("CORS not allowed from " + origin));
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
 
 // 🛡️ Rate Limiting & Throttling
 const limiter = rateLimit({
