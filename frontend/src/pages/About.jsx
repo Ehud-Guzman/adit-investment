@@ -8,7 +8,8 @@ import AboutCTA from '@/components/About/AboutCTA';
 
 export default function About() {
   return (
-    <div className="relative bg-gray-900 overflow-hidden">
+    <div className="relative min-h-screen bg-gray-900 overflow-hidden flex flex-col">
+
       <AboutHero />
       <AboutStory />
       <AboutMissionVision />

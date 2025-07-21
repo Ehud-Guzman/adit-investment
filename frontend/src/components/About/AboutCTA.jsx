@@ -11,7 +11,8 @@ import {
 
 export default function AboutCTA() {
   return (
-    <section className="relative py-28 px-4 sm:px-6 lg:px-8 bg-white text-gray-900 overflow-hidden border-t border-gray-200">
+    <section className="w-full relative py-28 px-4 sm:px-6 lg:px-8 bg-white text-gray-900 border-t border-gray-200">
+
       {/* Decorative BG pattern (optional) */}
       <div className="absolute inset-0 pointer-events-none opacity-5">
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')]" />
