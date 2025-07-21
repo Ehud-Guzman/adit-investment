@@ -109,3 +109,9 @@ body {
 .animate-pulse-scale {
   animation: pulse-scale 2s infinite;
 }
+@media (max-width: 640px) {
+  section {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}

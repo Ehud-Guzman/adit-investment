@@ -29,7 +29,7 @@ const values = [
 
 export default function AboutValues() {
   return (
-    <section className="relative py-20 sm:py-24 px-4 md:px-8 lg:px-16 xl:px-20 bg-white text-gray-900 border-t border-gray-100">
+    <section className="relative py-20 sm:py-24 px-0 md:px-8 lg:px-16 xl:px-20 bg-white text-gray-900 border-t border-gray-100">
       {/* BG Grid Pattern */}
       <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5 pointer-events-none z-0" />
 

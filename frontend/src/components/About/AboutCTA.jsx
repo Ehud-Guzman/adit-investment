@@ -10,7 +10,7 @@ import {
 
 export default function AboutCTA() {
   return (
-    <section className="w-full relative py-24 sm:py-28 px-4 md:px-8 lg:px-16 xl:px-20 bg-white text-gray-900 border-t border-gray-200">
+    <section className="w-full relative py-24 sm:py-28 px-0 md:px-8 lg:px-16 xl:px-20 bg-white text-gray-900 border-t border-gray-200">
       {/* Background pattern */}
       <div className="absolute inset-0 pointer-events-none opacity-5">
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')]" />

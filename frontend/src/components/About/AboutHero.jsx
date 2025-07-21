@@ -3,7 +3,7 @@ import { FiArrowRight } from "react-icons/fi";
 
 export default function AboutHero() {
   return (
-    <section className="relative py-20 sm:py-24 px-4 md:px-8 lg:px-16 xl:px-20 bg-white text-gray-900 overflow-hidden border-b border-gray-100">
+    <section className="relative py-20 sm:py-24 px-0 md:px-8 lg:px-16 xl:px-20 bg-white text-gray-900 overflow-hidden border-b border-gray-100">
       <div className="max-w-5xl mx-auto text-center relative z-10">
         <motion.h1
           initial={{ opacity: 0, y: 20 }}

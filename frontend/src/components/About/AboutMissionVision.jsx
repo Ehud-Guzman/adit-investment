@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 export default function AboutMissionVision() {
   return (
-    <section className="relative py-20 sm:py-24 lg:py-28 px-4 md:px-8 lg:px-16 xl:px-20 bg-white text-gray-900 border-y border-gray-100">
+    <section className="relative py-20 sm:py-24 lg:py-28 px-0 md:px-8 lg:px-16 xl:px-20 bg-white text-gray-900 border-y border-gray-100">
       {/* Background pattern */}
       <div className="absolute inset-0 bg-[url('/circuit-pattern.svg')] bg-repeat opacity-5 pointer-events-none z-0" />
 

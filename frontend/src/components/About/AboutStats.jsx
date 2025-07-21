@@ -10,7 +10,7 @@ const stats = [
 
 export default function AboutStats() {
   return (
-    <section className="relative py-20 sm:py-24 px-4 md:px-8 lg:px-16 xl:px-20 bg-white text-gray-900 border-y border-gray-100">
+    <section className="relative py-20 sm:py-24 px-0 md:px-8 lg:px-16 xl:px-20 bg-white text-gray-900 border-y border-gray-100">
       <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5 pointer-events-none z-0" />
 
       <div className="max-w-7xl mx-auto relative z-10">
