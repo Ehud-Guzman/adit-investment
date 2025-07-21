@@ -1,11 +1,11 @@
-import ContactHero from "@/componentsContactContactHero";
-import ContactInfoCards from "@/componentsContactContactInfoCards";
-import BusinessHoursCard from "@/componentsContact/BusinessHoursCard";
-import ContactForm from "@/componentsContactContactForm";
-import { showContactToast } from "@/componentsContactContactToast";
-import FAQAccordion from "@/componentsContact/FAQAccordion";
-import MapSection from "@/componentsContact/MapSection";
-import ContactCTA from "@/componentsContactContactCTA";
+import ContactHero from "@/components/Contact/ContactHero";
+import ContactInfoCards from "@/components/Contact/ContactInfoCards";
+import BusinessHoursCard from "@/components/Contact/BusinessHoursCard";
+import ContactForm from "@/components/Contact/ContactForm";
+import { showContactToast } from "@/components/Contact/ContactToast";
+import FAQAccordion from "@/components/Contact/FAQAccordion";
+import MapSection from "@/components/Contact/MapSection";
+import ContactCTA from "@/components/Contact/ContactCTA";
 
 const Contact = () => {
   const handleSubmit = async (formData) => {
