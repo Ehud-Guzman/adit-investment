@@ -1,0 +1,81 @@
+import { motion } from "framer-motion";
+import { FiArrowRight } from "react-icons/fi";
+
+export default function AboutStory() {
+  return (
+    <section
+      id="story"
+      className="relative py-24 px-6 sm:px-10 lg:px-20 bg-white text-gray-900 border-y border-gray-100"
+    >
+      {/* Subtle background pattern */}
+      <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5 pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center relative z-10">
+        {/* 📝 Text Block */}
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
+          <div className="flex items-center mb-4">
+            <div className="w-10 h-1 bg-gradient-to-r from-cyan-500 to-blue-500 mr-3 rounded-full" />
+            <span className="text-cyan-600 font-semibold uppercase tracking-wide text-sm">Our Journey</span>
+          </div>
+
+          <h2 className="text-3xl md:text-4xl font-extrabold leading-snug mb-5">
+            From Small Start to{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-500">
+              Regional Tech Influence
+            </span>
+          </h2>
+
+          <p className="text-gray-600 text-base md:text-lg mb-4">
+            Founded in Busia, Kenya, ADIT began with a simple goal — empower local businesses through digital tools.
+            With every project, we grew stronger and bolder.
+          </p>
+
+          <p className="text-gray-600 text-base md:text-lg mb-6">
+            Today, we deliver advanced tech to clients across sectors — secure networks, smart hardware, and powerful custom software.
+            Innovation isn't just what we do. It's who we are.
+          </p>
+
+          {/* Optional CTA */}
+          <a
+            href="#team"
+            className="inline-flex items-center gap-2 text-primary hover:underline font-medium text-sm"
+          >
+            Meet the Team <FiArrowRight className="mt-[1px]" />
+          </a>
+        </motion.div>
+
+        {/* 🖼️ Image Block */}
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="relative"
+        >
+          <div className="relative aspect-video rounded-3xl overflow-hidden shadow-xl group border border-gray-200">
+            <img
+              src="/office-team.jpg"
+              alt="ADIT Investment Team"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-10" />
+            <div className="absolute bottom-0 left-0 p-5 z-20">
+              <h3 className="text-white text-lg font-semibold">Our Busia HQ</h3>
+              <p className="text-gray-200 text-sm">Where strategy meets execution</p>
+            </div>
+          </div>
+
+          {/* 🧑‍💼 Floating Founder Avatar */}
+          <div className="absolute -bottom-8 -left-8 w-28 h-28 md:w-32 md:h-32 rounded-2xl overflow-hidden border-4 border-white shadow-lg z-30">
+            <img src="/founder.jpg" alt="Founder" className="w-full h-full object-cover" />
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}

@@ -91,7 +91,7 @@ export default function Hero() {
             <span 
               className="bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent"
               style={{ 
-                backgroundImage: `linear-gradient(135deg, ${colors.primary} 0%, #00C853 100%)`
+                backgroundImage: `linear-gradient(135deg, ${colors.primary} 10%, #00C853 100%)`
               }}
             >
               & Digital Solutions

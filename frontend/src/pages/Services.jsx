@@ -92,22 +92,22 @@ const services = [
 const testimonials = [
   {
     id: 1,
-    name: "James Mwangi",
-    position: "CEO, Nairobi Enterprises",
+    name: "James ",
+    position: "CEO, Itoya Hotel",
     content: "ADIT transformed our entire network infrastructure. Their team was professional and delivered ahead of schedule.",
     rating: 5
   },
   {
     id: 2,
     name: "Sarah Kiptoo",
-    position: "IT Manager, Coastal Hotels",
+    position: "IT Manager, GlimmerWave Hotels",
     content: "The security systems they installed have given us peace of mind. Excellent after-sales support too.",
     rating: 5
   },
   {
     id: 3,
     name: "David Omondi",
-    position: "Operations Director, Mombasa Logistics",
+    position: "Operations Director, Kisumu Logistics",
     content: "Their computer repair team saved us from losing critical data. Highly recommended for any business.",
     rating: 4
   }
@@ -121,16 +121,10 @@ const partners = [
   { id: 5, name: "Hikvision", logo: "/assets/images/services/Hikvision-Logo.png" },
   { id: 6, name: "Dahua", logo: "/assets/images/services/dahua logo.jpg" },
   { id: 7, name: "Kyocera", logo: "/assets/images/services/kyocera.svg" },
-  { id: 7, name: "Epson", logo: "/assets/images/services/epson-logo.png" },
+  { id: 8, name: "Epson", logo: "/assets/images/services/epson-logo.png" },
 ];
 
 export default function ServicesPage() {
-  const colors = {
-    primary: "#007A3D",
-    secondary: "#0056B3",
-    gradient: "linear-gradient(135deg, #007A3D 0%, #0056B3 100%)",
-  };
-
   const [activeServiceTab, setActiveServiceTab] = useState("all");
   const [expandedService, setExpandedService] = useState(null);
 
@@ -145,9 +139,9 @@ export default function ServicesPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* === HERO SECTION === */}
-      <section className="relative py-28 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      <section className="relative py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div className="absolute inset-0 overflow-hidden opacity-20">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-green-400/20 via-blue-500/10 to-transparent animate-pulse"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-400/20 via-purple-500/10 to-transparent animate-pulse"></div>
         </div>
 
         <div className="max-w-7xl mx-auto relative z-10">
@@ -161,8 +155,7 @@ export default function ServicesPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.8 }}
-              className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent"
-              style={{ backgroundImage: colors.gradient }}
+              className="text-3xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-600"
             >
               Comprehensive ICT Solutions
             </motion.h1>
@@ -170,9 +163,9 @@ export default function ServicesPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.8 }}
-              className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto"
+              className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto"
             >
-              Cutting-edge technology services designed to propel your business forward in the digital age.
+              Cutting-edge technology services to propel your business forward
             </motion.p>
           </motion.div>
         </div>
@@ -188,9 +181,9 @@ export default function ServicesPage() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl font-bold mb-4 text-gray-900">Our ICT Services</h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              We offer end-to-end technology solutions tailored for businesses of all sizes
+            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-gray-900">Our Services</h2>
+            <p className="text-gray-600 max-w-3xl mx-auto">
+              End-to-end technology solutions for businesses of all sizes
             </p>
           </motion.div>
 
@@ -204,7 +197,7 @@ export default function ServicesPage() {
                 onClick={() => setActiveServiceTab(tab)}
                 className={`px-6 py-2 rounded-full font-medium capitalize ${
                   activeServiceTab === tab
-                    ? "bg-gradient-to-r from-green-500 to-blue-500 text-white"
+                    ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >
@@ -224,7 +217,7 @@ export default function ServicesPage() {
                 transition={{ duration: 0.4 }}
                 viewport={{ once: true }}
                 className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all border border-gray-100 ${
-                  expandedService === service.id ? "ring-2 ring-green-500" : ""
+                  expandedService === service.id ? "ring-2 ring-blue-600" : ""
                 }`}
               >
                 <div className="h-48 overflow-hidden relative">
@@ -233,10 +226,10 @@ export default function ServicesPage() {
                     alt={service.title}
                     className="w-full h-full object-cover transition-transform duration-500 hover:scale-100"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900/70 to-transparent"></div>
                   <div className="absolute bottom-4 left-4 right-4">
                     <div className="flex items-center">
-                      <div className="p-2 rounded-lg bg-white text-green-600">
+                      <div className="p-2 rounded-lg bg-white text-blue-600">
                         {service.icon}
                       </div>
                       <h3 className="ml-3 text-xl font-bold text-white">{service.title}</h3>
@@ -257,7 +250,7 @@ export default function ServicesPage() {
                       <ul className="space-y-2">
                         {service.features.map((feature, index) => (
                           <li key={index} className="flex items-start">
-                            <FiCheck className="text-green-500 mt-1 mr-2 flex-shrink-0" />
+                            <FiCheck className="text-blue-600 mt-1 mr-2 flex-shrink-0" />
                             <span className="text-gray-600">{feature}</span>
                           </li>
                         ))}
@@ -267,7 +260,7 @@ export default function ServicesPage() {
                   
                   <button 
                     onClick={() => toggleServiceExpand(service.id)}
-                    className="flex items-center text-green-600 font-medium group"
+                    className="flex items-center text-blue-600 font-medium group"
                   >
                     {expandedService === service.id ? "Show less" : "Learn more"} 
                     <FiArrowRight className={`ml-2 transition-transform ${expandedService === service.id ? 'rotate-90' : 'group-hover:translate-x-1'}`} />
@@ -280,7 +273,7 @@ export default function ServicesPage() {
       </section>
 
       {/* === SERVICE PROCESS === */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-gray-50 to-gray-100">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-gray-50 to-gray-100">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -289,9 +282,9 @@ export default function ServicesPage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl font-bold mb-4 text-gray-900">Our Service Process</h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              A streamlined approach to delivering exceptional ICT solutions
+            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-gray-900">Our Process</h2>
+            <p className="text-gray-600 max-w-3xl mx-auto">
+              Streamlined approach to delivering exceptional solutions
             </p>
           </motion.div>
 
@@ -304,12 +297,12 @@ export default function ServicesPage() {
               viewport={{ once: true }}
               className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all"
             >
-              <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center text-green-600 text-2xl font-bold mb-4 mx-auto">
+              <div className="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 text-2xl font-bold mb-4 mx-auto">
                 1
               </div>
               <h3 className="text-xl font-semibold text-center mb-3">Consultation</h3>
               <p className="text-gray-600 text-center">
-                We listen to understand your specific business needs and challenges
+                Understand your business needs and challenges
               </p>
             </motion.div>
 
@@ -321,12 +314,12 @@ export default function ServicesPage() {
               viewport={{ once: true }}
               className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all"
             >
-              <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-2xl font-bold mb-4 mx-auto">
+              <div className="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 text-2xl font-bold mb-4 mx-auto">
                 2
               </div>
               <h3 className="text-xl font-semibold text-center mb-3">Solution Design</h3>
               <p className="text-gray-600 text-center">
-                Our experts create a customized technology plan for your business
+                Create customized technology plan
               </p>
             </motion.div>
 
@@ -338,12 +331,12 @@ export default function ServicesPage() {
               viewport={{ once: true }}
               className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all"
             >
-              <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center text-green-600 text-2xl font-bold mb-4 mx-auto">
+              <div className="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 text-2xl font-bold mb-4 mx-auto">
                 3
               </div>
               <h3 className="text-xl font-semibold text-center mb-3">Implementation</h3>
               <p className="text-gray-600 text-center">
-                Seamless deployment with minimal disruption to your operations
+                Seamless deployment with minimal disruption
               </p>
             </motion.div>
 
@@ -355,12 +348,12 @@ export default function ServicesPage() {
               viewport={{ once: true }}
               className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all"
             >
-              <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-2xl font-bold mb-4 mx-auto">
+              <div className="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 text-2xl font-bold mb-4 mx-auto">
                 4
               </div>
               <h3 className="text-xl font-semibold text-center mb-3">Support</h3>
               <p className="text-gray-600 text-center">
-                Ongoing maintenance and support to ensure optimal performance
+                Ongoing maintenance for optimal performance
               </p>
             </motion.div>
           </div>
@@ -368,7 +361,7 @@ export default function ServicesPage() {
       </section>
 
       {/* === INDUSTRY SOLUTIONS === */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -377,9 +370,9 @@ export default function ServicesPage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl font-bold mb-4 text-gray-900">Industry-Specific Solutions</h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Tailored technology packages for different business sectors
+            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-gray-900">Industry Solutions</h2>
+            <p className="text-gray-600 max-w-3xl mx-auto">
+              Tailored technology packages for different sectors
             </p>
           </motion.div>
 
@@ -387,7 +380,7 @@ export default function ServicesPage() {
             {/* Healthcare */}
             <motion.div
               whileHover={{ y: -10 }}
-              className="bg-gradient-to-br from-blue-50 to-green-50 rounded-2xl overflow-hidden shadow-lg border border-gray-200"
+              className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl overflow-hidden shadow-lg border border-gray-200"
             >
               <div className="p-8">
                 <div className="w-16 h-16 rounded-full bg-white shadow-md flex items-center justify-center text-blue-600 mb-6">
@@ -398,19 +391,19 @@ export default function ServicesPage() {
                 <h3 className="text-xl font-bold text-gray-900 mb-3">Healthcare</h3>
                 <ul className="space-y-3">
                   <li className="flex items-start">
-                    <FiCheck className="text-green-500 mt-1 mr-2 flex-shrink-0" />
-                    <span className="text-gray-700">HIPAA-compliant systems</span>
+                    <FiCheck className="text-blue-600 mt-1 mr-2 flex-shrink-0" />
+                    <span className="text-gray-700">Security Surveilance systems</span>
                   </li>
                   <li className="flex items-start">
-                    <FiCheck className="text-green-500 mt-1 mr-2 flex-shrink-0" />
+                    <FiCheck className="text-blue-600 mt-1 mr-2 flex-shrink-0" />
                     <span className="text-gray-700">Medical record management</span>
                   </li>
                   <li className="flex items-start">
-                    <FiCheck className="text-green-500 mt-1 mr-2 flex-shrink-0" />
+                    <FiCheck className="text-blue-600 mt-1 mr-2 flex-shrink-0" />
                     <span className="text-gray-700">Telemedicine solutions</span>
                   </li>
                   <li className="flex items-start">
-                    <FiCheck className="text-green-500 mt-1 mr-2 flex-shrink-0" />
+                    <FiCheck className="text-blue-600 mt-1 mr-2 flex-shrink-0" />
                     <span className="text-gray-700">Hospital network infrastructure</span>
                   </li>
                 </ul>
@@ -420,10 +413,10 @@ export default function ServicesPage() {
             {/* Education */}
             <motion.div
               whileHover={{ y: -10 }}
-              className="bg-gradient-to-br from-green-50 to-blue-50 rounded-2xl overflow-hidden shadow-lg border border-gray-200"
+              className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl overflow-hidden shadow-lg border border-gray-200"
             >
               <div className="p-8">
-                <div className="w-16 h-16 rounded-full bg-white shadow-md flex items-center justify-center text-green-600 mb-6">
+                <div className="w-16 h-16 rounded-full bg-white shadow-md flex items-center justify-center text-purple-600 mb-6">
                   <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                   </svg>
@@ -431,19 +424,19 @@ export default function ServicesPage() {
                 <h3 className="text-xl font-bold text-gray-900 mb-3">Education</h3>
                 <ul className="space-y-3">
                   <li className="flex items-start">
-                    <FiCheck className="text-green-500 mt-1 mr-2 flex-shrink-0" />
+                    <FiCheck className="text-purple-600 mt-1 mr-2 flex-shrink-0" />
                     <span className="text-gray-700">Computer lab setups</span>
                   </li>
                   <li className="flex items-start">
-                    <FiCheck className="text-green-500 mt-1 mr-2 flex-shrink-0" />
+                    <FiCheck className="text-purple-600 mt-1 mr-2 flex-shrink-0" />
                     <span className="text-gray-700">E-learning platforms</span>
                   </li>
                   <li className="flex items-start">
-                    <FiCheck className="text-green-500 mt-1 mr-2 flex-shrink-0" />
+                    <FiCheck className="text-purple-600 mt-1 mr-2 flex-shrink-0" />
                     <span className="text-gray-700">Campus-wide networking</span>
                   </li>
                   <li className="flex items-start">
-                    <FiCheck className="text-green-500 mt-1 mr-2 flex-shrink-0" />
+                    <FiCheck className="text-purple-600 mt-1 mr-2 flex-shrink-0" />
                     <span className="text-gray-700">Student information systems</span>
                   </li>
                 </ul>
@@ -453,10 +446,10 @@ export default function ServicesPage() {
             {/* Retail */}
             <motion.div
               whileHover={{ y: -10 }}
-              className="bg-gradient-to-br from-blue-50 to-green-50 rounded-2xl overflow-hidden shadow-lg border border-gray-200"
+              className="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl overflow-hidden shadow-lg border border-gray-200"
             >
               <div className="p-8">
-                <div className="w-16 h-16 rounded-full bg-white shadow-md flex items-center justify-center text-blue-600 mb-6">
+                <div className="w-16 h-16 rounded-full bg-white shadow-md flex items-center justify-center text-indigo-600 mb-6">
                   <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                   </svg>
@@ -464,19 +457,19 @@ export default function ServicesPage() {
                 <h3 className="text-xl font-bold text-gray-900 mb-3">Retail & Hospitality</h3>
                 <ul className="space-y-3">
                   <li className="flex items-start">
-                    <FiCheck className="text-green-500 mt-1 mr-2 flex-shrink-0" />
+                    <FiCheck className="text-indigo-600 mt-1 mr-2 flex-shrink-0" />
                     <span className="text-gray-700">POS systems</span>
                   </li>
                   <li className="flex items-start">
-                    <FiCheck className="text-green-500 mt-1 mr-2 flex-shrink-0" />
+                    <FiCheck className="text-indigo-600 mt-1 mr-2 flex-shrink-0" />
                     <span className="text-gray-700">Inventory management</span>
                   </li>
                   <li className="flex items-start">
-                    <FiCheck className="text-green-500 mt-1 mr-2 flex-shrink-0" />
+                    <FiCheck className="text-indigo-600 mt-1 mr-2 flex-shrink-0" />
                     <span className="text-gray-700">Customer WiFi solutions</span>
                   </li>
                   <li className="flex items-start">
-                    <FiCheck className="text-green-500 mt-1 mr-2 flex-shrink-0" />
+                    <FiCheck className="text-indigo-600 mt-1 mr-2 flex-shrink-0" />
                     <span className="text-gray-700">Digital signage</span>
                   </li>
                 </ul>
@@ -487,7 +480,7 @@ export default function ServicesPage() {
       </section>
 
       {/* === TESTIMONIALS === */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -496,8 +489,8 @@ export default function ServicesPage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl font-bold mb-4 text-gray-900">What Our Clients Say</h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-gray-900">Client Testimonials</h2>
+            <p className="text-gray-600 max-w-3xl mx-auto">
               Trusted by businesses across Kenya and East Africa
             </p>
           </motion.div>
@@ -526,7 +519,7 @@ export default function ServicesPage() {
                 </div>
                 <p className="text-gray-600 italic mb-6">"{testimonial.content}"</p>
                 <div className="flex items-center">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-green-500 to-blue-500 flex items-center justify-center text-white font-bold mr-4">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center text-white font-bold mr-4">
                     {testimonial.name.charAt(0)}
                   </div>
                   <div>
@@ -550,8 +543,8 @@ export default function ServicesPage() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl font-bold mb-4 text-gray-900">Our Technology Partners</h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-gray-900">Technology Partners</h2>
+            <p className="text-gray-600 max-w-3xl mx-auto">
               We work with leading brands to deliver premium solutions
             </p>
           </motion.div>
@@ -575,7 +568,7 @@ export default function ServicesPage() {
       </section>
 
       {/* === CTA SECTION === */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-green-600 to-blue-600 text-white">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
         <div className="max-w-7xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -583,15 +576,15 @@ export default function ServicesPage() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Transform Your Business?</h2>
-            <p className="text-xl mb-8 max-w-3xl mx-auto">
-              Let's discuss how our ICT solutions can drive your business forward.
+            <h2 className="text-2xl md:text-3xl font-bold mb-6">Transform Your Business Today</h2>
+            <p className="text-lg mb-8 max-w-3xl mx-auto">
+              Discover how our ICT solutions can drive your business forward
             </p>
             <motion.a
               href="/contact"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="inline-block px-8 py-4 bg-white text-green-600 font-bold rounded-lg shadow-lg hover:shadow-xl transition-all"
+              className="inline-block px-8 py-4 bg-white text-indigo-600 font-bold rounded-lg shadow-lg hover:shadow-xl transition-all"
             >
               Get in Touch
             </motion.a>

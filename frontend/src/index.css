@@ -2,70 +2,110 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 🌍 Global Font & Smoothing */
 body {
-  font-family: 'Inter', sans-serif;
+  @apply font-inter text-text bg-white antialiased;
+  scroll-behavior: smooth;
 }
-/* Modal Styling */
-.modal-content {
+
+/* 🌟 Text Selection */
+::selection {
+  background-color: #00A651;
+  color: white;
+}
+
+/* ✨ Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #00A651;
+  border-radius: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f0f0f0;
+}
+
+/* 🧩 Navbar Z-Stack */
+.navbar {
+  z-index: 50;
+}
+.auth-modal,
+.search-filters {
+  z-index: 60;
   position: relative;
 }
 
+/* 🖼️ Modals */
+.modal-content {
+  position: relative;
+}
 .modal-close {
   font-size: 1.5rem;
 }
 
-.thumbnail {
-  transition: border-color 0.3s;
-}
-
-.thumbnail.active {
-  border-color: #1e90ff;
-}
-
-/* Cart Sidebar */
+/* 🛒 Cart Sidebar */
 #cart-sidebar {
   overflow-y: auto;
 }
-
 .cart-close {
   font-size: 1.5rem;
 }
-
 .cart-items::-webkit-scrollbar {
   width: 8px;
 }
-
 .cart-items::-webkit-scrollbar-thumb {
   background-color: #888;
   border-radius: 4px;
 }
-
 .cart-items::-webkit-scrollbar-thumb:hover {
   background-color: #555;
 }
 
-/* Product Card Hover Effects */
+/* 📦 Product Card Hover Effects */
 .product-card {
-  position: relative;
+  @apply transition-all duration-300 ease-in-out relative;
 }
-
+.product-card img {
+  @apply transition-transform duration-300 ease-in-out;
+}
 .product-actions {
-  transition: opacity 0.3s;
+  @apply opacity-0 transition-opacity duration-300 absolute top-2 right-2;
 }
-
 .product-card:hover .product-actions {
   opacity: 1 !important;
 }
 
-/* Pagination */
-.pagination-btn:disabled {
-  cursor: not-allowed;
+/* 🔢 Pagination */
+.pagination-btn {
+  @apply px-3 py-2 rounded-md border text-sm font-medium transition-colors bg-white text-gray-700 border-gray-300 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed;
 }
-
 .page-btn {
-  transition: background-color 0.3s, color 0.3s;
+  @apply transition-colors;
 }
-
 .page-btn:hover {
   background-color: #e2e8f0;
+}
+
+/* 📌 Footer Brand Hover Pulse */
+.brand-glow:hover {
+  animation: pulse-scale 2s infinite;
+}
+
+/* 🧠 Custom Keyframes */
+@keyframes pulse-scale {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* 💫 Animation Utility */
+.animate-pulse-scale {
+  animation: pulse-scale 2s infinite;
 }
