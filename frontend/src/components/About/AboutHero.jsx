@@ -3,13 +3,13 @@ import { FiArrowRight } from "react-icons/fi";
 
 export default function AboutHero() {
   return (
-    <section className="relative py-20 sm:py-24 px-0 md:px-8 lg:px-16 xl:px-20 bg-white text-gray-900 overflow-hidden border-b border-gray-100">
-      <div className="max-w-5xl mx-auto text-center relative z-10">
+    <section className="relative py-16 sm:py-20 md:py-24 bg-white text-gray-900 border-b border-gray-100">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-2xl sm:text-4xl md:text-5xl font-bold mb-4 leading-tight"
+          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight"
         >
           Driving{" "}
           <span className="text-primary">Tech Innovation</span> in East Africa
@@ -32,13 +32,13 @@ export default function AboutHero() {
         >
           <a
             href="#story"
-            className="px-6 py-3 rounded-md bg-primary text-white font-semibold shadow-md hover:bg-primary/90 transition-all"
+            className="px-5 py-2.5 sm:px-6 sm:py-3 rounded-md bg-primary text-white font-semibold shadow-md hover:bg-primary/90 transition-all text-sm sm:text-base"
           >
             Our Story
           </a>
           <a
             href="#team"
-            className="px-6 py-3 rounded-md border border-gray-300 hover:border-primary text-gray-700 hover:text-primary transition-all font-medium"
+            className="px-5 py-2.5 sm:px-6 sm:py-3 rounded-md border border-gray-300 hover:border-primary text-gray-700 hover:text-primary transition-all font-medium text-sm sm:text-base"
           >
             Meet the Team
           </a>

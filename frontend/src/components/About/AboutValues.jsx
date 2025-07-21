@@ -29,18 +29,18 @@ const values = [
 
 export default function AboutValues() {
   return (
-    <section className="relative py-20 sm:py-24 px-0 md:px-8 lg:px-16 xl:px-20 bg-white text-gray-900 border-t border-gray-100">
+    <section className="relative py-16 sm:py-20 md:py-24 bg-white text-gray-900 border-t border-gray-100">
       {/* BG Grid Pattern */}
       <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5 pointer-events-none z-0" />
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-center mb-14"
+          className="text-center mb-10 sm:mb-12"
         >
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold leading-tight mb-4 bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 text-transparent bg-clip-text drop-shadow-sm">
             Our Core Values
@@ -51,7 +51,7 @@ export default function AboutValues() {
         </motion.div>
 
         {/* Value Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
           {values.map((value, i) => (
             <motion.div
               key={i}
@@ -60,7 +60,7 @@ export default function AboutValues() {
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.5, delay: i * 0.15 }}
               viewport={{ once: true }}
-              className={`relative bg-white border-t-4 ${value.border} rounded-2xl shadow-sm hover:shadow-md transition-all overflow-hidden p-6 sm:p-7`}
+              className={`relative bg-white border-t-4 ${value.border} rounded-xl sm:rounded-2xl shadow-sm hover:shadow-md transition-all overflow-hidden p-5 sm:p-6`}
             >
               {/* Glow Effect */}
               <div
@@ -69,7 +69,7 @@ export default function AboutValues() {
 
               {/* Index Badge */}
               <div
-                className={`w-12 h-12 mb-5 z-10 relative flex items-center justify-center text-lg font-bold rounded-full ${value.bgBlur} ${value.text}`}
+                className={`w-10 h-10 sm:w-12 sm:h-12 mb-4 z-10 relative flex items-center justify-center text-lg font-bold rounded-full ${value.bgBlur} ${value.text}`}
               >
                 {i + 1}
               </div>

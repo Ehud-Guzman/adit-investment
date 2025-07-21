@@ -5,11 +5,11 @@ export default function AboutStory() {
   return (
     <section
       id="story"
-      className="relative py-20 sm:py-24 px-4 md:px-8 lg:px-16 xl:px-20 bg-white text-gray-900 border-y border-gray-100"
+      className="relative py-16 sm:py-20 md:py-24 bg-white text-gray-900 border-y border-gray-100"
     >
       <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5 pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 sm:gap-12 lg:gap-20 items-center relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-center relative z-10">
         {/* Text Block */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}
@@ -55,27 +55,19 @@ export default function AboutStory() {
           viewport={{ once: true }}
           className="relative"
         >
-          <div className="relative aspect-video min-h-[250px] sm:min-h-[320px] rounded-2xl overflow-hidden shadow-xl group border border-gray-200">
-            <img
-              src="/office-team.jpg"
-              alt="ADIT Investment Team"
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-            />
+          <div className="relative aspect-video min-h-[250px] sm:min-h-[320px] rounded-xl sm:rounded-2xl overflow-hidden shadow-xl group border border-gray-200">
+            <div className="bg-gray-200 border-2 border-dashed rounded-xl w-full h-full" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-10" />
             <div className="absolute bottom-0 left-0 p-4 sm:p-5 z-20">
-              <h3 className="text-white text-sm sm:text-lg font-semibold">Our Busia HQ</h3>
+              <h3 className="text-white text-base sm:text-lg font-semibold">Our Busia HQ</h3>
               <p className="text-gray-200 text-xs sm:text-sm">Where strategy meets execution</p>
             </div>
           </div>
 
           {/* Floating Avatar */}
           <div className="flex justify-center md:justify-start">
-            <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:-left-8 w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-2xl overflow-hidden border-4 border-white shadow-lg z-30">
-              <img
-                src="/founder.jpg"
-                alt="Founder"
-                className="w-full h-full object-cover"
-              />
+            <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:-left-6 w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-xl sm:rounded-2xl overflow-hidden border-4 border-white shadow-lg z-30">
+              <div className="bg-gray-200 border-2 border-dashed rounded-xl w-full h-full" />
             </div>
           </div>
         </motion.div>
