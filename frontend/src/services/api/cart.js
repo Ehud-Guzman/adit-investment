@@ -118,6 +118,22 @@ export const updateCartQuantity = ({ cartItemId, quantity }) => {
   return updateCartItem(cartItemId, quantity);
 };
 
+// 🧹 Clear entire cart
+export const clearCart = async () => {
+  try {
+    const res = await api.delete("/cart/clear");
+    return res.data;
+  } catch (error) {
+    console.error("Clear cart error:", {
+      status: error.response?.status,
+      data: error.response?.data,
+      endpoint: "/cart/clear",
+    });
+    throw error;
+  }
+};
+
+
 // ✅ Grouped export for flexible importing
 export const cart = {
   getCart,
@@ -127,4 +143,5 @@ export const cart = {
   removeFromCart,
   getCartWithDetails,
   updateCartQuantity,
+  clearCart
 };
