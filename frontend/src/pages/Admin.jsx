@@ -8,10 +8,10 @@ import { useAdminAuth } from "@/hooks/useAdminAuth";
 import useAdminProducts from "@/hooks/admin/useAdminProducts";
 
 // 🧱 Layout & UI
-import AdminLayout from "@/components/admin/AdminLayout";
-import AdminLoginForm from "@/components/admin/AdminLoginForm";
-import ProductForm from "@/components/admin/ProductForm";
-import ProductList from "@/components/admin/ProductList";
+import AdminLayout from "@/components/Admin/AdminLayout";
+import AdminLoginForm from "@/components/Admin/AdminLoginForm";
+import ProductForm from "@/components/Admin/ProductForm";
+import ProductList from "@/components/Admin/ProductList";
 import UserTable from "./admin/users/UserTable";
 import UserFilters from "./admin/users/UserFilters";
 import LoadingOverlay from "@/components/common/LoadingOverlay";
