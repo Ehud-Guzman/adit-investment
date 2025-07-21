@@ -3,9 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import api from "@/services/api/index";
 
-import DashboardMetrics from "@/components/admin/dashboard/DashboardMetrics";
-import DashboardCharts from "@/components/admin/dashboard/DashboardCharts";
-import RecentActivityFeed from "@/components/admin/dashboard/RecentActivityFeed";
+import DashboardMetrics from "@/components/Admin/dashboard/DashboardMetrics";
+import DashboardCharts from "@/components/Admin/dashboard/DashboardCharts";
+import RecentActivityFeed from "@/components/Admin/dashboard/RecentActivityFeed";
 import SkeletonLoader from "@/components/ui/SkeletonLoader";
 
 const AdminDashboard = () => {
