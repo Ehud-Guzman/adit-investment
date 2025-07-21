@@ -5,13 +5,12 @@ export default function AboutStory() {
   return (
     <section
       id="story"
-      className="relative py-20 sm:py-24 px-4 sm:px-6 lg:px-20 bg-white text-gray-900 border-y border-gray-100"
+      className="relative py-20 sm:py-24 px-4 md:px-8 lg:px-16 xl:px-20 bg-white text-gray-900 border-y border-gray-100"
     >
-      {/* Background pattern */}
       <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5 pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 items-center relative z-10">
-        {/* 📝 Text Block */}
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 sm:gap-12 lg:gap-20 items-center relative z-10">
+        {/* Text Block */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -40,16 +39,15 @@ export default function AboutStory() {
             Today, we deliver advanced tech to clients across sectors — secure networks, smart hardware, and powerful custom software. Innovation isn't just what we do. It's who we are.
           </p>
 
-          {/* CTA */}
           <a
             href="#team"
-            className="inline-flex items-center gap-2 text-primary hover:underline font-medium text-sm"
+            className="inline-flex items-center gap-2 text-primary hover:text-blue-700 transition-colors duration-300 font-medium text-sm"
           >
             Meet the Team <FiArrowRight className="mt-[1px]" />
           </a>
         </motion.div>
 
-        {/* 🖼️ Image Block */}
+        {/* Image Block */}
         <motion.div
           initial={{ opacity: 0, x: 50 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -57,7 +55,7 @@ export default function AboutStory() {
           viewport={{ once: true }}
           className="relative"
         >
-          <div className="relative aspect-video rounded-2xl overflow-hidden shadow-xl group border border-gray-200">
+          <div className="relative aspect-video min-h-[250px] sm:min-h-[320px] rounded-2xl overflow-hidden shadow-xl group border border-gray-200">
             <img
               src="/office-team.jpg"
               alt="ADIT Investment Team"
@@ -70,13 +68,15 @@ export default function AboutStory() {
             </div>
           </div>
 
-          {/* Floating Founder Avatar */}
-          <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 md:-translate-x-0 md:left-auto md:-bottom-8 md:-left-8 w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-2xl overflow-hidden border-4 border-white shadow-lg z-30">
-            <img
-              src="/founder.jpg"
-              alt="Founder"
-              className="w-full h-full object-cover"
-            />
+          {/* Floating Avatar */}
+          <div className="flex justify-center md:justify-start">
+            <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:-left-8 w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-2xl overflow-hidden border-4 border-white shadow-lg z-30">
+              <img
+                src="/founder.jpg"
+                alt="Founder"
+                className="w-full h-full object-cover"
+              />
+            </div>
           </div>
         </motion.div>
       </div>
