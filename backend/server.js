@@ -1,262 +1,176 @@
 // server.js
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import { MongoClient, ObjectId } from 'mongodb';
-import { upload } from './cloudinary.js'; // Adjust path if needed
 
+import express from "express";
+import dotenv from "dotenv";
+import helmet from "helmet";
+import cors from "cors";
+import compression from "compression";
+import rateLimit from "express-rate-limit";
+import slowDown from "express-slow-down";
+import hpp from "hpp";
+import cookieParser from "cookie-parser";
+
+import { connectDB } from "./config/db.js";
+import { validateEnv } from "./config/envCheck.js";
+
+// 🧩 Route Factories (Dependency Injected)
+import createAuthRouter from "./routes/auth.js";
+import createUserRouter from "./routes/users.js";
+import createProductRouter from "./routes/products.js";
+import createCartRouter from "./routes/cart.js";
+import createWishlistRouter from "./routes/wishlist.js";
+import createReviewRouter from "./routes/reviews.js";
+import createAdminProductRouter from "./routes/adminProducts.js";
+import createAdminUserRouter from "./routes/admin/users.js";
+import createAdminDashboardRouter from "./routes/admin/dashboardRoutes.js";
+import createSettingsRouter from "./routes/settings.js";
+import createEmailRouter from "./routes/emailRoutes.js";
+
+
+// 📦 Non-DI Routes
+import uploadRoutes from "./routes/upload.js";
+import cleanupRoutes from "./routes/cleanup.js";
+
+// 🌍 Load environment variables
 dotenv.config();
+validateEnv();
+
+// 🚀 App Init
 const app = express();
-const PORT = process.env.PORT || 8080;
 
-// ===== MIDDLEWARE =====
-app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'https://adit-investment.netlify.app',
-    'https://adit-investment-1.onrender.com'
-  ],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true,
-}));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// 🔒 Secure HTTP Headers
+app.use(helmet());
 
-// ===== DATABASE SETUP =====
-const client = new MongoClient(process.env.MONGO_URI);
-let db, products, users, cart, wishlist;
+// 💨 Prevent HTTP Parameter Pollution
+app.use(hpp());
 
-try {
-  await client.connect();
-  console.log('🧠 Connected to MongoDB');
-  db = client.db('ADIT-website');
-  products = db.collection('products');
-  users = db.collection('users');
-  cart = db.collection('cart');
-  wishlist = db.collection('wishlist');
-} catch (err) {
-  console.error('❌ MongoDB connection failed:', err.message);
-  process.exit(1);
+// 🍪 Parse Cookies
+app.use(cookieParser());
+
+// 🔄 Parse JSON & URL-encoded Bodies
+app.use(express.json({ limit: "10kb" }));
+app.use(express.urlencoded({ extended: true, limit: "10kb" }));
+
+// 🔧 GZIP Compression
+app.use(compression());
+
+// 🧼 Sanitize Inputs (basic)
+app.use((req, _res, next) => {
+  const sanitize = (obj) => {
+    for (const key in obj) {
+      if (/^\$/.test(key) || key.includes(".")) {
+        delete obj[key];
+      } else if (typeof obj[key] === "string") {
+        obj[key] = obj[key].replace(/[<>]/g, "");
+      } else if (typeof obj[key] === "object" && obj[key] !== null) {
+        sanitize(obj[key]);
+      }
+    }
+  };
+  sanitize(req.body);
+  sanitize(req.query);
+  sanitize(req.params);
+  next();
+});
+
+// 🌐 CORS Configuration
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(",") || [
+  "http://localhost:5173",
+  "https://adit-investment.netlify.app",
+  "https://adit-investment-1.onrender.com",
+];
+
+app.use(
+  cors({
+    origin: (origin, cb) => {
+      if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
+      cb(new Error("CORS not allowed for origin: " + origin));
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  })
+);
+
+// 🛡️ Rate Limiting & Throttling
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: "⏱ Too many requests. Please try again later.",
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const speedLimiter = slowDown({
+  windowMs: 15 * 60 * 1000,
+  delayAfter: 50,
+  delayMs: (hits) => Math.min((hits - 50) * 300, 2000),
+});
+
+app.use("/api", limiter, speedLimiter);
+
+// 🎯 Health Check
+app.get("/api/health", (_req, res) => {
+  res.status(200).json({ status: "✅ API is healthy" });
+});
+
+// 🧠 Boot Server Function
+async function startServer() {
+  try {
+    console.log("🧠 Connecting to MongoDB...");
+    const collections = await connectDB();
+
+    app.locals.db = collections._db || collections.db;
+    console.log("✅ MongoDB connected");
+
+    // Injected Routes (dependency-based)
+    app.use("/api/auth", createAuthRouter(collections.users, collections.sessions, collections.db));
+    app.use("/api/users", createUserRouter(collections.users));
+    app.use("/api/products", createProductRouter(collections.products));
+    app.use("/api/cart", createCartRouter(collections.cart));
+    app.use("/api/wishlist", createWishlistRouter(collections.wishlist));
+    app.use("/api/reviews", createReviewRouter(collections.reviews, collections.users));
+    app.use("/api/admin/products", createAdminProductRouter(collections.products));
+    app.use("/api/admin/users", createAdminUserRouter(collections.users));
+    app.use("/api/admin/dashboard", createAdminDashboardRouter());
+    app.use("/api/email", createEmailRouter(app.locals.db));
+
+
+    // 🔐 Super Admin - Settings Routes (after DB connection)
+    const settingsRouter = createSettingsRouter(collections.adminSettings);
+    app.use("/api/settings", settingsRouter);
+
+    // Static routes (no DB)
+    app.use("/api/upload", uploadRoutes);
+    app.use("/api/cleanup", cleanupRoutes);
+
+    // ❌ Catch-all for unknown routes
+    app.use((req, res) => {
+      res.status(404).json({
+        message: `❌ Route not found: ${req.originalUrl}`,
+      });
+    });
+
+    // 🔥 Fire it up
+    const PORT = process.env.PORT || 8080;
+    app.listen(PORT, () => {
+      console.log(`🚀 Server live at http://localhost:${PORT}`);
+    });
+  } catch (err) {
+    console.error("💥 Server startup failed:", err.message);
+    process.exit(1);
+  }
 }
 
-const getQueryId = (id) => /^[0-9a-fA-F]{24}$/.test(id)
-  ? { _id: new ObjectId(id) }
-  : { id };
-
-// ===== HEALTH CHECK =====
-app.get('/api/ping', async (req, res) => {
-  try {
-    const status = await db.command({ ping: 1 });
-    res.json({ message: '✅ MongoDB is alive', status: status.ok === 1 ? 'ok' : 'not ok' });
-  } catch (err) {
-    res.status(500).json({ message: '❌ MongoDB dead', error: err.message });
-  }
+// 🚨 Fatal Crash Catchers
+process.on("uncaughtException", (err) => {
+  console.error("💥 Uncaught Exception:", err.message);
+  process.exit(1);
 });
 
-// ===== PRODUCTS =====
-app.get('/api/products', async (req, res) => {
-  try {
-    const data = await products.find().toArray();
-    res.json(data);
-  } catch (err) {
-    res.status(500).json({ message: '❌ Failed to fetch products', error: err.message });
-  }
+process.on("unhandledRejection", (err) => {
+  console.error("💥 Unhandled Rejection:", err.message);
+  process.exit(1);
 });
 
-app.get('/api/products/:id', async (req, res) => {
-  try {
-    const item = await products.findOne(getQueryId(req.params.id));
-    item
-      ? res.json(item)
-      : res.status(404).json({ message: 'Product not found' });
-  } catch (err) {
-    res.status(500).json({ message: '❌ Error fetching product', error: err.message });
-  }
-});
-
-app.post('/api/products', async (req, res) => {
-  try {
-    const body = req.body;
-    if (!body || Object.keys(body).length === 0) {
-      return res.status(400).json({ message: '⚠️ Request body is empty' });
-    }
-
-    const result = await products.insertOne(body);
-    const insertedProduct = await products.findOne({ _id: result.insertedId });
-
-    res.status(201).json(insertedProduct);
-  } catch (err) {
-    console.error('❌ POST /products error:', err.message);
-    res.status(500).json({ message: '❌ Error creating product', error: err.message });
-  }
-});
-
-app.put('/api/products/:id', async (req, res) => {
-  try {
-    const result = await products.updateOne(getQueryId(req.params.id), { $set: req.body });
-    res.json(result);
-  } catch (err) {
-    res.status(500).json({ message: '❌ Error updating product', error: err.message });
-  }
-});
-
-app.delete('/api/products/:id', async (req, res) => {
-  try {
-    const filter = getQueryId(req.params.id);
-    const product = await products.findOne(filter);
-    if (!product) return res.status(404).json({ message: 'Product not found' });
-
-    const deleteProduct = await products.deleteOne(filter);
-    const deleteFromCart = await cart.deleteMany({ productId: req.params.id });
-    const deleteFromWishlist = await wishlist.deleteMany({ productId: req.params.id });
-
-    res.json({
-      message: '✅ Product and related data deleted',
-      deletedProduct: deleteProduct.deletedCount,
-      removedFromCart: deleteFromCart.deletedCount,
-      removedFromWishlist: deleteFromWishlist.deletedCount,
-    });
-  } catch (err) {
-    res.status(500).json({ message: '❌ Error deleting product', error: err.message });
-  }
-});
-
-// ===== IMAGE UPLOAD =====
-app.post('/api/upload', upload.single('image'), (req, res) => {
-  try {
-    if (!req.file?.path) throw new Error('No image returned from Cloudinary');
-    res.status(201).json({ url: req.file.path });
-  } catch (err) {
-    res.status(500).json({ message: '❌ Upload failed', error: err.message });
-  }
-});
-
-// ===== USERS =====
-app.get('/api/users', async (req, res) => {
-  try {
-    const data = await users.find().toArray();
-    res.json(data);
-  } catch (err) {
-    res.status(500).json({ message: '❌ Failed to fetch users', error: err.message });
-  }
-});
-
-app.post('/api/users', async (req, res) => {
-  try {
-    const result = await users.insertOne(req.body);
-    res.status(201).json(result);
-  } catch (err) {
-    res.status(500).json({ message: '❌ Failed to add user', error: err.message });
-  }
-});
-
-// ===== CART (Improved) =====
-app.get('/api/cart', async (req, res) => {
-  try {
-    const { userId } = req.query;
-    const filter = userId ? { userId } : {};
-    const data = await cart.find(filter).toArray();
-    res.json(data);
-  } catch (err) {
-    res.status(500).json({ message: '❌ Failed to fetch cart', error: err.message });
-  }
-});
-
-app.post('/api/cart', async (req, res) => {
-  try {
-    const { userId, productId, quantity = 1 } = req.body;
-    if (!userId || !productId) {
-      return res.status(400).json({ message: '⚠️ Missing required fields' });
-    }
-
-    const existingItem = await cart.findOne({ userId, productId });
-    if (existingItem) {
-      const updated = await cart.updateOne(
-        { _id: existingItem._id },
-        { $inc: { quantity } }
-      );
-      return res.json({ message: '🛒 Cart updated', updated });
-    }
-
-    const result = await cart.insertOne({ userId, productId, quantity, addedAt: new Date() });
-    res.status(201).json({ message: '🛒 Added to cart', result });
-  } catch (err) {
-    res.status(500).json({ message: '❌ Failed to add to cart', error: err.message });
-  }
-});
-
-app.put('/api/cart/:id', async (req, res) => {
-  try {
-    const result = await cart.updateOne(getQueryId(req.params.id), { $set: req.body });
-    res.json(result);
-  } catch (err) {
-    res.status(500).json({ message: '❌ Failed to update cart', error: err.message });
-  }
-});
-
-app.delete('/api/cart/:id', async (req, res) => {
-  try {
-    const result = await cart.deleteOne(getQueryId(req.params.id));
-    if (result.deletedCount === 0) {
-      return res.status(404).json({ message: 'Cart item not found' });
-    }
-    res.json({ message: '🗑️ Cart item removed successfully' });
-  } catch (err) {
-    res.status(500).json({ message: '❌ Error deleting cart item', error: err.message });
-  }
-});
-
-// ===== WISHLIST =====
-app.get('/api/wishlist', async (req, res) => {
-  try {
-    const data = await wishlist.find().toArray();
-    res.json(data);
-  } catch (err) {
-    res.status(500).json({ message: '❌ Failed to fetch wishlist', error: err.message });
-  }
-});
-
-app.post('/api/wishlist', async (req, res) => {
-  try {
-    const result = await wishlist.insertOne(req.body);
-    res.status(201).json(result);
-  } catch (err) {
-    res.status(500).json({ message: '❌ Failed to add to wishlist', error: err.message });
-  }
-});
-
-app.delete('/api/wishlist/:id', async (req, res) => {
-  try {
-    const result = await wishlist.deleteOne(getQueryId(req.params.id));
-    if (result.deletedCount === 0) {
-      return res.status(404).json({ message: 'Wishlist item not found' });
-    }
-    res.json({ message: '🗑️ Wishlist item removed successfully' });
-  } catch (err) {
-    res.status(500).json({ message: '❌ Error deleting wishlist item', error: err.message });
-  }
-});
-
-// ===== CLEANUP ORPHANED CART/WISHLIST =====
-app.delete('/api/cleanup', async (req, res) => {
-  try {
-    const productDocs = await products.find({}, { projection: { _id: 1 } }).toArray();
-    const productIds = productDocs.map(p => p._id.toString());
-
-    const removedCart = await cart.deleteMany({ productId: { $nin: productIds } });
-    const removedWishlist = await wishlist.deleteMany({ productId: { $nin: productIds } });
-
-    res.json({
-      message: '🧹 Cleanup complete',
-      removedFromCart: removedCart.deletedCount,
-      removedFromWishlist: removedWishlist.deletedCount,
-    });
-  } catch (err) {
-    res.status(500).json({ message: '❌ Cleanup failed', error: err.message });
-  }
-});
-
-// ===== START SERVER =====
-app.listen(PORT, () => {
-  console.log(`🚀 ADIT backend live on port ${PORT}`);
-});
+// 🧠 Start it
+startServer();

@@ -9,9 +9,9 @@ dotenv.config();
 
 // ✅ Configure Cloudinary
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,   // "dcywqtljq"
-  api_key: process.env.CLOUDINARY_API_KEY,         // "655339527751366"
-  api_secret: process.env.CLOUDINARY_API_SECRET,   // "KxxB1oIbs9ZWKof6fn_Gcizr8M0"
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,   
+  api_key: process.env.CLOUDINARY_API_KEY,         
+  api_secret: process.env.CLOUDINARY_API_SECRET,   
 });
 
 // ✅ Set up storage engine

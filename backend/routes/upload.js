@@ -1,33 +1,16 @@
-// routes/upload.js
-import express from 'express';
-import multer from 'multer';
-import { v2 as cloudinary } from 'cloudinary';
-import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import express from "express";
+import { upload } from "../cloudinary.js";
 
 const router = express.Router();
 
-// Cloudinary config
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.CLOUD_KEY,
-  api_secret: process.env.CLOUD_SECRET,
-});
-
-// Set up multer + Cloudinary storage
-const storage = new CloudinaryStorage({
-  cloudinary,
-  params: {
-    folder: 'products', // You can change this to any folder name
-    allowed_formats: ['jpg', 'png', 'webp'],
-  },
-});
-
-const upload = multer({ storage });
-
-// Upload route
-router.post('/', upload.single('image'), (req, res) => {
-  if (!req.file) return res.status(400).json({ error: 'No image uploaded' });
-  res.status(200).json({ url: req.file.path }); // 👈 This is the Cloudinary image URL
+router.post("/", upload.single("image"), (req, res) => {
+  try {
+    if (!req.file?.path) throw new Error("No image returned from Cloudinary");
+    res.status(201).json({ url: req.file.path });
+  } catch (err) {
+    console.error(`[UPLOAD ERROR]`, err.message);
+    res.status(500).json({ message: "Upload failed", error: err.message });
+  }
 });
 
 export default router;
