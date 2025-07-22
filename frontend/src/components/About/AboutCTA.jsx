@@ -16,13 +16,13 @@ export default function AboutCTA() {
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')]" />
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      <div className="max-w-4xl mx-auto px-0 sm:px-6 lg:px-8 text-center relative z-10">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6"
+          className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 px-4 sm:px-0"
         >
           Ready to Power Your Business with Cutting-Edge IT?
         </motion.h2>
@@ -32,13 +32,13 @@ export default function AboutCTA() {
           whileInView={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-base sm:text-lg text-gray-600 mb-8 max-w-2xl mx-auto"
+          className="text-base sm:text-lg text-gray-600 mb-8 max-w-2xl mx-auto px-4 sm:px-0"
         >
           Let's discuss how we can transform your technology infrastructure.
         </motion.p>
 
         {/* CTA Buttons */}
-        <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
+        <div className="flex flex-wrap justify-center gap-3 sm:gap-4 px-4 sm:px-0">
           <motion.a
             href="/contact"
             whileHover={{ y: -5 }}
@@ -58,7 +58,7 @@ export default function AboutCTA() {
         </div>
 
         {/* Social Icons */}
-        <div className="flex justify-center mt-8 sm:mt-10 gap-2 sm:gap-3 flex-wrap">
+        <div className="flex justify-center mt-8 sm:mt-10 gap-2 sm:gap-3 flex-wrap px-4 sm:px-0">
           {[FaFacebook, FaTwitter, FaLinkedin, FaInstagram, FaWhatsapp].map(
             (Icon, i) => (
               <motion.a

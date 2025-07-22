@@ -9,13 +9,14 @@ export default function AboutStory() {
     >
       <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5 pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-center relative z-10">
+      <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-center relative z-10">
         {/* Text Block */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
+          className="px-4 sm:px-0"
         >
           <div className="flex items-center mb-4">
             <div className="w-8 sm:w-10 h-1 bg-gradient-to-r from-cyan-500 to-blue-500 mr-3 rounded-full" />
@@ -55,7 +56,7 @@ export default function AboutStory() {
           viewport={{ once: true }}
           className="relative"
         >
-          <div className="relative aspect-video min-h-[250px] sm:min-h-[320px] rounded-xl sm:rounded-2xl overflow-hidden shadow-xl group border border-gray-200">
+          <div className="relative aspect-video min-h-[250px] sm:min-h-[320px] rounded-none sm:rounded-xl md:rounded-2xl overflow-hidden shadow-xl group border-0 sm:border border-gray-200">
             <div className="bg-gray-200 border-2 border-dashed rounded-xl w-full h-full" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-10" />
             <div className="absolute bottom-0 left-0 p-4 sm:p-5 z-20">

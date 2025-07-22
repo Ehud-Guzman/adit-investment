@@ -3,17 +3,16 @@ import { motion } from "framer-motion";
 export default function AboutMissionVision() {
   return (
     <section className="relative py-16 sm:py-20 md:py-24 bg-white text-gray-900 border-y border-gray-100">
-      {/* Background pattern */}
       <div className="absolute inset-0 bg-[url('/circuit-pattern.svg')] bg-repeat opacity-5 pointer-events-none z-0" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-center mb-10 sm:mb-14"
+          className="text-center mb-10 sm:mb-14 px-4 sm:px-0"
         >
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-gray-800">
             Our Core Beliefs
@@ -24,7 +23,7 @@ export default function AboutMissionVision() {
         </motion.div>
 
         {/* Mission & Vision Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 lg:gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 lg:gap-10 px-4 sm:px-0">
           {/* Mission */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
