@@ -11,7 +11,8 @@ import {
   cleanUser,
   handleError,
 } from "../../../utils/auth.helpers.js";
-import { toastGuard } from "@/utils/toastControl.js";
+import { toastGuard } from "../../../utils/toastControl.js";
+
 
 
 const loginHandler = async (req, res, users, sessions) => {
