@@ -1,3 +1,4 @@
+// AboutStory.jsx
 import { motion } from "framer-motion";
 import { FiArrowRight } from "react-icons/fi";
 
@@ -9,14 +10,13 @@ export default function AboutStory() {
     >
       <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5 pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-center relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-center relative z-10">
         {/* Text Block */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="px-4 sm:px-0"
         >
           <div className="flex items-center mb-4">
             <div className="w-8 sm:w-10 h-1 bg-gradient-to-r from-cyan-500 to-blue-500 mr-3 rounded-full" />

@@ -1,5 +1,3 @@
-// src/components/Admin/settings/SettingsPage.jsx
-
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FiPlus } from "react-icons/fi";
@@ -8,7 +6,7 @@ import { getSettings } from "@/services/api/settingsApi";
 import SettingModal from "./SettingModal";
 import SettingCard from "./SettingCard";
 import SettingTable from "./SettingsTable";
-import { safeToast } from "@/utils/toastManager";
+import { toastGuard } from "@/utils/toastControl"; // 👈 Updated
 
 export default function SettingsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,23 +14,22 @@ export default function SettingsPage() {
   const [viewMode, setViewMode] = useState("cards");
 
   const {
-  data = {},
-  isLoading,
-  isError,
-  error,
-  refetch,
-} = useQuery({
-  queryKey: ["settings"],
-  queryFn: getSettings,
-  staleTime: 1000 * 60 * 5,
-  onError: (err) => {
-    const message = err?.response?.data?.message || "Failed to fetch settings.";
-    safeToast.error(message);
-  },
-});
+    data = {},
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["settings"],
+    queryFn: getSettings,
+    staleTime: 1000 * 60 * 5,
+    onError: (err) => {
+      const message = err?.response?.data?.message || "Failed to fetch settings.";
+      toastGuard.once("settings-fetch-error", message, "error");
+    },
+  });
 
-const settings = data.settings || [];
-
+  const settings = data.settings || [];
 
   const handleCreate = () => {
     setEditingSetting(null);

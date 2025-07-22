@@ -1,3 +1,4 @@
+// AboutTeam.jsx
 import { motion } from "framer-motion";
 import { FaLinkedin, FaTwitter } from "react-icons/fa";
 
@@ -40,14 +41,14 @@ export default function AboutTeam() {
     >
       <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5 pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-center mb-10 sm:mb-14 px-4 sm:px-0"
+          className="text-center mb-10 sm:mb-14"
         >
           <div className="inline-flex items-center mb-4 px-3 py-1.5 rounded-full bg-gradient-to-r from-cyan-50 to-blue-50 border border-cyan-100">
             <span className="w-2 h-2 rounded-full bg-cyan-500 mr-2 animate-ping" />
@@ -64,7 +65,7 @@ export default function AboutTeam() {
         </motion.div>
 
         {/* Team Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 px-4 sm:px-0">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {team.map((member) => (
             <motion.div
               key={member.id}

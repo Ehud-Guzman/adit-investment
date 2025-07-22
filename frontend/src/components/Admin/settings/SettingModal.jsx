@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "@/services/api/index";
-import { safeToast } from "@/utils/toastManager";
+import { toastGuard } from "@/utils/toastControl"; // 🔥 Use new toast system
 
 export default function SettingModal({ isOpen, onClose, setting, refetch }) {
   const isEdit = Boolean(setting);
@@ -23,23 +23,29 @@ export default function SettingModal({ isOpen, onClose, setting, refetch }) {
     e.preventDefault();
 
     if (!formData.key || !formData.value) {
-      return safeToast("setting-invalid", "Both fields are required", "error");
+      return toastGuard.once("setting-invalid", "Both fields are required", "error");
     }
 
     try {
       setLoading(true);
+
       if (isEdit) {
         await api.put(`/settings/${setting._id}`, { value: formData.value });
-        safeToast("setting-update", "Setting updated", "success");
+        toastGuard.once("setting-updated", "✅ Setting updated", "success");
       } else {
         await api.post("/settings", formData);
-        safeToast("setting-create", "Setting created", "success");
+        toastGuard.once("setting-created", "🎉 Setting created", "success");
       }
+
       refetch();
       onClose();
     } catch (err) {
       console.error(err);
-      safeToast("setting-fail", "Failed to save setting", "error");
+      toastGuard.once(
+        "setting-fail",
+        err?.response?.data?.message || "Failed to save setting",
+        "error"
+      );
     } finally {
       setLoading(false);
     }

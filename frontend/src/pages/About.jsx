@@ -1,3 +1,4 @@
+// About.jsx
 import AboutHero from "@/components/About/AboutHero";
 import AboutStory from "@/components/About/AboutStory";
 import AboutMissionVision from "@/components/About/AboutMissionVision";
@@ -8,8 +9,8 @@ import AboutCTA from "@/components/About/AboutCTA";
 
 export default function About() {
   return (
-    <main className="bg-white text-gray-900 overflow-x-hidden">
-      <div className="relative">
+    <main className="bg-white text-gray-900">
+      <div className="w-full">
         <AboutHero />
         <AboutStory />
         <AboutMissionVision />

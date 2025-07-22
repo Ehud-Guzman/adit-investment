@@ -7,7 +7,7 @@ import {
   ArrowDownIcon,
 } from "@heroicons/react/24/solid";
 import api from "@/services/api/index";
-import { safeToast } from "@/utils/toastManager";
+import { toastGuard } from "@/utils/toastControl";
 
 export default function UserActions({ user, refetch, isSuperAdmin }) {
   const [loadingAction, setLoadingAction] = useState(null);
@@ -17,29 +17,27 @@ export default function UserActions({ user, refetch, isSuperAdmin }) {
       promote: "promote this user to admin",
       demote: "demote this admin to user",
       lock:
-        user.status === "locked"
+        user.status === "suspended"
           ? "unlock this user"
           : "lock this user account",
       delete: "soft delete this user",
     };
 
-    if (!window.confirm(`Are you sure you want to ${confirmMsg[type]}?`))
-      return;
-
+    if (!window.confirm(`Are you sure you want to ${confirmMsg[type]}?`)) return;
     setLoadingAction(type);
 
     try {
-   const urlMap = {
-  lock: `/users/${user._id}/status`,
-    promote: `/users/${user._id}/toggle-admin`,
-  demote: `/users/${user._id}/toggle-admin`,
-  delete: `/users/${user._id}`,
-};
-
+      const urlMap = {
+        lock: `/users/${user._id}/status`,
+        promote: `/users/${user._id}/toggle-admin`,
+        demote: `/users/${user._id}/toggle-admin`,
+        delete: `/users/${user._id}`,
+      };
 
       const bodyMap = {
-        lock: { status: user.status === "suspended" ? "active" : "suspended" },
-
+        lock: {
+          status: user.status === "suspended" ? "active" : "suspended",
+        },
         promote: { role: "admin" },
         demote: { role: "user" },
         delete: null,
@@ -56,17 +54,18 @@ export default function UserActions({ user, refetch, isSuperAdmin }) {
 
       await api({ method, url: urlMap[type], ...config });
 
-      safeToast(
-        `user-${type}-success`,
-        `User ${type}d successfully`,
+      toastGuard.once(
+        `user-${type}-success-${user._id}`,
+        `✅ User ${type}d successfully`,
         "success"
       );
+
       refetch();
     } catch (err) {
       console.error(err);
-      safeToast(
-        `user-${type}-fail`,
-        err.response?.data?.message || `Failed to ${type} user`,
+      toastGuard.once(
+        `user-${type}-fail-${user._id}`,
+        err.response?.data?.message || `❌ Failed to ${type} user`,
         "error"
       );
     } finally {

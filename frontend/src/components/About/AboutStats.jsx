@@ -1,3 +1,4 @@
+// AboutStats.jsx
 import { motion } from "framer-motion";
 import { FiUsers, FiTrendingUp, FiAward, FiGlobe } from "react-icons/fi";
 
@@ -13,13 +14,13 @@ export default function AboutStats() {
     <section className="relative py-16 sm:py-20 md:py-24 bg-white text-gray-900 border-y border-gray-100">
       <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5 pointer-events-none z-0" />
 
-      <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 px-4 sm:px-0"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6"
         >
           {stats.map((stat, index) => {
             const Icon = stat.icon;

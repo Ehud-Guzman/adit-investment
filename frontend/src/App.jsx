@@ -23,10 +23,13 @@ import Contact from "./pages/Contact";
 import Admin from "./pages/Admin";
 
 // Lazy-loaded (for perf)
-const SettingPage = lazy(() => import("./components/Admin/settings/SettingsPage"));
+const SettingPage = lazy(() =>
+  import("./components/Admin/settings/SettingsPage")
+);
 const VerifyEmail = lazy(() => import("./pages/Auth/VerifyEmail"));
-const ResendVerification = lazy(() => import("./pages/Auth/ResendVerification"));
-
+const ResendVerification = lazy(() =>
+  import("./pages/Auth/ResendVerification")
+);
 
 // RBAC wrapper (create this in /components)
 import RequireRole from "./components/RequireRole";
@@ -57,7 +60,9 @@ export default function App() {
 
         {/* 📦 Route Views */}
         <main className="flex-grow mt-[72px] px-4 sm:px-6 lg:px-8">
-          <Suspense fallback={<div className="text-center py-10">Loading...</div>}>
+          <Suspense
+            fallback={<div className="text-center py-10">Loading...</div>}
+          >
             <Routes location={location}>
               {/* 🌐 Public Routes */}
               <Route path="/" element={<Home />} />
@@ -66,7 +71,10 @@ export default function App() {
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/verify-email/:token" element={<VerifyEmail />} />
-              <Route path="/resend-verification" element={<ResendVerification />} />
+              <Route
+                path="/resend-verification"
+                element={<ResendVerification />}
+              />
 
               {/* 🔐 Admin Portal (open access, handles login itself) */}
               <Route path="/admin" element={<Admin />} />
@@ -104,15 +112,15 @@ export default function App() {
       {/* 🍞 Global Toasts */}
       <ToastContainer
         position="bottom-right"
-        autoClose={3000}
-        limit={2}
-        newestOnTop
-        hideProgressBar={false}
-        closeOnClick
-        pauseOnFocusLoss={false}
-        pauseOnHover={true}
-        draggable={false}
-        theme="colored"
+        autoClose={3000} // ⏱️ Standard toast duration (adjust as needed)
+        limit={6} // ✅ Show more toasts without overwhelming
+        newestOnTop={true} // 🆕 Always see the latest first
+        closeOnClick={true} // 👆 Let users dismiss easily
+        pauseOnFocusLoss={false} // 🚫 Don’t pause when switching tabs (for speed)
+        pauseOnHover={true} // 🖱️ Let users hover to pause if needed
+        draggable={false} // 🚫 Keep UX clean; no dragging required
+        hideProgressBar={true} // 🧼 Clean UI — no jittery progress
+        theme="colored" // 🎨 Vibrant and consistent styling
       />
     </>
   );

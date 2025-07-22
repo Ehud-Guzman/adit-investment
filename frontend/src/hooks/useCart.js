@@ -2,7 +2,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { cart as cartAPI } from "@/services/api/index.js";
-import { safeToast } from "@/utils/toastManager";
+import { toastGuard } from "@/utils/toastControl";
 
 // ✅ Central toast keys
 const toastIds = {
@@ -66,7 +66,7 @@ export const useCart = ({
       const status = error?.response?.status;
 
       if (![400, 401].includes(status)) {
-        safeToast(toastIds.error, message, "error", 3000);
+        toastGuard.once(toastIds.error, message, "error", 3000);
       }
     }
   }, [cartQuery.isError, cartQuery.error, cartQuery.data]);
@@ -102,10 +102,10 @@ export const useCart = ({
         queryClient.setQueryData(["cart"], guestCart);
       }
 
-      safeToast(toastIds.add, "🛒 Added to cart", "success", 2000);
+      toastGuard.once(toastIds.add, "🛒 Added to cart", "success", 2000);
       await invalidateCart();
     } catch (err) {
-      safeToast(
+      toastGuard.once(
         toastIds.error,
         err?.response?.data?.message || err.message || "Failed to add to cart",
         "error",
@@ -133,10 +133,10 @@ export const useCart = ({
         }
       }
 
-      safeToast(toastIds.update, "✅ Cart updated", "success", 2000);
+      toastGuard.once(toastIds.update, "✅ Cart updated", "success", 2000);
       await invalidateCart();
     } catch (err) {
-      safeToast(
+      toastGuard.once(
         toastIds.error,
         err?.response?.data?.message || err.message || "Failed to update cart",
         "error",
@@ -164,10 +164,10 @@ export const useCart = ({
         queryClient.setQueryData(["cart"], filtered);
       }
 
-      safeToast(toastIds.remove, "🗑️ Removed from cart", "success", 2000);
+      toastGuard.once(toastIds.remove, "🗑️ Removed from cart", "success", 2000);
       await invalidateCart();
     } catch (err) {
-      safeToast(
+      toastGuard.once(
         toastIds.error,
         err?.response?.data?.message || err.message || "Failed to remove item",
         "error",
@@ -187,10 +187,10 @@ export const useCart = ({
         queryClient.setQueryData(["cart"], []);
       }
 
-      safeToast(toastIds.clear, "🧼 Cart cleared", "success", 2000);
+      toastGuard.once(toastIds.clear, "🧼 Cart cleared", "success", 2000);
       await invalidateCart();
     } catch (err) {
-      safeToast(toastIds.error, "🚫 Failed to clear cart", "error", 3000);
+      toastGuard.once(toastIds.error, "🚫 Failed to clear cart", "error", 3000);
     }
   };
 
@@ -209,4 +209,3 @@ export const useCart = ({
     refetchCart: cartQuery.refetch,
   };
 };
-

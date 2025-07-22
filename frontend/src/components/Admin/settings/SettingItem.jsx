@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import api from "@/services/api/index";
-import { PencilIcon, TrashIcon, CheckIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { safeToast } from "@/utils/toastManager";
+import {
+  PencilIcon,
+  TrashIcon,
+  CheckIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/solid";
+import { toastGuard } from "@/utils/toastControl"; // ✅ not safeToast
 
 export default function SettingItem({ setting, refetch }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -9,27 +14,30 @@ export default function SettingItem({ setting, refetch }) {
   const [loading, setLoading] = useState(false);
 
   const update = async () => {
+    const toastId = `setting-update-${setting._id}`;
     try {
       setLoading(true);
       await api.put(`/settings/${setting._id}`, { value });
-      safeToast("setting-update", "Updated successfully", "success");
+      toastGuard.once(toastId, "✅ Setting updated", "success");
       setIsEditing(false);
       refetch();
     } catch (err) {
-      safeToast("setting-update-fail", "Update failed", "error");
+      toastGuard.once(`${toastId}-fail`, "❌ Failed to update", "error");
     } finally {
       setLoading(false);
     }
   };
 
   const remove = async () => {
+    const toastId = `setting-delete-${setting._id}`;
     if (!window.confirm("Delete this setting?")) return;
+
     try {
       await api.delete(`/settings/${setting._id}`);
-      safeToast("setting-deleted", "Setting removed", "success");
+      toastGuard.once(toastId, "🗑️ Setting removed", "success");
       refetch();
     } catch (err) {
-      safeToast("setting-delete-fail", "Delete failed", "error");
+      toastGuard.once(`${toastId}-fail`, "❌ Delete failed", "error");
     }
   };
 
@@ -73,10 +81,7 @@ export default function SettingItem({ setting, refetch }) {
             >
               <PencilIcon className="w-5 h-5" />
             </button>
-            <button
-              onClick={remove}
-              className="text-red-600"
-            >
+            <button onClick={remove} className="text-red-600">
               <TrashIcon className="w-5 h-5" />
             </button>
           </>
