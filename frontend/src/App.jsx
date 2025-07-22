@@ -10,6 +10,7 @@ import Navbar from "./components/Navbar";
 import Footer from "@/layout/Footer/Footer";
 import AuthModal from "./components/AuthModal";
 
+
 // Hooks
 import { useAuth } from "@/hooks/useAuth";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
