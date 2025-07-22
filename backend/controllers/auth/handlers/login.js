@@ -3,31 +3,32 @@ import {
   signAccessToken,
   signRefreshToken,
 } from "../../../utils/tokens.js";
+
 import {
   accessCookieOptions,
   refreshCookieOptions,
 } from "../../../config/cookieOptions.js";
-import {
-  cleanUser,
-  handleError,
-} from "../../../utils/auth.helpers.js";
+
+import { handleError } from "../../../utils/auth.helpers.js";
 
 const loginHandler = async (req, res, users, sessions) => {
   try {
     const { email, password } = req.body;
 
-    // 🛑 Validate input
+    // 🔍 Validate input
     if (!email || !password) {
       return res.status(400).json({ message: "Email and password are required" });
     }
 
-    // 🔍 Find user
+    // 🧠 Check if user exists
     const user = await users.findOne({ email });
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+
+    const passwordValid = user && await bcrypt.compare(password, user.password);
+    if (!passwordValid) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    // 🛡️ Check account status
+    // 🚫 Block unverified or inactive accounts
     if (!user.isVerified) {
       return res.status(403).json({
         message: "Email not verified. Please check your inbox.",
@@ -38,22 +39,31 @@ const loginHandler = async (req, res, users, sessions) => {
       return res.status(403).json({ message: `Account is ${user.status}` });
     }
 
-    // ✅ Clean + normalize user with correct role
-    const normalizedUser = cleanUser(user); // Now includes role, isAdmin, isSuperAdmin
+    // 🧹 Cleaned + structured user for token + client
+    const normalizedUser = {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      isAdmin: user.isAdmin === true,
+      isSuperAdmin: user.isSuperAdmin === true,
+      status: user.status,
+      isVerified: user.isVerified,
+    };
 
-    // 🔐 Generate tokens
+    // 🔐 Sign tokens
     const accessToken = signAccessToken(normalizedUser);
     const refreshToken = signRefreshToken(normalizedUser);
 
-    // 💾 Store session in DB
+    // 💾 Save session to DB
     await sessions.insertOne({
       userId: normalizedUser._id,
       refreshToken,
       createdAt: new Date(),
     });
 
-    // 🍪 Send cookies + response
-    return res
+    // 🍪 Set tokens as HttpOnly cookies and send response
+    res
       .cookie("token", accessToken, accessCookieOptions)
       .cookie("refreshToken", refreshToken, refreshCookieOptions)
       .status(200)

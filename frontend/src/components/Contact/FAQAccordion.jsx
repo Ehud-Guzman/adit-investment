@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiChevronDown } from "react-icons/fi";
-import { FiChevronUp } from "react-icons/fi";
 
 const faqs = [
   {
@@ -16,6 +15,14 @@ const faqs = [
     question: "Do you offer customer support on weekends?",
     answer: "Not officially, but we monitor emails for urgent issues.",
   },
+  {
+    question: "What areas do you serve?",
+    answer: "We primarily serve businesses across East Africa, with offices in Kenya and Uganda.",
+  },
+  {
+    question: "Do you offer remote consultations?",
+    answer: "Yes, we offer video consultations for all our services.",
+  },
 ];
 
 export default function FAQAccordion() {
@@ -28,24 +35,27 @@ export default function FAQAccordion() {
 
   const toggleAll = () => {
     setShowAll((prev) => !prev);
-    setActiveIndex(null); // reset individual toggles
+    setActiveIndex(null);
   };
 
   return (
-    <section className="w-full max-w-3xl mx-auto mt-20">
+    <section className="w-full max-w-3xl mx-auto mt-16 bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
       <div className="text-center mb-8">
-        <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 text-transparent bg-clip-text">
+        <h2 className="text-3xl font-bold text-gray-800 mb-4">
           Frequently Asked Questions
         </h2>
+        <p className="text-gray-600 mb-6">
+          Common questions about contacting us and our services
+        </p>
         <button
           onClick={toggleAll}
-          className="mt-4 text-sm px-4 py-2 rounded-md bg-gray-800/50 text-cyan-300 border border-cyan-500/30 hover:bg-cyan-600/10 transition-all"
+          className="px-4 py-2 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors text-sm"
         >
           {showAll ? "Collapse All" : "Expand All"}
         </button>
       </div>
 
-      <div className="space-y-5">
+      <div className="space-y-4">
         {faqs.map((faq, i) => {
           const isOpen = showAll || activeIndex === i;
 
@@ -53,22 +63,15 @@ export default function FAQAccordion() {
             <motion.div
               key={i}
               layout
-              transition={{ layout: { duration: 0.3, type: "spring" } }}
-              className={`rounded-xl overflow-hidden border-2 backdrop-blur-lg ${
-                isOpen
-                  ? "border-cyan-500 bg-gray-900/60 shadow-xl"
-                  : "border-gray-700 bg-gray-800/40 hover:border-cyan-400/30"
-              } transition-all`}
+              className={`rounded-lg overflow-hidden border ${isOpen ? "border-cyan-300" : "border-gray-200"}`}
             >
               <button
                 onClick={() => toggle(i)}
-                className="w-full flex items-center justify-between px-6 py-4 text-left text-white font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                className="w-full flex items-center justify-between px-5 py-4 text-left bg-white focus:outline-none"
               >
-                <span className="text-lg">{faq.question}</span>
+                <span className="font-medium text-gray-800">{faq.question}</span>
                 <FiChevronDown
-                  className={`w-6 h-6 transform transition-transform duration-300 ${
-                    isOpen ? "rotate-180 text-cyan-400" : "rotate-0 text-white"
-                  }`}
+                  className={`w-5 h-5 transform transition-transform duration-300 ${isOpen ? "rotate-180 text-cyan-500" : "text-gray-500"}`}
                 />
               </button>
 
@@ -79,7 +82,7 @@ export default function FAQAccordion() {
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="px-6 pb-4 text-gray-300 leading-relaxed"
+                    className="px-5 pb-4 text-gray-600"
                   >
                     {faq.answer}
                   </motion.div>

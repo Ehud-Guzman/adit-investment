@@ -136,6 +136,7 @@ async function startServer() {
 
     // Injected Routes (dependency-based)
     app.use("/api/auth", createAuthRouter(collections.users, collections.sessions, collections.db));
+
     app.use("/api/users", createUserRouter(collections.users));
     app.use("/api/products", createProductRouter(collections.products));
     app.use("/api/cart", createCartRouter(collections.cart));
@@ -144,7 +145,7 @@ async function startServer() {
     app.use("/api/admin/products", createAdminProductRouter(collections.products));
     app.use("/api/admin/users", createAdminUserRouter(collections.users));
     app.use("/api/admin/dashboard", createAdminDashboardRouter());
-    app.use("/api/email", createEmailRouter(app.locals.db));
+    
 
 
     // 🔐 Super Admin - Settings Routes (after DB connection)

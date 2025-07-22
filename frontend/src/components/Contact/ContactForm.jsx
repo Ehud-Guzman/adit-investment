@@ -1,4 +1,3 @@
-// components/contact/ContactForm.jsx
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { motion } from "framer-motion";
@@ -24,68 +23,67 @@ export default function ContactForm({ onSubmit }) {
   };
 
   return (
-    <motion.form
-      id="contact-form"
-      onSubmit={handleSubmit(handleFormSubmit)}
+    <motion.div
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
       viewport={{ once: true }}
-      className="w-full max-w-xl mx-auto bg-white/60 backdrop-blur-xl rounded-2xl px-6 sm:px-10 py-10 border border-white/40 shadow-xl"
+      className="w-full max-w-xl mx-auto"
     >
-      <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">
-        Send a Message
-      </h2>
+      <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 sm:p-8">
+        <h2 className="text-2xl font-bold mb-6 text-black-800 text-center">
+          Send a Message
+        </h2>
 
-      {/* Name */}
-      <div className="mb-5">
-        <label className="block mb-1 font-medium text-gray-800">Name</label>
-        <input
-          type="text"
-          {...register("name")}
-          className="w-full px-4 py-3 rounded-md bg-white/70 border border-gray-300 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-cyan-400 outline-none transition-all"
-          placeholder="Your Name"
-        />
-        {errors.name && (
-          <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
-        )}
+        <form onSubmit={handleSubmit(handleFormSubmit)}>
+          <div className="mb-5">
+            <label className="block mb-2 font-medium text-gray-700">Name</label>
+            <input
+              type="text"
+              {...register("name")}
+              className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 placeholder-gray-500 focus:ring-2 focus:ring-cyan-500 outline-none transition-all"
+              placeholder="Your Name"
+            />
+            {errors.name && (
+              <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+            )}
+          </div>
+
+          <div className="mb-5">
+            <label className="block mb-2 font-medium text-gray-700">Email</label>
+            <input
+              type="email"
+              {...register("email")}
+              className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 placeholder-gray-500 focus:ring-2 focus:ring-cyan-500 outline-none transition-all"
+              placeholder="you@example.com"
+            />
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+            )}
+          </div>
+
+          <div className="mb-6">
+            <label className="block mb-2 font-medium text-gray-700">Message</label>
+            <textarea
+              rows="5"
+              {...register("message")}
+              className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 placeholder-gray-500 focus:ring-2 focus:ring-cyan-500 outline-none transition-all"
+              placeholder="Type your message here..."
+            />
+            {errors.message && (
+              <p className="text-red-500 text-sm mt-1">{errors.message.message}</p>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold py-3 rounded-lg shadow-md hover:opacity-90 transition-all"
+          >
+            {isSubmitting ? "Sending..." : "Send Message"}
+          </button>
+        </form>
       </div>
-
-      {/* Email */}
-      <div className="mb-5">
-        <label className="block mb-1 font-medium text-gray-800">Email</label>
-        <input
-          type="email"
-          {...register("email")}
-          className="w-full px-4 py-3 rounded-md bg-white/70 border border-gray-300 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-cyan-400 outline-none transition-all"
-          placeholder="you@example.com"
-        />
-        {errors.email && (
-          <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
-        )}
-      </div>
-
-      {/* Message */}
-      <div className="mb-6">
-        <label className="block mb-1 font-medium text-gray-800">Message</label>
-        <textarea
-          rows="5"
-          {...register("message")}
-          className="w-full px-4 py-3 rounded-md bg-white/70 border border-gray-300 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-cyan-400 outline-none transition-all"
-          placeholder="Type your message here..."
-        />
-        {errors.message && (
-          <p className="text-red-500 text-sm mt-1">{errors.message.message}</p>
-        )}
-      </div>
-
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="w-full bg-gradient-to-r from-cyan-400 to-blue-400 text-white font-semibold py-3 rounded-md shadow-md hover:opacity-90 transition-all"
-      >
-        {isSubmitting ? "Sending..." : "Send Message"}
-      </button>
-    </motion.form>
+    </motion.div>
   );
 }

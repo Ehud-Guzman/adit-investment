@@ -1,45 +1,44 @@
-// components/contact/ContactInfoCards.jsx
 import { motion } from "framer-motion";
 import { FiMail, FiPhone, FiMapPin } from "react-icons/fi";
 
 const cards = [
   {
-    icon: <FiMail className="w-6 h-6 text-cyan-700" />,
+    icon: <FiMail className="w-6 h-6" />,
     title: "Email Us",
     content: "adit.investmentlimited@gmail.com",
     action: "Send a message",
     link: "mailto:adit.investmentlimited@gmail.com",
-    bg: "bg-gradient-to-br from-cyan-100 to-white",
+    bg: "bg-gradient-to-br from-cyan-50 to-white",
     border: "border-cyan-200",
-    textColor: "text-cyan-700",
+    iconBg: "bg-cyan-100 text-cyan-700",
   },
   {
-    icon: <FiPhone className="w-6 h-6 text-blue-700" />,
+    icon: <FiPhone className="w-6 h-6" />,
     title: "Call Us",
     content: ["+254 733 681 921", "+254 704 970 535"],
     action: "Call now",
     link: "tel:+254733681921",
-    bg: "bg-gradient-to-br from-blue-100 to-white",
+    bg: "bg-gradient-to-br from-blue-50 to-white",
     border: "border-blue-200",
-    textColor: "text-blue-700",
+    iconBg: "bg-blue-100 text-blue-700",
   },
   {
-    icon: <FiMapPin className="w-6 h-6 text-purple-700" />,
+    icon: <FiMapPin className="w-6 h-6" />,
     title: "Visit Us",
     content: "Busia and Bondo Town, Kenya",
-    
     action: "View on map",
     link: "#location",
     isScroll: true,
-    bg: "bg-gradient-to-br from-purple-100 to-white",
+    bg: "bg-gradient-to-br from-purple-50 to-white",
     border: "border-purple-200",
-    textColor: "text-purple-700",
+    iconBg: "bg-purple-100 text-purple-700",
   },
 ];
 
 export default function ContactInfoCards() {
   return (
     <div className="space-y-6">
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">Contact Information</h2>
       {cards.map((card, i) => (
         <motion.div
           key={i}
@@ -48,10 +47,10 @@ export default function ContactInfoCards() {
           whileHover={{ y: -5 }}
           transition={{ duration: 0.4, delay: i * 0.1 }}
           viewport={{ once: true }}
-          className={`p-6 rounded-xl shadow-md transition-all border ${card.bg} ${card.border}`}
+          className={`p-6 rounded-xl shadow-sm transition-all border ${card.bg} ${card.border}`}
         >
           <div className="flex items-start">
-            <div className="flex-shrink-0 p-3 rounded-lg bg-white shadow-sm">
+            <div className={`flex-shrink-0 p-3 rounded-lg ${card.iconBg}`}>
               {card.icon}
             </div>
             <div className="ml-4">
@@ -69,7 +68,7 @@ export default function ContactInfoCards() {
 
               {card.isScroll ? (
                 <button
-                  className={`inline-block mt-3 text-sm font-medium hover:underline ${card.textColor}`}
+                  className={`inline-block mt-3 text-sm font-medium hover:underline ${card.iconBg.replace('bg-', 'text-')}`}
                   onClick={() =>
                     document.getElementById("location")?.scrollIntoView({
                       behavior: "smooth",
@@ -81,7 +80,7 @@ export default function ContactInfoCards() {
               ) : (
                 <a
                   href={card.link}
-                  className={`inline-block mt-3 text-sm font-medium hover:underline ${card.textColor}`}
+                  className={`inline-block mt-3 text-sm font-medium hover:underline ${card.iconBg.replace('bg-', 'text-')}`}
                 >
                   {card.action}
                 </a>

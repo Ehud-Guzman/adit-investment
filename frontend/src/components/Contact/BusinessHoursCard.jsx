@@ -14,7 +14,7 @@ function getBusinessStatus() {
   const closeHour = 18;
 
   if (day === 0) {
-    const nextOpen = setHours(setMinutes(addDays(now, 1), openHour));
+    const nextOpen = setHours(setMinutes(addDays(now, 1), openHour);
     const timeUntilOpen = formatDistanceStrict(now, nextOpen);
     return {
       open: false,
@@ -89,7 +89,7 @@ export default function BusinessHoursCard() {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       viewport={{ once: true }}
-      className="w-full max-w-lg bg-gradient-to-br from-white to-gray-50 rounded-2xl border border-gray-200 shadow-xl p-6 mx-auto relative overflow-hidden"
+      className="w-full max-w-lg bg-gradient-to-br from-white to-gray-50 rounded-2xl border border-gray-200 shadow-xl p-4 sm:p-6 mx-auto relative overflow-hidden"
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
@@ -110,7 +110,7 @@ export default function BusinessHoursCard() {
       
       <div className="relative z-10">
         {/* Header with animated clock icon */}
-        <div className="flex items-center gap-3 mb-6">
+        <div className="flex items-center gap-3 mb-4 sm:mb-6">
           <motion.div 
             className="p-3 bg-gradient-to-br from-indigo-500 to-blue-500 rounded-xl shadow-md relative"
             animate={{ 
@@ -126,7 +126,7 @@ export default function BusinessHoursCard() {
               scale: { duration: 0.3 }
             }}
           >
-            <FiClock className="w-6 h-6 text-white" />
+            <FiClock className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             {/* Clock hands */}
             <motion.div 
               className="absolute top-1/2 left-1/2 w-0.5 h-2.5 bg-white origin-top -translate-x-1/2 -translate-y-1/2"
@@ -152,71 +152,69 @@ export default function BusinessHoursCard() {
             />
           </motion.div>
           <div>
-            <h2 className="text-xl font-bold text-gray-800">Business Hours</h2>
-            <p className="text-sm text-gray-500">Current operational status</p>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-800">Business Hours</h2>
+            <p className="text-xs sm:text-sm text-gray-500">Current operational status</p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
           {/* Current Time */}
-          <div className="bg-gradient-to-br from-indigo-50 to-blue-50 p-4 rounded-xl border border-indigo-100">
+          <div className="bg-gradient-to-br from-indigo-50 to-blue-50 p-3 sm:p-4 rounded-xl border border-indigo-100">
             <div className="text-xs text-indigo-600 font-medium mb-1">CURRENT TIME</div>
-            <div className="text-2xl font-bold text-gray-800">
+            <div className="text-xl sm:text-2xl font-bold text-gray-800">
               {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </div>
             <div className="text-xs text-gray-500 mt-1">
-              {currentTime.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' })}
+              {currentTime.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' })}
             </div>
           </div>
 
-          {/* Days of Week - Fixed layout */}
-          <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-4 rounded-xl border border-gray-200">
-  <div className="text-xs text-gray-600 font-medium mb-2">WEEK SCHEDULE</div>
-  
-  {/* Clipped overflow */}
-  <div className="flex gap-1 overflow-hidden max-w-full">
-    {days.map((day, index) => (
-      <div key={index} className="flex flex-col items-center flex-shrink-0">
-        <div className={`w-7 h-7 rounded-full flex items-center justify-center text-sm ${
-          day.active 
-            ? "bg-indigo-500 text-white shadow-sm" 
-            : "text-gray-400 bg-gray-100"
-        }`}>
-          {day.name.charAt(0)}
-        </div>
-        <div className={`text-[10px] mt-1 ${
-          day.active ? "font-bold text-indigo-600" : "text-gray-400"
-        }`}>
-          {day.name}
-        </div>
-      </div>
-    ))}
-  </div>
-</div>
-
+          {/* Days of Week - Responsive layout */}
+          <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-3 sm:p-4 rounded-xl border border-gray-200">
+            <div className="text-xs text-gray-600 font-medium mb-2">WEEK SCHEDULE</div>
+            
+            <div className="flex justify-between">
+              {days.map((day, index) => (
+                <div key={index} className="flex flex-col items-center">
+                  <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-xs sm:text-sm ${
+                    day.active 
+                      ? "bg-indigo-500 text-white shadow-sm" 
+                      : "text-gray-400 bg-gray-100"
+                  }`}>
+                    {day.name.charAt(0)}
+                  </div>
+                  <div className={`text-[10px] mt-1 ${
+                    day.active ? "font-bold text-indigo-600" : "text-gray-400"
+                  }`}>
+                    {index === 0 || index === 6 ? day.name : day.name.substring(0,1)}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
 
           {/* Hours Summary */}
-          <div className="bg-gradient-to-br from-blue-50 to-cyan-50 p-4 rounded-xl border border-blue-100">
+          <div className="bg-gradient-to-br from-blue-50 to-cyan-50 p-3 sm:p-4 rounded-xl border border-blue-100">
             <div className="text-xs text-blue-600 font-medium mb-2">OPERATING HOURS</div>
             <div className="flex justify-between items-center mb-1">
-              <span className="text-gray-600">Mon - Sat</span>
-              <span className="font-medium">8 AM - 6 PM</span>
+              <span className="text-xs sm:text-sm text-gray-600">Mon - Sat</span>
+              <span className="text-xs sm:text-sm font-medium">8 AM - 6 PM</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">Sunday-</span>
-              <span className="font-medium text-red-500">Closed</span>
+              <span className="text-xs sm:text-sm text-gray-600">Sunday</span>
+              <span className="text-xs sm:text-sm font-medium text-red-500">Closed</span>
             </div>
           </div>
         </div>
 
         {/* Visual Timeline */}
-        <div className="mt-6 mb-6">
+        <div className="mt-4 sm:mt-6 mb-4 sm:mb-6">
           <div className="flex justify-between text-xs text-gray-500 mb-2">
-            <span>8:00 AM</span>
+            <span>8 AM</span>
             <span className="text-gray-800 font-medium">Business Hours</span>
-            <span>6:00 PM</span>
+            <span>6 PM</span>
           </div>
-          <div className="h-3 bg-gray-200 rounded-full overflow-hidden relative">
+          <div className="h-2.5 sm:h-3 bg-gray-200 rounded-full overflow-hidden relative">
             <div className="absolute inset-0 flex">
               <div className="w-1/3 bg-blue-100"></div>
               <div className="w-1/3 bg-blue-200"></div>
@@ -230,18 +228,18 @@ export default function BusinessHoursCard() {
                 transition={{ duration: 1, ease: "easeOut" }}
               />
             )}
-            <div className="absolute top-0 h-4 w-0.5 bg-gray-800 left-1/3 -ml-px"></div>
-            <div className="absolute top-0 h-4 w-0.5 bg-gray-800 left-2/3 -ml-px"></div>
+            <div className="absolute top-0 h-3 sm:h-4 w-0.5 bg-gray-800 left-1/3 -ml-px"></div>
+            <div className="absolute top-0 h-3 sm:h-4 w-0.5 bg-gray-800 left-2/3 -ml-px"></div>
             
             {status.open && (
               <motion.div 
-                className="absolute top-0 h-5 w-1.5 bg-white border-2 border-gray-800 rounded-full -mt-1"
+                className="absolute top-0 h-4 w-1.5 bg-white border-2 border-gray-800 rounded-full -mt-1"
                 style={{ left: `${progress}%` }}
                 initial={{ left: "0%" }}
                 animate={{ left: `${progress}%` }}
                 transition={{ duration: 1, ease: "easeOut" }}
               >
-                <div className="absolute top-5 left-1/2 -translate-x-1/2 mt-1 text-xs font-medium text-gray-700 bg-white px-2 py-0.5 rounded shadow">
+                <div className="absolute top-4 left-1/2 -translate-x-1/2 mt-1 text-xs font-medium text-gray-700 bg-white px-2 py-0.5 rounded shadow whitespace-nowrap">
                   Now
                 </div>
               </motion.div>
@@ -278,13 +276,13 @@ export default function BusinessHoursCard() {
                   <FiAlertCircle className="w-5 h-5 text-amber-600" />
                 )}
               </div>
-              <div className="ml-4">
+              <div className="ml-3">
                 <div className={`text-sm font-semibold ${
                   status.open ? "text-green-700" : "text-amber-700"
                 }`}>
                   {status.open ? "We're Open!" : "Currently Closed"}
                 </div>
-                <div className="text-gray-700 mt-1">
+                <div className="text-xs sm:text-sm text-gray-700 mt-1">
                   {status.message}
                 </div>
               </div>
@@ -294,7 +292,7 @@ export default function BusinessHoursCard() {
             {status.open && (
               <div className="mt-3 flex items-center">
                 <div className="text-xs text-gray-500">Workday progress:</div>
-                <div className="ml-2 w-24 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                <div className="ml-2 w-20 sm:w-24 h-1.5 bg-gray-200 rounded-full overflow-hidden">
                   <motion.div 
                     className={`h-full ${status.open ? 'bg-gradient-to-r from-green-500 to-emerald-500' : 'bg-gray-300'}`}
                     initial={{ width: "0%" }}
