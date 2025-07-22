@@ -10,7 +10,6 @@ import Navbar from "./components/Navbar";
 import Footer from "@/layout/Footer/Footer";
 import AuthModal from "./components/AuthModal";
 
-
 // Hooks
 import { useAuth } from "@/hooks/useAuth";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
@@ -60,7 +59,7 @@ export default function App() {
         />
 
         {/* 📦 Route Views */}
-        <main className="flex-grow mt-[72px] px-4 sm:px-6 lg:px-8">
+        <main className="flex-grow mt-[72px]"> {/* Removed padding classes here */}
           <Suspense
             fallback={<div className="text-center py-10">Loading...</div>}
           >
@@ -113,15 +112,15 @@ export default function App() {
       {/* 🍞 Global Toasts */}
       <ToastContainer
         position="bottom-right"
-        autoClose={3000} // ⏱️ Standard toast duration (adjust as needed)
-        limit={6} // ✅ Show more toasts without overwhelming
-        newestOnTop={true} // 🆕 Always see the latest first
-        closeOnClick={true} // 👆 Let users dismiss easily
-        pauseOnFocusLoss={false} // 🚫 Don’t pause when switching tabs (for speed)
-        pauseOnHover={true} // 🖱️ Let users hover to pause if needed
-        draggable={false} // 🚫 Keep UX clean; no dragging required
-        hideProgressBar={true} // 🧼 Clean UI — no jittery progress
-        theme="colored" // 🎨 Vibrant and consistent styling
+        autoClose={3000}
+        limit={6}
+        newestOnTop={true}
+        closeOnClick={true}
+        pauseOnFocusLoss={false}
+        pauseOnHover={true}
+        draggable={false}
+        hideProgressBar={true}
+        theme="colored"
       />
     </>
   );

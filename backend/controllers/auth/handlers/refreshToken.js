@@ -4,7 +4,10 @@ import {
   signAccessToken,
   signRefreshToken,
 } from "../../../utils/tokens.js";
-import { accessCookieOptions, refreshCookieOptions } from "../../../config/cookieOptions.js";
+import {
+  accessCookieOptions,
+  refreshCookieOptions,
+} from "../../../config/cookieOptions.js";
 import { cleanUser } from "../../../utils/auth.helpers.js";
 
 const refreshTokenHandler = async (req, res, users, sessions) => {
@@ -38,9 +41,11 @@ const refreshTokenHandler = async (req, res, users, sessions) => {
       return res.status(403).json({ message: "Token reuse detected. Sessions revoked." });
     }
 
-    const safeUser = cleanUser(user);
-    const newAccessToken = signAccessToken(safeUser);
-    const newRefreshToken = signRefreshToken(safeUser);
+    // ✅ Use cleanUser (already handles role, isAdmin, isSuperAdmin)
+    const normalizedUser = cleanUser(user);
+
+    const newAccessToken = signAccessToken(normalizedUser);
+    const newRefreshToken = signRefreshToken(normalizedUser);
 
     await sessions.updateOne(
       { refreshToken: token },
@@ -50,7 +55,11 @@ const refreshTokenHandler = async (req, res, users, sessions) => {
     return res
       .cookie("token", newAccessToken, accessCookieOptions)
       .cookie("refreshToken", newRefreshToken, refreshCookieOptions)
-      .json({ token: newAccessToken, refreshToken: newRefreshToken });
+      .json({
+        token: newAccessToken,
+        refreshToken: newRefreshToken,
+        user: normalizedUser,
+      });
   } catch (err) {
     console.error("Token refresh failed:", err);
     return res.status(500).json({ message: "Token refresh failed", error: err.message });

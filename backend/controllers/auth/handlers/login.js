@@ -12,18 +12,13 @@ import {
   handleError,
 } from "../../../utils/auth.helpers.js";
 
-
-
-
 const loginHandler = async (req, res, users, sessions) => {
   try {
     const { email, password } = req.body;
 
     // 🛑 Validate input
     if (!email || !password) {
-      return res
-        .status(400)
-        .json({ message: "Email and password are required" });
+      return res.status(400).json({ message: "Email and password are required" });
     }
 
     // 🔍 Find user
@@ -43,12 +38,8 @@ const loginHandler = async (req, res, users, sessions) => {
       return res.status(403).json({ message: `Account is ${user.status}` });
     }
 
-    // ✅ Clean + normalize user
-    const safeUser = cleanUser(user);
-    const normalizedUser = {
-      ...safeUser,
-      role: user.isAdmin ? "admin" : "user", // 👈 key fix
-    };
+    // ✅ Clean + normalize user with correct role
+    const normalizedUser = cleanUser(user); // Now includes role, isAdmin, isSuperAdmin
 
     // 🔐 Generate tokens
     const accessToken = signAccessToken(normalizedUser);
@@ -70,6 +61,7 @@ const loginHandler = async (req, res, users, sessions) => {
         token: accessToken,
         user: normalizedUser,
       });
+
   } catch (err) {
     handleError(res, err, "Login failed");
   }

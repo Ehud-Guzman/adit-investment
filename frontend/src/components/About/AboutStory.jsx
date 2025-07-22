@@ -10,7 +10,7 @@ export default function AboutStory() {
     >
       <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5 pointer-events-none" />
 
-      <div className="container mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-center relative z-10">
+      <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-center relative z-10"> {/* Removed px classes */}
         {/* Text Block */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}

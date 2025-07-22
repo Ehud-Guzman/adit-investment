@@ -7,7 +7,7 @@ export default function AboutMissionVision() {
       {/* Background pattern */}
       <div className="absolute inset-0 bg-[url('/circuit-pattern.svg')] bg-repeat opacity-5 pointer-events-none z-0" />
 
-      <div className="container mx-auto px-4 sm:px-6 relative z-10">
+      <div className="container mx-auto relative z-10"> {/* Removed px classes */}
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

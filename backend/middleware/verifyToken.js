@@ -13,12 +13,14 @@ export const verifyToken = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // 👇 Standardize the payload into req.user
     req.user = {
       userId: decoded.userId,
       role: decoded.role,
-      isAdmin: decoded.isAdmin,
+      isAdmin: ["admin", "superadmin"].includes(decoded.role),
+        isSuperAdmin: decoded.isSuperAdmin, // ✅ always computed
     };
+
+    console.log("🔑 Verified token:", req.user); // Debugging aid
 
     next();
   } catch (err) {

@@ -5,7 +5,8 @@ export const signAccessToken = (user) =>
     {
       userId: user._id.toString(),
       role: user.role,         // ✅ now role is included in JWT
-      isAdmin: user.isAdmin,   // optional, keep if still used
+      isAdmin: user.isAdmin, 
+      isSuperAdmin: user.isSuperAdmin,  // optional, keep if still used
     },
     process.env.JWT_SECRET,
     { expiresIn: "1d" }
