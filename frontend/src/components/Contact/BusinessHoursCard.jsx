@@ -14,7 +14,7 @@ function getBusinessStatus() {
   const closeHour = 18;
 
   if (day === 0) {
-    const nextOpen = setHours(setMinutes(addDays(now, 1), openHour);
+    const nextOpen = setHours(setMinutes(addDays(now, 1), openHour));
     const timeUntilOpen = formatDistanceStrict(now, nextOpen);
     return {
       open: false,
