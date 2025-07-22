@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { adminLogout } from "@/services/api/admin/adminActions";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { api } from "@/services/api"; // Axios instance
+import { api } from "@/services/api/index"; // Axios instance
 
 export function useAdminLogoutMutation({ clearTokens, queryClient }) {
   const navigate = useNavigate();
