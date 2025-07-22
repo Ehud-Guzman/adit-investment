@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { adminLogin } from "@/services/api/admin/adminActions";
-import { api } from "@/services/api"; // 🔐 Axios instance
+import { api } from "@/services/api/index"; // 🔐 Axios instance
 
 export function useAdminLoginMutation({ updateTokens, queryClient }) {
   const navigate = useNavigate();
