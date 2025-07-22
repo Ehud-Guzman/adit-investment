@@ -2,8 +2,8 @@ import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-// ✅ CORRECT IMPORT FOR ADMIN AUTH
 import { adminLogin } from "@/services/api/admin/adminActions";
+import { api } from "@/services/api"; // 🔐 Axios instance
 
 export function useAdminLoginMutation({ updateTokens, queryClient }) {
   const navigate = useNavigate();
@@ -16,7 +16,15 @@ export function useAdminLoginMutation({ updateTokens, queryClient }) {
         throw new Error("Access denied: Not an admin");
       }
 
+      // ✅ Store token in localStorage
+      localStorage.setItem("accessToken", token);
+
+      // ✅ Set Axios default Authorization header
+      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+      // ✅ Optional: update your state/store/context
       updateTokens(token);
+
       return user;
     },
 
@@ -27,7 +35,10 @@ export function useAdminLoginMutation({ updateTokens, queryClient }) {
     },
 
     onError: (err) => {
-      const msg = err?.message || "Admin login failed";
+      const msg =
+        err?.response?.data?.message ||
+        err?.message ||
+        "Admin login failed";
       toast.error(msg);
     },
   });
