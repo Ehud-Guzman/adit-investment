@@ -95,7 +95,7 @@ const Filters = ({
         <div className="flex gap-2 w-full md:hidden">
           <button
             onClick={() => setFiltersOpen(!filtersOpen)}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm transition-colors"
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm transition-colors shadow-sm"
           >
             <FiFilter />
             {filtersOpen ? "Hide Filters" : "Filters"}
@@ -103,7 +103,7 @@ const Filters = ({
 
           <button
             onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
-            className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm transition-colors"
+            className="flex items-center gap-2 bg-blue-100 hover:bg-blue-200 text-blue-800 px-4 py-2 rounded-lg text-sm transition-colors shadow-sm"
           >
             <FiSearch />
             Search
