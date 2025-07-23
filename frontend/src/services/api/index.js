@@ -15,7 +15,7 @@ const api = axios.create({
   },
 });
 
-console.log("🔥 API BaseURL:", baseURL); // ✅ Keep in dev, remove in prod
+
 
 // 🚀 REQUEST INTERCEPTOR — Attach access token from localStorage (if present)
 api.interceptors.request.use(

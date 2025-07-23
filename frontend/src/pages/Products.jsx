@@ -1,29 +1,43 @@
-import { useState, useEffect, useMemo, useCallback, useRef } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useRef,
+} from "react";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { ToastContainer, toast } from "react-toastify";
 import { debounce } from "lodash";
-import { getProducts, getProductById } from "../services/api/products";
-import { getProductReviews, submitReview } from "../services/api/reviews";
-import { useCart } from "../hooks/useCart";
-import { useWishlist } from "../hooks/useWishlist";
-import { useAuth } from "../hooks/useAuth";
-import Navbar from "../components/Navbar";
-import Header from "../components/Header";
-import BenefitsBar from "../components/BenefitsBar";
-import Filters from "../components/Filters";
-import ProductList from "../components/ProductList";
-import AuthModal from "../components/AuthModal";
-import QuickViewModal from "../components/QuickView/QuickViewModal";
-import CartSidebar from "../components/CartSidebar";
-import ErrorBoundary from "../components/ErrorBoundary";
-import LoadingSpinner from "../components/LoadingSpinner";
-import "react-toastify/dist/ReactToastify.css";
+import {
+  getProducts,
+  getProductById,
+} from "@/services/api/products";
+import {
+  getProductReviews,
+  submitReview,
+} from "@/services/api/reviews";
+import { useCart } from "@/hooks/useCart";
+import { useWishlist } from "@/hooks/useWishlist";
+import { useAuth } from "@/hooks/useAuth";
+import Navbar from "@/components/Navbar";
+import Header from "@/components/Header";
+import BenefitsBar from "@/components/BenefitsBar";
+import Filters from "@/components/Filters";
+import ProductList from "@/components/ProductList";
+import AuthModal from "@/components/AuthModal";
+import QuickViewModal from "@/components/QuickView/QuickViewModal";
+import CartSidebar from "@/components/CartSidebar";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import LipaNaMpesa from "@/components/LipaNaMpesa";
-
-
-
+import "react-toastify/dist/ReactToastify.css";
 
 const Products = () => {
+  // === STATE ===
   const [category, setCategory] = useState("all");
   const [sortBy, setSortBy] = useState("featured");
   const [searchTerm, setSearchTerm] = useState("");
@@ -37,6 +51,8 @@ const Products = () => {
   const scrollPositionRef = useRef(0);
 
   const queryClient = useQueryClient();
+
+  // === HOOKS ===
   const {
     currentUser,
     isLoadingUser,
@@ -46,6 +62,7 @@ const Products = () => {
     isLoggingIn,
     isRegistering,
   } = useAuth();
+
   const {
     cart,
     cartCount,
@@ -54,9 +71,15 @@ const Products = () => {
     updateCartItem,
     removeFromCart,
   } = useCart();
-  const { wishlist, isLoadingWishlist, toggleWishlist, removeFromWishlist } =
-    useWishlist();
 
+  const {
+    wishlist,
+    isLoadingWishlist,
+    toggleWishlist,
+    removeFromWishlist,
+  } = useWishlist();
+
+  // === PRODUCTS QUERY ===
   const {
     data: productsData,
     isLoading: isLoadingProducts,
@@ -79,7 +102,6 @@ const Products = () => {
         sort: sortBy,
         search: searchTerm,
       });
-      
       return {
         products: data.products || [],
         pagination: data.pagination || {
@@ -88,22 +110,15 @@ const Products = () => {
           total: 0,
           pages: 1,
           hasNext: false,
-          hasPrev: false
-        }
+          hasPrev: false,
+        },
       };
     },
     staleTime: 1000 * 60 * 5,
     keepPreviousData: true,
   });
 
-  // Restore scroll position after data loads
-  useEffect(() => {
-    if (!isLoadingProducts && !isPreviousData && scrollPositionRef.current > 0) {
-      window.scrollTo(0, scrollPositionRef.current);
-      scrollPositionRef.current = 0;
-    }
-  }, [isLoadingProducts, isPreviousData]);
-
+  // === QUICK VIEW & REVIEWS ===
   const { data: quickViewProduct, isLoading: isLoadingQuickView } = useQuery({
     queryKey: ["product", quickViewProductId],
     queryFn: () => getProductById(quickViewProductId),
@@ -119,23 +134,21 @@ const Products = () => {
   });
 
   const submitReviewMutation = useMutation({
-    mutationFn: ({ productId, review }) => submitReview(productId, review),
+    mutationFn: ({ productId, review }) =>
+      submitReview(productId, review),
     onSuccess: () => {
       queryClient.invalidateQueries(["reviews", quickViewProductId]);
       queryClient.invalidateQueries(["products"]);
-      toast.success("Review submitted successfully");
+      toast.success("✅ Review submitted");
     },
-    onError: (error) => {
-      toast.error(error?.response?.data?.message || "Failed to submit review");
+    onError: (err) => {
+      toast.error(
+        err?.response?.data?.message || "Failed to submit review"
+      );
     },
   });
 
-  const isLoading = useMemo(
-    () =>
-      isLoadingProducts || isLoadingUser || isLoadingCart || isLoadingWishlist,
-    [isLoadingProducts, isLoadingUser, isLoadingCart, isLoadingWishlist]
-  );
-
+  // === SEARCH DEBOUNCE ===
   const debouncedSearch = useMemo(
     () =>
       debounce((value) => {
@@ -145,55 +158,57 @@ const Products = () => {
     []
   );
 
- const handleWishlistToggle = useCallback(
-  (productId) => {
-    const existingItem = wishlist.find((item) => item.productId === productId);
-    if (existingItem) {
-      removeFromWishlist(existingItem._id); // ✅ Use _id, not productId
-      
-    } else {
-      toggleWishlist(productId);
-    
+  useEffect(() => () => debouncedSearch.cancel(), [debouncedSearch]);
+
+  // === SCROLL RESTORE ===
+  useEffect(() => {
+    if (!isLoadingProducts && !isPreviousData && scrollPositionRef.current > 0) {
+      window.scrollTo(0, scrollPositionRef.current);
+      scrollPositionRef.current = 0;
     }
-  },
-  [wishlist, toggleWishlist, removeFromWishlist]
-);
+  }, [isLoadingProducts, isPreviousData]);
 
-
-  const openQuickView = useCallback(
-    (productId) => setQuickViewProductId(productId),
-    []
+  // === CALLBACKS ===
+  const handleWishlistToggle = useCallback(
+    (productId) => {
+      const existing = wishlist.find((item) => item.productId === productId);
+      if (existing) {
+        removeFromWishlist(existing._id);
+      } else {
+        toggleWishlist(productId);
+      }
+    },
+    [wishlist, toggleWishlist, removeFromWishlist]
   );
+
+  const handlePageChange = useCallback((page) => setCurrentPage(page), []);
+  const openQuickView = useCallback((id) => setQuickViewProductId(id), []);
   const closeQuickView = useCallback(() => setQuickViewProductId(null), []);
 
-  const handlePageChange = useCallback(
-    (page) => {
-      setCurrentPage(page);
-    },
-    []
-  );
-
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setIsScrolled(window.scrollY > 50);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
     document.body.style.overflow = authModalOpen ? "hidden" : "auto";
   }, [authModalOpen]);
 
-  useEffect(() => () => debouncedSearch.cancel(), [debouncedSearch]);
+  const isLoading = useMemo(
+    () =>
+      isLoadingProducts || isLoadingUser || isLoadingCart || isLoadingWishlist,
+    [isLoadingProducts, isLoadingUser, isLoadingCart, isLoadingWishlist]
+  );
 
   return (
     <ErrorBoundary>
       <div className="relative min-h-screen bg-gray-50">
+        {/* === Header/Nav === */}
         <div className="sticky top-0 z-[100] bg-white shadow-md transition-all duration-300">
           <div
             className={`${
-              isScrolled
-                ? "h-0 opacity-0 overflow-hidden"
-                : "h-auto opacity-100"
+              isScrolled ? "h-0 opacity-0" : "h-auto opacity-100"
             } transition-all duration-300`}
           >
             <Navbar />
@@ -211,10 +226,7 @@ const Products = () => {
 
         <main className="container mx-auto px-4 sm:px-6 pt-8">
           {isLoading && (
-            <div
-              className="fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50"
-              style={{ top: "72px" }}
-            >
+            <div className="fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50" style={{ top: 72 }}>
               <LoadingSpinner size="lg" />
             </div>
           )}
@@ -246,22 +258,16 @@ const Products = () => {
           />
 
           {isError ? (
-            <div className="text-center text-red-600 py-8" role="alert">
+            <div className="text-center text-red-600 py-8">
               {productsError?.message ||
-                "Failed to load products. Try again later."}
+                "Something went wrong while loading products."}
             </div>
           ) : (
             <ProductList
               products={productsData?.products || []}
               loading={isLoadingProducts}
               error={productsError}
-              pagination={{
-                page: productsData?.pagination?.page || currentPage,
-                pages: productsData?.pagination?.pages || 1,
-                hasNext: productsData?.pagination?.hasNext || false,
-                hasPrev: productsData?.pagination?.hasPrev || false,
-                total: productsData?.pagination?.total || 0
-              }}
+              pagination={productsData?.pagination}
               onPageChange={handlePageChange}
               onAddToCart={addToCart}
               onWishlistToggle={handleWishlistToggle}
@@ -315,19 +321,18 @@ const Products = () => {
 
         <LipaNaMpesa />
 
-<ToastContainer
-  position="bottom-right"
-  autoClose={2000} // ⏱ Faster, but not too fast
-  hideProgressBar
-  closeOnClick
-  pauseOnFocusLoss={false} // 🔇 no queue when you tab back
-  pauseOnHover={false}     // ⏩ no hang if user hovers
-  draggable={false}        // 🖱️ keeps layout still
-  newestOnTop              // 🆕 recent toasts on top
-  limit={2}                // ⛔ prevents stacking overload
-  theme="colored"
-/>
-
+        <ToastContainer
+          position="bottom-right"
+          autoClose={2000}
+          hideProgressBar
+          closeOnClick
+          pauseOnHover={false}
+          pauseOnFocusLoss={false}
+          draggable={false}
+          newestOnTop
+          limit={2}
+          theme="colored"
+        />
       </div>
     </ErrorBoundary>
   );

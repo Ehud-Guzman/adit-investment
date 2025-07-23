@@ -31,13 +31,13 @@ export default function ContactForm({ onSubmit }) {
       className="w-full max-w-xl mx-auto"
     >
       <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 sm:p-8">
-        <h2 className="text-2xl font-bold mb-6 text-black-800 text-center">
+        <h2 className="text-2xl font-bold mb-6 text-gray-900 text-center">
           Send a Message
         </h2>
 
         <form onSubmit={handleSubmit(handleFormSubmit)}>
           <div className="mb-5">
-            <label className="block mb-2 font-medium text-gray-700">Name</label>
+            <label className="block mb-2 font-medium text-gray-900">Name</label>
             <input
               type="text"
               {...register("name")}

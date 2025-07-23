@@ -59,7 +59,7 @@ export default function App() {
         />
 
         {/* 📦 Route Views */}
-        <main className="flex-grow mt-[72px]"> {/* Removed padding classes here */}
+        <main className="flex-grow pt-16 md:pt-20">
           <Suspense
             fallback={<div className="text-center py-10">Loading...</div>}
           >

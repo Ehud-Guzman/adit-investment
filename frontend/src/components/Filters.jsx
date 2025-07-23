@@ -1,10 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  FiFilter,
-  FiSearch,
-  FiChevronDown,
-  FiX,
-} from "react-icons/fi";
+import { FiFilter, FiSearch, FiChevronDown, FiX } from "react-icons/fi";
 
 const CATEGORIES = [
   { value: "all", label: "All Categories", icon: "🛒" },
@@ -172,18 +167,19 @@ const Filters = ({
       {mobileSearchOpen && (
         <div className="md:hidden relative mb-4">
           <div className="relative flex items-center">
-            <FiSearch className="absolute left-3 text-gray-400" />
+            <FiSearch className="absolute left-3 text-gray-800" />
             <input
               type="text"
               value={searchTerm}
               onChange={handleSearchChange}
               placeholder="Search products..."
-              className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-full text-sm text-black-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+
             {searchTerm && (
               <button
                 onClick={clearSearch}
-                className="absolute right-3 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 text-gray-400 hover:text-gray-700"
               >
                 <FiX />
               </button>
@@ -193,7 +189,9 @@ const Filters = ({
       )}
 
       {/* Categories */}
-      <div className={`${filtersOpen ? "block" : "hidden md:block"} mb-2 md:mb-4`}>
+      <div
+        className={`${filtersOpen ? "block" : "hidden md:block"} mb-2 md:mb-4`}
+      >
         <div className="flex flex-wrap gap-2">
           {CATEGORIES.map(({ value, label, icon }) => (
             <button
@@ -217,7 +215,8 @@ const Filters = ({
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-100">
           <div className="text-sm text-gray-500">
             Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
-            {Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems} items
+            {Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems}{" "}
+            items
           </div>
         </div>
       )}

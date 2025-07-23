@@ -1,10 +1,11 @@
-// hooks/useCart.js
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useRef } from "react";
-import { cart as cartAPI } from "@/services/api/index.js";
+import { useEffect } from "react";
+import { cart as cartAPI } from "@/services/api/index";
 import { toastGuard } from "@/utils/toastControl";
 
-// ✅ Central toast keys
+import { normalizeCartItems } from "@/utils/cartNormalizer";
+
+
 const toastIds = {
   add: "cart-toast-add",
   update: "cart-toast-update",
@@ -13,10 +14,13 @@ const toastIds = {
   error: "cart-toast-error",
 };
 
-// 🧠 Guest cart utils
+const isMergePending = () =>
+  typeof window !== "undefined" && window.__mergePending === true;
+
 const getGuestCart = () => {
   try {
-    const parsed = JSON.parse(localStorage.getItem("guest_cart"));
+    const raw = localStorage.getItem("guest_cart");
+    const parsed = JSON.parse(raw);
     return Array.isArray(parsed) ? parsed : [];
   } catch {
     localStorage.removeItem("guest_cart");
@@ -37,33 +41,29 @@ export const useCart = ({
   isLoadingUser = false,
 } = {}) => {
   const queryClient = useQueryClient();
-  const didRefetch = useRef(false);
 
-  // 🛒 Cart query
   const cartQuery = useQuery({
     queryKey: ["cart"],
-    enabled: !isLoadingUser,
-    staleTime: 60 * 1000,
-    queryFn: async () =>
-      isAuthenticated
-        ? await cartAPI.getCart().then((data) =>
-            Array.isArray(data)
-              ? data.map((item) => ({ ...item, id: item._id }))
-              : []
-          )
-        : getGuestCart(),
+    enabled: !isLoadingUser && !window.__mergePending,
+    staleTime: Infinity,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    queryFn: async () => {
+      const data = isAuthenticated ? await cartAPI.getCart() : getGuestCart();
+
+      return normalizeCartItems(data);
+    },
     retry: (count, error) => {
       const status = error?.response?.status;
       return count < 3 && ![400, 401].includes(status);
     },
   });
 
-  // 🚨 Handle load errors
   useEffect(() => {
     if (cartQuery.isError && !cartQuery.data) {
-      const error = cartQuery.error;
-      const message = error?.response?.data?.message || error.message;
-      const status = error?.response?.status;
+      const message =
+        cartQuery.error?.response?.data?.message || cartQuery.error.message;
+      const status = cartQuery.error?.response?.status;
 
       if (![400, 401].includes(status)) {
         toastGuard.once(toastIds.error, message, "error", 3000);
@@ -71,35 +71,36 @@ export const useCart = ({
     }
   }, [cartQuery.isError, cartQuery.error, cartQuery.data]);
 
-  // 🔁 Re-fetch after login
-  useEffect(() => {
-    if (isAuthenticated && !isLoadingUser && !didRefetch.current) {
-      queryClient.invalidateQueries(["cart"]);
-      didRefetch.current = true;
-    }
-  }, [isAuthenticated, isLoadingUser, queryClient]);
-
   const invalidateCart = async () => {
     await queryClient.invalidateQueries(["cart"]);
   };
 
-  // ➕ Add to cart
   const addToCart = async (productId, quantity = 1) => {
     const pid = String(productId);
     const qty = Number(quantity);
-    if (!pid || isNaN(qty) || qty < 1) throw new Error("Invalid product or quantity");
+    if (!pid || isNaN(qty) || qty < 1)
+      throw new Error("Invalid product or quantity");
 
     try {
       if (isAuthenticated) {
-        await cartAPI.addToCart(pid, qty);
+        const updated = await cartAPI.addToCart(pid, qty);
+        queryClient.setQueryData(["cart"], normalizeCartItems(updated));
       } else {
         const guestCart = getGuestCart();
         const existing = guestCart.find((item) => item.productId === pid);
-        if (existing) existing.quantity += qty;
-        else guestCart.push({ id: `guest-${Date.now()}`, productId: pid, quantity: qty });
+
+        if (existing) {
+          existing.quantity += qty;
+        } else {
+          guestCart.push({
+            id: `guest-${Date.now()}`,
+            productId: pid,
+            quantity: qty,
+          });
+        }
 
         setGuestCart(guestCart);
-        queryClient.setQueryData(["cart"], guestCart);
+        queryClient.setQueryData(["cart"], normalizeCartItems(guestCart));
       }
 
       toastGuard.once(toastIds.add, "🛒 Added to cart", "success", 2000);
@@ -115,21 +116,22 @@ export const useCart = ({
     }
   };
 
-  // ✏️ Update quantity
   const updateCartItem = async (cartItemId, quantity) => {
     const qty = Number(quantity);
-    if (!cartItemId || isNaN(qty) || qty < 1) throw new Error("Invalid item or quantity");
+    if (!cartItemId || isNaN(qty) || qty < 1)
+      throw new Error("Invalid item or quantity");
 
     try {
       if (isAuthenticated) {
-        await cartAPI.updateCartItem(cartItemId, qty);
+        const updated = await cartAPI.updateCartItem(cartItemId, qty);
+        queryClient.setQueryData(["cart"], normalizeCartItems(updated));
       } else {
         const guestCart = getGuestCart();
         const item = guestCart.find((item) => item.id === cartItemId);
         if (item) {
           item.quantity = qty;
           setGuestCart(guestCart);
-          queryClient.setQueryData(["cart"], guestCart);
+          queryClient.setQueryData(["cart"], normalizeCartItems(guestCart));
         }
       }
 
@@ -146,22 +148,21 @@ export const useCart = ({
     }
   };
 
-  // ❌ Remove item
   const removeFromCart = async (cartItemId) => {
     if (!cartItemId) throw new Error("Cart item ID is required");
 
     try {
       if (isAuthenticated) {
+        const currentCart = queryClient.getQueryData(["cart"]) || [];
+        const filtered = currentCart.filter((item) => item.id !== cartItemId);
+
         await cartAPI.removeFromCart(cartItemId);
-      } else {
-        const filtered = getGuestCart().filter(
-          (item) =>
-            item.id !== cartItemId &&
-            item._id !== cartItemId &&
-            item.productId !== cartItemId
-        );
-        setGuestCart(filtered);
         queryClient.setQueryData(["cart"], filtered);
+      } else {
+        const guestCart = getGuestCart();
+        const filtered = guestCart.filter((item) => item.id !== cartItemId);
+        setGuestCart(filtered);
+        queryClient.setQueryData(["cart"], normalizeCartItems(filtered));
       }
 
       toastGuard.once(toastIds.remove, "🗑️ Removed from cart", "success", 2000);
@@ -177,7 +178,6 @@ export const useCart = ({
     }
   };
 
-  // 🧼 Clear all
   const clearCart = async () => {
     try {
       if (isAuthenticated) {

@@ -10,7 +10,7 @@ export default function createCartRouter(cart) {
 
   router.get("/", controller.getUserCart);
   router.post("/", controller.addToCart);
- router.post('/merge', verifyToken, controller.mergeGuestCart);
+  router.post("/merge", controller.mergeGuestCart);
 
   router.put("/:id", controller.updateItem);
   router.delete("/:id", controller.removeItem);

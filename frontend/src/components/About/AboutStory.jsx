@@ -56,7 +56,8 @@ export default function AboutStory() {
           viewport={{ once: true }}
           className="relative"
         >
-          <div className="relative aspect-video min-h-[250px] sm:min-h-[320px] rounded-none sm:rounded-xl md:rounded-2xl overflow-hidden shadow-xl group border-0 sm:border border-gray-200">
+         <div className="relative w-full max-w-md mx-auto sm:max-w-none aspect-[16/10] sm:aspect-video min-h-[180px] sm:min-h-[320px] rounded-xl md:rounded-2xl overflow-hidden shadow-xl group border-0 sm:border border-gray-200">
+
             <div className="bg-gray-200 border-2 border-dashed rounded-xl w-full h-full" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-10" />
             <div className="absolute bottom-0 left-0 p-4 sm:p-5 z-20">
