@@ -173,13 +173,13 @@ const Filters = ({
               value={searchTerm}
               onChange={handleSearchChange}
               placeholder="Search products..."
-              className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-full text-sm text-black-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-full text-sm text-gray-900 placeholder-green-500 focus:outline-none focus:ring-2 focus:ring-blue-900"
             />
 
             {searchTerm && (
               <button
                 onClick={clearSearch}
-                className="absolute right-3 text-gray-400 hover:text-gray-700"
+                className="absolute right-3 text-gray-900 hover:text-gray-500"
               >
                 <FiX />
               </button>

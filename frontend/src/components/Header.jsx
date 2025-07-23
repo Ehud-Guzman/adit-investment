@@ -6,18 +6,24 @@ import { useAuth } from "../hooks/useAuth";
 import HeaderButtons from "./HeaderButtons";
 import MobileMenu from "./MobileMenu";
 
-const Header = ({ cartCount, setCartOpen, setAuthModalOpen, setAuthMode, isScrolled }) => {
+const Header = ({
+  cartCount,
+  setCartOpen,
+  setAuthModalOpen,
+  setAuthMode,
+  isScrolled,
+}) => {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const { currentUser, logout } = useAuth();
 
-  // ✅ Toast reminder if not verified (on mount)
+  // 🔔 Toast for unverified users
   useEffect(() => {
     if (currentUser && !currentUser.isVerified) {
       toast.info("⚠️ Please verify your email to unlock full access.");
     }
   }, [currentUser]);
 
-  // 🛑 Close mobile menu on outside click
+  // 📱 Close menu on outside click
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (isMenuOpen && !e.target.closest(".mobile-menu-container")) {
@@ -28,7 +34,7 @@ const Header = ({ cartCount, setCartOpen, setAuthModalOpen, setAuthMode, isScrol
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isMenuOpen]);
 
-  // 🛒 Cart logic based on login & email verification
+  // 🛒 Cart access control
   const handleCartClick = () => {
     if (!currentUser) {
       toast.info("Please log in to view your cart");
@@ -44,10 +50,10 @@ const Header = ({ cartCount, setCartOpen, setAuthModalOpen, setAuthMode, isScrol
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <header 
-      className={`sticky top-4 z-[90] transition-all duration-300 ${
-        isScrolled 
-          ? "bg-white/90 backdrop-blur-md shadow-md py-0" 
+    <header
+      className={`sticky top-4 z-[90] transition-all duration-300 min-h-[88px] ${
+        isScrolled
+          ? "bg-white/90 backdrop-blur-md shadow-md py-2"
           : "bg-white py-6"
       }`}
     >
@@ -57,12 +63,12 @@ const Header = ({ cartCount, setCartOpen, setAuthModalOpen, setAuthMode, isScrol
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ 
-              type: "spring", 
+            transition={{
+              type: "spring",
               stiffness: 70,
-              damping: 15
+              damping: 15,
             }}
-            className={`bg-white/80 backdrop-blur-lg border border-blue-100 shadow-inner px-4 sm:px-6 py-2 sm:py-3 rounded-2xl transition-all duration-300 ${
+            className={`transform-gpu transition-all duration-300 bg-white/80 backdrop-blur-lg border border-blue-100 shadow-inner px-4 sm:px-6 py-2 sm:py-3 rounded-2xl ${
               isScrolled ? "scale-[0.95] origin-left" : ""
             }`}
           >
