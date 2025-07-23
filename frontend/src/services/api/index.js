@@ -1,28 +1,28 @@
+// src/api/index.js
 import axios from "axios";
+import { TOKEN_KEY } from "./auth"; // Your token localStorage key
 
-    import { TOKEN_KEY } from "./auth";
-
-// 🌍 Base URL — Netlify/Render will inject in prod via env
+// 🌍 Base API URL — fallback to localhost if env is missing
 const baseURL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
-console.log("🔥 API BaseURL:", baseURL); // remove this after verifying!
 
-// ⚙️ Axios Instance
+// 🔧 Create Axios instance
 const api = axios.create({
   baseURL,
+  timeout: 20000,                // ⏱ 20s timeout
+  withCredentials: true,         // 🍪 Needed for cookie auth
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 20000,           // ⏱ 20s timeout
-  withCredentials: true,    // 🍪 for cookie-based refresh
 });
 
-// 🛡️ REQUEST INTERCEPTOR — attach access token if available
+console.log("🔥 API BaseURL:", baseURL); // ✅ Keep in dev, remove in prod
+
+// 🚀 REQUEST INTERCEPTOR — Attach access token from localStorage (if present)
 api.interceptors.request.use(
   (config) => {
-    if (config._suppressAuth) return config;
+    if (config._suppressAuth) return config; // Allow bypassing auth
 
-const token = localStorage.getItem(TOKEN_KEY);
-
+    const token = localStorage.getItem(TOKEN_KEY); // e.g., "adminAccessToken"
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -32,46 +32,42 @@ const token = localStorage.getItem(TOKEN_KEY);
   (error) => Promise.reject(error)
 );
 
-// 🔁 RESPONSE INTERCEPTOR — handle token refresh logic
+// 🔁 RESPONSE INTERCEPTOR — Handle token refresh automatically
 api.interceptors.response.use(
   (res) => res,
   async (err) => {
     const original = err.config;
     const status = err.response?.status;
-    const url = original?.url || "";
+    const isAuthEndpoint = /\/auth\/(login|refresh|register)/.test(original?.url || "");
+    const isPublic = /\/(products|health|ping)/.test(original?.url || "");
 
-    const isAuthRoute = /\/auth\/(login|register|refresh)/.test(url);
-    const isPublic = /\/(products|health|ping)/.test(url);
-
-    if (axios.isCancel(err)) return Promise.reject(err);
-
-    // 👉 If 401, attempt refresh once unless it's an auth/public route
-    if (status === 401 && !original._retry && !isAuthRoute && !isPublic) {
+    // 💥 Only handle 401 once per request
+    if (status === 401 && !original._retry && !isAuthEndpoint && !isPublic) {
       original._retry = true;
 
       try {
-        const refreshResponse = await api.post("/auth/refresh", null, {
-          _suppressAuth: true,
+        const refreshRes = await api.post("/auth/refresh", null, {
+          _suppressAuth: true, // don't attach token again
         });
 
-        const newAccessToken = refreshResponse.data?.accessToken || refreshResponse.data?.token;
-        const newRefreshToken = refreshResponse.data?.refreshToken;
+        const newAccessToken = refreshRes.data?.accessToken || refreshRes.data?.token;
+        const newRefreshToken = refreshRes.data?.refreshToken;
 
-        if (!newAccessToken) throw new Error("No access token received");
+        if (!newAccessToken) throw new Error("Refresh succeeded but no access token returned");
 
-        // ✅ Save refreshed tokens
-        localStorage.setItem("adminAccessToken", newAccessToken);
+        // 🧠 Persist new tokens
+        localStorage.setItem(TOKEN_KEY, newAccessToken);
         if (newRefreshToken) {
           localStorage.setItem("refreshToken", newRefreshToken);
         }
 
-        // 🔁 Retry the original request with new access token
+        // 🔁 Retry original request with new access token
         original.headers.Authorization = `Bearer ${newAccessToken}`;
         return api(original);
       } catch (refreshErr) {
-        console.warn("🔒 Refresh failed:", refreshErr.message);
-        window.dispatchEvent(new CustomEvent("forceLogout")); // 🚨 Logout listener
-        return Promise.reject(new axios.Cancel("Refresh failed"));
+        console.warn("🔐 Token refresh failed:", refreshErr.message);
+        window.dispatchEvent(new CustomEvent("forceLogout")); // Listen in your app
+        return Promise.reject(new axios.Cancel("Session expired. Refresh failed."));
       }
     }
 
@@ -79,11 +75,10 @@ api.interceptors.response.use(
   }
 );
 
-// ✅ Export base instance and domain-split services
+// 🧩 Modular API Barrels — per feature domain
 export { api };
 export default api;
 
-// Barrel export per feature domain
 export * as auth from "./auth";
 export * as cart from "./cart";
 export * as products from "./products";

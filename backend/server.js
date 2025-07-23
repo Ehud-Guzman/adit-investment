@@ -13,7 +13,7 @@ import cookieParser from "cookie-parser";
 import { connectDB } from "./config/db.js";
 import { validateEnv } from "./config/envCheck.js";
 
-// 🧩 Route Factories (Dependency Injected)
+// 🧩 Route Factories
 import createAuthRouter from "./routes/auth.js";
 import createUserRouter from "./routes/users.js";
 import createProductRouter from "./routes/products.js";
@@ -26,45 +26,35 @@ import createAdminDashboardRouter from "./routes/admin/dashboardRoutes.js";
 import createSettingsRouter from "./routes/settings.js";
 import createEmailRouter from "./routes/emailRoutes.js";
 
-
 // 📦 Non-DI Routes
 import uploadRoutes from "./routes/upload.js";
 import cleanupRoutes from "./routes/cleanup.js";
 
-// 🌍 Load environment variables
+// 🌍 Environment Setup
 dotenv.config();
 validateEnv();
 
-// 🚀 App Init
 const app = express();
 
-// 🔒 Secure HTTP Headers
+// 🔒 Security & Hardening
 app.use(helmet());
-
-// 💨 Prevent HTTP Parameter Pollution
 app.use(hpp());
-
-// 🍪 Parse Cookies
 app.use(cookieParser());
 
-// 🔄 Parse JSON & URL-encoded Bodies
+// 🔄 Parsers
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 
-// 🔧 GZIP Compression
+// ⚡ Performance
 app.use(compression());
 
-// 🧼 Sanitize Inputs (basic)
+// 🧼 Input Sanitization Middleware
 app.use((req, _res, next) => {
   const sanitize = (obj) => {
     for (const key in obj) {
-      if (/^\$/.test(key) || key.includes(".")) {
-        delete obj[key];
-      } else if (typeof obj[key] === "string") {
-        obj[key] = obj[key].replace(/[<>]/g, "");
-      } else if (typeof obj[key] === "object" && obj[key] !== null) {
-        sanitize(obj[key]);
-      }
+      if (/^\$/.test(key) || key.includes(".")) delete obj[key];
+      else if (typeof obj[key] === "string") obj[key] = obj[key].replace(/[<>]/g, "");
+      else if (typeof obj[key] === "object" && obj[key] !== null) sanitize(obj[key]);
     }
   };
   sanitize(req.body);
@@ -80,21 +70,12 @@ const allowedOrigins = [
   "https://adit-investment-1.onrender.com",
 ];
 
-// CORS setup with clear logging
 app.use(
   cors({
     origin: (origin, cb) => {
-      if (!origin) {
-        // 🧪 Allow tools like Postman or curl (no origin)
-        return cb(null, true);
-      }
-
-      if (allowedOrigins.includes(origin)) {
-        return cb(null, true);
-      }
-
+      if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
       console.warn("⛔️ Blocked CORS origin:", origin);
-      return cb(new Error("CORS not allowed from " + origin));
+      cb(new Error("CORS not allowed from " + origin));
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
@@ -102,41 +83,38 @@ app.use(
   })
 );
 
-
-// 🛡️ Rate Limiting & Throttling
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  message: "⏱ Too many requests. Please try again later.",
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
-const speedLimiter = slowDown({
-  windowMs: 15 * 60 * 1000,
-  delayAfter: 50,
-  delayMs: (hits) => Math.min((hits - 50) * 300, 2000),
-});
-
-app.use("/api", limiter, speedLimiter);
+// 🛡️ Rate Limiting
+app.use(
+  "/api",
+  rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+    message: "⏱ Too many requests. Please try again later.",
+    standardHeaders: true,
+    legacyHeaders: false,
+  }),
+  slowDown({
+    windowMs: 15 * 60 * 1000,
+    delayAfter: 50,
+    delayMs: (hits) => Math.min((hits - 50) * 300, 2000),
+  })
+);
 
 // 🎯 Health Check
 app.get("/api/health", (_req, res) => {
   res.status(200).json({ status: "✅ API is healthy" });
 });
 
-// 🧠 Boot Server Function
+// 🧠 Server Boot Function
 async function startServer() {
   try {
     console.log("🧠 Connecting to MongoDB...");
     const collections = await connectDB();
-
     app.locals.db = collections._db || collections.db;
-    console.log("✅ MongoDB connected");
+    console.log("✅ MongoDB connected successfully");
 
-    // Injected Routes (dependency-based)
+    // 🔌 DI Routes
     app.use("/api/auth", createAuthRouter(collections.users, collections.sessions, collections.db));
-
     app.use("/api/users", createUserRouter(collections.users));
     app.use("/api/products", createProductRouter(collections.products));
     app.use("/api/cart", createCartRouter(collections.cart));
@@ -145,36 +123,27 @@ async function startServer() {
     app.use("/api/admin/products", createAdminProductRouter(collections.products));
     app.use("/api/admin/users", createAdminUserRouter(collections.users));
     app.use("/api/admin/dashboard", createAdminDashboardRouter());
-    
+    app.use("/api/settings", createSettingsRouter(collections.adminSettings));
 
-
-    // 🔐 Super Admin - Settings Routes (after DB connection)
-    const settingsRouter = createSettingsRouter(collections.adminSettings);
-    app.use("/api/settings", settingsRouter);
-
-    // Static routes (no DB)
+    // 🧱 Static/Utility Routes
     app.use("/api/upload", uploadRoutes);
     app.use("/api/cleanup", cleanupRoutes);
 
-    // ❌ Catch-all for unknown routes
+    // ❌ 404 Catch-All
     app.use((req, res) => {
-      res.status(404).json({
-        message: `❌ Route not found: ${req.originalUrl}`,
-      });
+      res.status(404).json({ message: `❌ Route not found: ${req.originalUrl}` });
     });
 
-    // 🔥 Fire it up
+    // 🚀 Start Server
     const PORT = process.env.PORT || 8080;
-    app.listen(PORT, () => {
-      console.log(`🚀 Server live at http://localhost:${PORT}`);
-    });
+    app.listen(PORT, () => console.log(`🚀 Server live at http://localhost:${PORT}`));
   } catch (err) {
     console.error("💥 Server startup failed:", err.message);
     process.exit(1);
   }
 }
 
-// 🚨 Fatal Crash Catchers
+// 🚨 Crash Handlers
 process.on("uncaughtException", (err) => {
   console.error("💥 Uncaught Exception:", err.message);
   process.exit(1);
@@ -185,5 +154,5 @@ process.on("unhandledRejection", (err) => {
   process.exit(1);
 });
 
-// 🧠 Start it
+// 🧠 Start
 startServer();
