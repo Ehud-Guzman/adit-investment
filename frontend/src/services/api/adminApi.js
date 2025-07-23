@@ -1,6 +1,6 @@
 // services/api/adminApi.js
 import axios from "axios";
-import { getAdminToken } from "@/services/api/auth/token"; // ✅ Use helper for consistency
+import { getAdminToken } from "@/services/api/auth/token";
 
 const isLocalhost = typeof window !== "undefined" && window.location.hostname === "localhost";
 
@@ -8,19 +8,20 @@ const baseURL = isLocalhost
   ? import.meta.env.VITE_API_URL_LOCAL || "http://localhost:8080/api"
   : import.meta.env.VITE_API_URL || "https://adit-investment-1.onrender.com/api";
 
+// 🛡️ Axios instance with credentials for cookie-based refresh
 const adminApi = axios.create({
   baseURL,
   headers: {
     "Content-Type": "application/json",
   },
   timeout: 10000,
-  withCredentials: true, // Only needed if you're doing cookie auth (you're not)
+  withCredentials: true, // ✅ Needed for sending refreshToken cookie
 });
 
-// ✅ Attach correct admin access token to headers
+// 🔐 Attach access token from localStorage
 adminApi.interceptors.request.use(
   (config) => {
-    const token = getAdminToken(); // or localStorage.getItem("adminAccessToken")
+    const token = getAdminToken(); // from localStorage or secure helper
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

@@ -33,7 +33,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <App />
       </BrowserRouter>
 
-      {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
+   
     </QueryClientProvider>
   </React.StrictMode>
 );
