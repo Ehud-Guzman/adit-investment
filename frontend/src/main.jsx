@@ -6,8 +6,11 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import App from "./App.jsx";
 import "./index.css";
-
 import { api } from "./services/api/index.js";
+
+// 🔍 DEBUG: Check env vars are loading correctly
+console.log("🌍 Full ENV dump:", import.meta.env);
+console.log("🔥 API Base URL:", import.meta.env.VITE_API_URL);
 
 // 🔐 Inject admin access token if available
 const adminToken = localStorage.getItem("adminAccessToken");
@@ -32,8 +35,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <BrowserRouter>
         <App />
       </BrowserRouter>
-
-   
     </QueryClientProvider>
   </React.StrictMode>
 );
+  
