@@ -12,7 +12,7 @@ const QuickViewModal = ({
   isOpen,
   onClose,
   addToCart,
-  addToWishlist = () => {}, // Add default function
+  addToWishlist = () => {},
   removeFromWishlist = () => {},
   isInWishlist,
   reviews = [],
@@ -68,15 +68,14 @@ const QuickViewModal = ({
 
     setLocalReviews((prev) => [newReview, ...prev]);
 
-   submitReview({
-  productId: product._id,
-  review: {
-    text: data.reviewText,
-    rating: Number(data.reviewRating),
-    userId: currentUser?._id, // 🔥 Add this line
-  },
-});
-
+    submitReview({
+      productId: product._id,
+      review: {
+        text: data.reviewText,
+        rating: Number(data.reviewRating),
+        userId: currentUser._id,
+      },
+    });
 
     reset();
   };
@@ -87,11 +86,9 @@ const QuickViewModal = ({
   };
 
   const handleWishlistToggle = () => {
-    if (isInWishlist) {
-      removeFromWishlist(product._id);
-    } else {
-      addToWishlist(product._id);
-    }
+    isInWishlist
+      ? removeFromWishlist(product._id)
+      : addToWishlist(product._id);
   };
 
   const handleImageError = (e) => {
@@ -99,9 +96,7 @@ const QuickViewModal = ({
     setImageLoading(false);
   };
 
-  const handleImageLoad = () => {
-    setImageLoading(false);
-  };
+  const handleImageLoad = () => setImageLoading(false);
 
   if (!isOpen || !product) return null;
 
@@ -141,6 +136,7 @@ const QuickViewModal = ({
             )}
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+              {/* Product Image Section */}
               <div className="relative">
                 <div className="relative h-64 sm:h-80 md:h-96 rounded-xl overflow-hidden mb-3 sm:mb-4 bg-gray-100">
                   {imageLoading && (
@@ -148,10 +144,7 @@ const QuickViewModal = ({
                   )}
                   <motion.img
                     key={selectedImageIndex}
-                    src={
-                      product.images?.[selectedImageIndex] ||
-                      "/placeholder-product.jpg"
-                    }
+                    src={product.images?.[selectedImageIndex] || "/placeholder-product.jpg"}
                     alt={product.name}
                     className={`w-full h-full object-contain transition-opacity duration-300 ${
                       imageLoading ? "opacity-0" : "opacity-100"
@@ -180,13 +173,11 @@ const QuickViewModal = ({
                         }`}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        aria-label={`View image ${index + 1} of ${
-                          product.images.length
-                        }`}
+                        aria-label={`View image ${index + 1}`}
                       >
                         <img
                           src={image}
-                          alt={`${product.name} thumbnail ${index + 1}`}
+                          alt={`Thumbnail ${index + 1}`}
                           className="w-full h-full object-cover"
                           loading="lazy"
                         />
@@ -196,38 +187,29 @@ const QuickViewModal = ({
                 )}
               </div>
 
+              {/* Product Info Section */}
               <div className="flex flex-col">
                 <div className="flex justify-between items-start mb-4 sm:mb-5">
                   <div>
-                    <h2
-                      id="quick-view-title"
-                      className="text-xl sm:text-2xl font-bold text-gray-900 mb-1"
-                    >
+                    <h2 id="quick-view-title" className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">
                       {product.name}
                     </h2>
                     <div className="flex items-center gap-2">
-                      <RatingStars
-                        rating={product.rating || 0}
-                        size="md"
-                        showNumber={true}
-                      />
+                      <RatingStars rating={product.rating || 0} size="md" showNumber />
                       <span className="text-sm text-gray-500">
                         ({localReviews.length} reviews)
                       </span>
                     </div>
                   </div>
+
                   <motion.button
                     onClick={handleWishlistToggle}
-                    className={`p-2 rounded-full ${
-                      isInWishlist
-                        ? "bg-red-500 text-white hover:bg-red-600"
-                        : "bg-gray-200 hover:bg-gray-300"
-                    } transition-colors`}
+                    className={`p-2 rounded-full transition-colors ${
+                      isInWishlist ? "bg-red-500 text-white hover:bg-red-600" : "bg-gray-200 hover:bg-gray-300"
+                    }`}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    aria-label={
-                      isInWishlist ? "Remove from wishlist" : "Add to wishlist"
-                    }
+                    aria-label={isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
                   >
                     <FiHeart size={20} fill={isInWishlist ? "white" : "none"} />
                   </motion.button>
@@ -240,15 +222,14 @@ const QuickViewModal = ({
                   className="mb-5 sm:mb-6"
                 />
 
+                {/* Availability & Description */}
                 <div className="mb-5 sm:mb-6">
                   <div className="flex items-center gap-3 mb-3 sm:mb-4">
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${
-                        product.stock > 0
-                          ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-800"
-                      }`}
-                    >
+                    <span className={`px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${
+                      product.stock > 0
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                    }`}>
                       {product.stock > 0 ? "In Stock" : "Out of Stock"}
                     </span>
                     {product.stock > 0 && (
@@ -266,37 +247,13 @@ const QuickViewModal = ({
                   <p className="text-sm sm:text-base text-gray-700 mb-4 sm:mb-5">
                     {product.description || "No description available"}
                   </p>
-
-                  {(product.specs || []).length > 0 && (
-                    <div className="mb-5 sm:mb-6">
-                      <h3 className="font-semibold text-lg mb-3 sm:mb-4">
-                        Specifications
-                      </h3>
-                      <div className="space-y-3 sm:space-y-4">
-                        {product.specs.map((spec, index) => (
-                          <div
-                            key={index}
-                            className="grid grid-cols-3 gap-3 sm:gap-4 text-sm sm:text-base"
-                          >
-                            <span className="col-span-1 text-gray-600">
-                              {spec.label}
-                            </span>
-                            <span className="col-span-2 font-medium">
-                              {spec.value}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
                 </div>
 
+                {/* Quantity and Add to Cart */}
                 <div className="flex items-center gap-3 flex-wrap mb-6 sm:mb-8">
                   <QuantitySelector
                     quantity={quantity}
-                    onIncrease={() =>
-                      setQuantity((q) => Math.min(q + 1, product.stock))
-                    }
+                    onIncrease={() => setQuantity((q) => Math.min(q + 1, product.stock))}
                     onDecrease={() => setQuantity((q) => Math.max(1, q - 1))}
                     max={product.stock}
                     size="lg"
@@ -313,21 +270,18 @@ const QuickViewModal = ({
                     whileTap={product.stock > 0 ? { scale: 0.98 } : {}}
                     aria-label="Add to cart"
                   >
-                    <FiShoppingCart size={20} />
-                    Add to Cart
+                    <FiShoppingCart size={20} /> Add to Cart
                   </motion.button>
                 </div>
 
+                {/* Reviews Section */}
                 <div className="mt-6 border-t pt-6">
                   <h3 className="text-xl font-bold mb-4">Customer Reviews</h3>
 
                   {localReviews.length > 0 ? (
                     <div className="space-y-5">
                       {localReviews.map((review) => (
-                        <div
-                          key={review._id}
-                          className="border-b pb-5 last:border-b-0 last:pb-0"
-                        >
+                        <div key={review._id} className="border-b pb-5 last:border-b-0 last:pb-0">
                           <div className="flex justify-between items-start mb-2">
                             <div className="flex items-center gap-2">
                               <div
@@ -336,46 +290,32 @@ const QuickViewModal = ({
                               >
                                 {getUserInitials(review.userName)}
                               </div>
-                              <span className="font-medium">
-                                {review.userName}
-                              </span>
+                              <span className="font-medium">{review.userName}</span>
                             </div>
-                            <RatingStars
-                              rating={review.rating}
-                              size="sm"
-                              showNumber={false}
-                            />
+                            <RatingStars rating={review.rating} size="sm" showNumber={false} />
                           </div>
                           <p className="text-gray-700 pl-10">{review.text}</p>
                           <div className="text-xs text-gray-500 pl-10 mt-1">
-                            {new Date(review.createdAt).toLocaleDateString(
-                              "en-US",
-                              {
-                                year: "numeric",
-                                month: "long",
-                                day: "numeric",
-                              }
-                            )}
+                            {new Date(review.createdAt).toLocaleDateString("en-US", {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            })}
                           </div>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-gray-500">
-                      No reviews yet. Be the first to review!
-                    </p>
+                    <p className="text-gray-500">No reviews yet. Be the first to review!</p>
                   )}
 
-                  <form
-                    onSubmit={handleSubmit(onSubmitReview)}
-                    className="mt-6"
-                  >
+                  <form onSubmit={handleSubmit(onSubmitReview)} className="mt-6">
                     <h4 className="font-medium mb-3">Write a Review</h4>
                     <div className="flex items-center gap-2 mb-3">
                       <span>Rating:</span>
                       <RatingStars
                         rating={5}
-                        interactive={true}
+                        interactive
                         onChange={(value) => setValue("reviewRating", value)}
                       />
                     </div>
@@ -403,10 +343,7 @@ const QuickViewModal = ({
                         disabled={isSubmitting}
                         className="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
                       >
-                        {isSubmitting ? (
-                          <FiLoader className="animate-spin" size={18} />
-                        ) : null}
-                        Submit Review
+                        {isSubmitting && <FiLoader className="animate-spin" size={18} />} Submit Review
                       </button>
                     </div>
                   </form>

@@ -12,9 +12,9 @@ import PriceDisplay from "./PriceDisplay";
 const ProductCard = ({
   product,
   size = "medium",
-  onAddToCart = () => console.warn("⚠️ Missing 'onAddToCart' handler in ProductCard"),
-  onWishlistToggle = () => console.warn("⚠️ Missing 'onWishlistToggle' handler in ProductCard"),
-  onQuickView = () => console.warn("⚠️ Missing 'onQuickView' handler in ProductCard"),
+  onAddToCart = () => console.warn("⚠️ Missing 'onAddToCart' handler"),
+  onWishlistToggle = () => console.warn("⚠️ Missing 'onWishlistToggle' handler"),
+  onQuickView = () => console.warn("⚠️ Missing 'onQuickView' handler"),
   isInWishlist = false,
   loading = false
 }) => {
@@ -208,16 +208,15 @@ const ProductCard = ({
           <p className="text-xs text-gray-400 mb-1">SKU: {sku}</p>
         )}
 
-        <PriceDisplay
-          price={price}
-          originalPrice={originalPrice}
-          size={size}
-          className="mb-2 sm:mb-3"
-          isCompact={size === "small"}
-        />
+        {/* Price + Add to Cart */}
+        <div className="mt-auto flex flex-col gap-2 sm:gap-3">
+          <PriceDisplay
+            price={price}
+            originalPrice={originalPrice}
+            size={size}
+            isCompact={size === "small"}
+          />
 
-        {/* Cart */}
-        <div className="mt-auto">
           <motion.button
             onClick={(e) => {
               e.stopPropagation();
@@ -255,7 +254,7 @@ ProductCard.propTypes = {
     originalPrice: PropTypes.number,
     featured: PropTypes.bool,
     rating: PropTypes.number,
-    reviewCount: PropTypes.number, // ✅ NEW!
+    reviewCount: PropTypes.number,
     stock: PropTypes.number,
     description: PropTypes.string,
     sku: PropTypes.string,
@@ -269,4 +268,3 @@ ProductCard.propTypes = {
 };
 
 export default ProductCard;
-// ✅ ProductCard.jsx

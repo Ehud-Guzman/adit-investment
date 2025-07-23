@@ -1,10 +1,10 @@
 import axios from "axios";
 
-// 🌍 Dynamic Base URL
-const isLocalhost = window.location.hostname === "localhost";
-const baseURL = isLocalhost
-  ? import.meta.env.VITE_API_URL_LOCAL || "http://localhost:8080/api"
-  : import.meta.env.VITE_API_URL || "https://adit-investment-1.onrender.com/api";
+    import { TOKEN_KEY } from "./auth";
+
+// 🌍 Base URL — Netlify/Render will inject in prod via env
+const baseURL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
+console.log("🔥 API BaseURL:", baseURL); // remove this after verifying!
 
 // ⚙️ Axios Instance
 const api = axios.create({
@@ -13,15 +13,16 @@ const api = axios.create({
     "Content-Type": "application/json",
   },
   timeout: 20000,           // ⏱ 20s timeout
-  withCredentials: true,    // 🍪 cookies for refresh token
+  withCredentials: true,    // 🍪 for cookie-based refresh
 });
 
-// 🛡️ REQUEST INTERCEPTOR — attach access token
+// 🛡️ REQUEST INTERCEPTOR — attach access token if available
 api.interceptors.request.use(
   (config) => {
     if (config._suppressAuth) return config;
 
-    const token = localStorage.getItem("adminAccessToken"); // 💡 Use consistent admin key
+const token = localStorage.getItem(TOKEN_KEY);
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -31,7 +32,7 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// 🔁 RESPONSE INTERCEPTOR — refresh logic
+// 🔁 RESPONSE INTERCEPTOR — handle token refresh logic
 api.interceptors.response.use(
   (res) => res,
   async (err) => {
@@ -39,17 +40,18 @@ api.interceptors.response.use(
     const status = err.response?.status;
     const url = original?.url || "";
 
-    // Ignore retry loops or irrelevant routes
     const isAuthRoute = /\/auth\/(login|register|refresh)/.test(url);
     const isPublic = /\/(products|health|ping)/.test(url);
 
     if (axios.isCancel(err)) return Promise.reject(err);
+
+    // 👉 If 401, attempt refresh once unless it's an auth/public route
     if (status === 401 && !original._retry && !isAuthRoute && !isPublic) {
       original._retry = true;
 
       try {
         const refreshResponse = await api.post("/auth/refresh", null, {
-          _suppressAuth: true, // ❌ don’t attach expired token
+          _suppressAuth: true,
         });
 
         const newAccessToken = refreshResponse.data?.accessToken || refreshResponse.data?.token;
@@ -57,19 +59,19 @@ api.interceptors.response.use(
 
         if (!newAccessToken) throw new Error("No access token received");
 
-        // 🔐 Save new tokens
+        // ✅ Save refreshed tokens
         localStorage.setItem("adminAccessToken", newAccessToken);
         if (newRefreshToken) {
           localStorage.setItem("refreshToken", newRefreshToken);
         }
 
-        // 🧠 Retry original request with new token
+        // 🔁 Retry the original request with new access token
         original.headers.Authorization = `Bearer ${newAccessToken}`;
         return api(original);
       } catch (refreshErr) {
         console.warn("🔒 Refresh failed:", refreshErr.message);
-        window.dispatchEvent(new CustomEvent("forceLogout")); // ❗ Trigger logout on failure
-        return Promise.reject(new axios.Cancel("Request canceled - refresh failed"));
+        window.dispatchEvent(new CustomEvent("forceLogout")); // 🚨 Logout listener
+        return Promise.reject(new axios.Cancel("Refresh failed"));
       }
     }
 
@@ -77,10 +79,11 @@ api.interceptors.response.use(
   }
 );
 
-// ✅ Barrel Exports — split by domain
+// ✅ Export base instance and domain-split services
 export { api };
 export default api;
 
+// Barrel export per feature domain
 export * as auth from "./auth";
 export * as cart from "./cart";
 export * as products from "./products";
