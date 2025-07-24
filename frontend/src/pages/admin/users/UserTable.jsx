@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import adminApi from "@/services/api/adminApi"; // 👈 Use the correct Axios instance
 
 import RoleTag from "./RoleTag";
 import UserStatusBadge from "./UserStatusBadge";
@@ -19,12 +19,11 @@ export default function UserTable() {
 
   const [selectedUser, setSelectedUser] = useState(null);
 
-  // Sanitize filters before sending
   const queryFilters = useMemo(() => {
     const clean = {};
     if (filters.search?.trim()) clean.search = filters.search.trim();
-    if (filters.role && filters.role !== "all") clean.role = filters.role;
-    if (filters.status && filters.status !== "all") clean.status = filters.status;
+    if (filters.role !== "all") clean.role = filters.role;
+    if (filters.status !== "all") clean.status = filters.status;
     clean.page = filters.page;
     clean.limit = filters.limit;
     return clean;
@@ -39,13 +38,11 @@ export default function UserTable() {
   } = useQuery({
     queryKey: ["adminUsers", queryFilters],
     queryFn: () =>
-  axios
-    .get("http://localhost:8080/api/admin/users", {
-      params: queryFilters,
-      withCredentials: true, // 🔥 this is REQUIRED for cookie-based auth
-    })
-    .then((res) => res.data),
-
+      adminApi
+        .get("/admin/users", {
+          params: queryFilters,
+        })
+        .then((res) => res.data),
     keepPreviousData: true,
     staleTime: 1000 * 60 * 5,
   });
@@ -62,15 +59,11 @@ export default function UserTable() {
     }));
   };
 
-
-
   const openUser = (id) => setSelectedUser(id);
   const closeUser = () => setSelectedUser(null);
 
   return (
     <div className="p-4 space-y-4">
-    
-
       {/* Table */}
       <div className="overflow-x-auto bg-white shadow-md rounded-lg">
         <table className="min-w-full divide-y divide-gray-200">
