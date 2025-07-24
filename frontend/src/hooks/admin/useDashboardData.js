@@ -1,22 +1,26 @@
 // 📊 useDashboardData.js
 import { useQuery } from "@tanstack/react-query";
-import axios from "@/services/api/index"; // ✅ Custom Axios instance with baseURL
+import axios from "@/services/api/index"; // ✅ Centralized Axios with baseURL + interceptors
 
-// 🧠 Fetches dashboard overview metrics (for admin dashboard)
+/**
+ * 🚀 Fetches dashboard metrics from the admin API
+ * GET /admin/dashboard/overview
+ */
 const fetchDashboardData = async () => {
-  const response = await axios.get("/admin/dashboard/overview");
-  return response.data;
+  const { data } = await axios.get("/admin/dashboard/overview");
+  return data;
 };
 
 /**
- * 🧩 useDashboardData
- * React Query hook to fetch and cache dashboard metrics
+ * 🧠 useDashboardData
+ * Fetches and caches admin dashboard metrics
  */
 export const useDashboardData = () => {
   return useQuery({
-    queryKey: ["dashboard-overview"], // 🔑 Cached under this key
+    queryKey: ["dashboard-overview"],
     queryFn: fetchDashboardData,
-    staleTime: 5 * 60 * 1000,         // ⏱ 5 minutes cache
-    retry: 1,                         // 🔁 Retry once on failure
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    retry: 1,
+    refetchOnWindowFocus: false, // 🚫 Don't hammer on tab switch
   });
 };
