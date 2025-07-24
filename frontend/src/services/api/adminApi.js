@@ -1,33 +1,34 @@
 // services/api/adminApi.js
 import axios from "axios";
-import { getAdminToken } from "@/services/api/auth/token";
+import { TOKEN_KEY } from "@/services/api/auth";
 
-const isLocalhost = typeof window !== "undefined" && window.location.hostname === "localhost";
+// 🌍 Ensure baseURL is defined
+const baseURL = import.meta.env.VITE_API_URL;
+if (!baseURL) throw new Error("❌ VITE_API_URL is missing. Set it in Netlify/env vars.");
 
-const baseURL = isLocalhost
-  ? import.meta.env.VITE_API_URL_LOCAL || "http://localhost:8080/api"
-  : import.meta.env.VITE_API_URL || "https://adit-investment-1.onrender.com/api";
-
-// 🛡️ Axios instance with credentials for cookie-based refresh
+// 🛠️ Create Admin Axios instance
 const adminApi = axios.create({
   baseURL,
+  timeout: 20000,
+  withCredentials: true, // 🍪 Needed for cookie-based refresh flows
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 10000,
-  withCredentials: true, // ✅ Needed for sending refreshToken cookie
 });
 
-// 🔐 Attach access token from localStorage
+// 🔐 Request Interceptor — Add access token
 adminApi.interceptors.request.use(
   (config) => {
-    const token = getAdminToken(); // from localStorage or secure helper
-    if (token) {
+    const token = localStorage.getItem(TOKEN_KEY); // Change this if you use a different key like "adminAccessToken"
+    if (token && !config.headers.Authorization) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
   (error) => Promise.reject(error)
 );
+
+// 🔁 (Optional) Response Interceptor — Token refresh logic
+// You can skip this if it's handled in your main API instance
 
 export default adminApi;

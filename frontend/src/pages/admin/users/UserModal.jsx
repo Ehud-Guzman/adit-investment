@@ -1,7 +1,6 @@
-// components/admin/users/UserModal.jsx
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
-import axios from 'axios';
+import axios from '@/services/api/index'; // ✅ Use your configured Axios
 import RoleTag from './RoleTag';
 import UserStatusBadge from './UserStatusBadge';
 
@@ -13,12 +12,20 @@ export default function UserModal({ isOpen, onRequestClose, userId }) {
 
   useEffect(() => {
     if (!isOpen || !userId) return;
-    setLoading(true);
-    axios
-      .get(`/api/admin/users/${userId}`)
-      .then((res) => setUser(res.data))
-      .catch((err) => console.error("❌ Modal fetch error:", err))
-      .finally(() => setLoading(false));
+
+    const fetchUser = async () => {
+      setLoading(true);
+      try {
+        const { data } = await axios.get(`/admin/users/${userId}`);
+        setUser(data);
+      } catch (err) {
+        console.error("❌ Modal fetch error:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
   }, [isOpen, userId]);
 
   if (!isOpen) return null;
@@ -36,11 +43,11 @@ export default function UserModal({ isOpen, onRequestClose, userId }) {
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold text-gray-800">User Profile</h2>
           <div className="space-y-1 text-sm">
-            <p><span className="font-medium">Name:</span> {user.name}</p>
-            <p><span className="font-medium">Email:</span> {user.email}</p>
-            <p className="flex items-center gap-1"><span className="font-medium">Role:</span> <RoleTag role={user.role} /></p>
-            <p className="flex items-center gap-1"><span className="font-medium">Status:</span> <UserStatusBadge status={user.status} /></p>
-            <p><span className="font-medium">Joined:</span> {new Date(user.createdAt).toLocaleString()}</p>
+            <p><span className="font-medium">Name:</span> {user?.name}</p>
+            <p><span className="font-medium">Email:</span> {user?.email}</p>
+            <p className="flex items-center gap-1"><span className="font-medium">Role:</span> <RoleTag role={user?.role} /></p>
+            <p className="flex items-center gap-1"><span className="font-medium">Status:</span> <UserStatusBadge status={user?.status} /></p>
+            <p><span className="font-medium">Joined:</span> {new Date(user?.createdAt).toLocaleString()}</p>
           </div>
           <div className="mt-6 text-right">
             <button
