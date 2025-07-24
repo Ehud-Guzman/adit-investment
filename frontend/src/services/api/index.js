@@ -3,7 +3,12 @@ import axios from "axios";
 import { TOKEN_KEY } from "./auth"; // Your token localStorage key
 
 // 🌍 Base API URL — fallback to localhost if env is missing
-const baseURL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
+if (!import.meta.env.VITE_API_URL) {
+  throw new Error("❌ VITE_API_URL is missing. Define it in Netlify env vars.");
+}
+
+const baseURL = import.meta.env.VITE_API_URL;
+
 
 // 🔧 Create Axios instance
 const api = axios.create({
