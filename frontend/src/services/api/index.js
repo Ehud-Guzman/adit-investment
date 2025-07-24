@@ -8,6 +8,8 @@ if (!import.meta.env.VITE_API_URL) {
 }
 
 const baseURL = import.meta.env.VITE_API_URL;
+console.log("🌍 Using API baseURL:", baseURL);
+
 
 
 // 🔧 Create Axios instance
