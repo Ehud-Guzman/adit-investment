@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ProductCard from './ProductCard';
 import ProductSkeleton from './ProductSkeleton';
 import ErrorMessage from './ErrorMessage';
+import { useUserActivity } from "@/hooks/useUserActivity";
+
 
 const ProductList = ({
   products = [],
@@ -63,6 +65,9 @@ const ProductList = ({
       />
     );
   }
+
+  const { logActivity } = useUserActivity();
+
 
   // Calculate visible page numbers
   const getVisiblePages = () => {

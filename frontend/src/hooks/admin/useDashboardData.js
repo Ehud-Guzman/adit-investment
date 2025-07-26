@@ -1,26 +1,47 @@
-// 📊 useDashboardData.js
 import { useQuery } from "@tanstack/react-query";
-import axios from "@/services/api/index"; // ✅ Centralized Axios with baseURL + interceptors
+import axios from "@/services/api/index";
 
-/**
- * 🚀 Fetches dashboard metrics from the admin API
- * GET /admin/dashboard/overview
- */
 const fetchDashboardData = async () => {
-  const { data } = await axios.get("/admin/dashboard/overview");
-  return data;
+  try {
+    const { data } = await axios.get("/admin/dashboard/overview");
+    return data;
+  } catch (error) {
+    // Transform error to user-friendly message
+    let message = "Failed to load dashboard data";
+    
+    if (error.response) {
+      switch (error.response.status) {
+        case 401:
+          message = "Authentication required";
+          break;
+        case 403:
+          message = "You don't have permission";
+          break;
+        case 500:
+          message = "Server error occurred";
+          break;
+        default:
+          message = `Request failed: ${error.response.status}`;
+      }
+    } else if (error.request) {
+      message = "Network error - please check your connection";
+    }
+    
+    throw new Error(message);
+  }
 };
 
-/**
- * 🧠 useDashboardData
- * Fetches and caches admin dashboard metrics
- */
 export const useDashboardData = () => {
   return useQuery({
     queryKey: ["dashboard-overview"],
     queryFn: fetchDashboardData,
     staleTime: 1000 * 60 * 5, // 5 minutes
-    retry: 1,
-    refetchOnWindowFocus: false, // 🚫 Don't hammer on tab switch
+    retry: 2,
+    retryDelay: 2000,
+    refetchOnWindowFocus: true,
+    refetchInterval: 1000 * 60 * 10, // Refresh every 10 minutes
+    onError: (error) => {
+      console.error("Dashboard data error:", error.message);
+    }
   });
 };

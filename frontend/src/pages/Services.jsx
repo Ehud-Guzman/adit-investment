@@ -92,8 +92,8 @@ const services = [
 const testimonials = [
   {
     id: 1,
-    name: "James ",
-    position: "CEO, Itoya Hotel",
+    name: "Edwin ",
+    position: "Manager, Itoya Hotel",
     content: "ADIT transformed our entire network infrastructure. Their team was professional and delivered ahead of schedule.",
     rating: 5
   },

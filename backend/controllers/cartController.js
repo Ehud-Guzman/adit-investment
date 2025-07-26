@@ -1,21 +1,21 @@
 import { ObjectId } from "mongodb";
 
-export default function CartController(cart) {
-  // 🧼 Enhanced normalization with consistent ID handling
- const normalizeCartItems = (items) =>
-  items.map((item) => ({
-    ...item,
-    id: item._id?.toString?.() || item.id,
-    _id: item._id?.toString?.(), // force string always
-    productId: item.productId?.toString?.(),
-  }));
+export default function CartController(cart, products) {
+  const normalizeCartItems = (items) =>
+    items.map((item) => ({
+      ...item,
+      id: item._id?.toString?.() || item.id,
+      _id: item._id?.toString?.(),
+      productId: item.productId?.toString?.(),
+    }));
 
+  const MAX_QTY = 10;
 
   return {
     // 📦 GET /cart
     getUserCart: async (req, res) => {
       const userId = req.user?.userId;
-      if (!userId) return res.status(401).json({ message: "Unauthorized: Missing user" });
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
 
       try {
         const items = await cart.find({ userId }).toArray();
@@ -34,13 +34,30 @@ export default function CartController(cart) {
         return res.status(400).json({ message: `Invalid or missing productId: ${productId}` });
       }
 
+      const qty = Math.min(Math.max(Number(quantity) || 1, 1), MAX_QTY);
+
       try {
+        const product = await products.findOne({ _id: new ObjectId(productId) });
+        if (!product) return res.status(404).json({ message: "Product not found" });
+
         const existing = await cart.findOne({ userId, productId });
 
         if (existing) {
-          await cart.updateOne({ userId, productId }, { $inc: { quantity } });
+          await cart.updateOne(
+            { userId, productId },
+            {
+              $inc: { quantity: qty },
+              $set: { updatedAt: new Date() },
+            }
+          );
         } else {
-          await cart.insertOne({ userId, productId, quantity, createdAt: new Date() });
+          await cart.insertOne({
+            userId,
+            productId,
+            quantity: qty,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          });
         }
 
         const updatedCart = await cart.find({ userId }).toArray();
@@ -60,10 +77,17 @@ export default function CartController(cart) {
         return res.status(400).json({ message: "Invalid cart item ID" });
       }
 
+      const qty = Math.min(Math.max(Number(quantity) || 1, 1), MAX_QTY);
+
       try {
         const result = await cart.updateOne(
           { _id: new ObjectId(id), userId },
-          { $set: { quantity } }
+          {
+            $set: {
+              quantity: qty,
+              updatedAt: new Date(),
+            },
+          }
         );
 
         if (result.matchedCount === 0) {
@@ -77,91 +101,133 @@ export default function CartController(cart) {
       }
     },
 
-    // ❌ FIXED: DELETE /cart/:id with proper normalization
-      removeItem: async (req, res) => {
+    // ❌ DELETE /cart/:id
+    removeItem: async (req, res) => {
       const userId = req.user?.userId;
       const { id } = req.params;
 
       if (!userId) {
-        return res.status(401).json({ message: "Unauthorized: Missing user ID" });
+        return res.status(401).json({ message: "Unauthorized" });
       }
 
       if (!ObjectId.isValid(id)) {
         console.warn("🛑 Invalid cart item ID received:", id);
         const fallbackCart = await cart.find({ userId }).toArray();
-        return res.status(200).json(normalizeCartItems(fallbackCart)); // ✅ Fixed normalization
+        return res.status(200).json(normalizeCartItems(fallbackCart));
       }
 
       try {
         const result = await cart.deleteOne({ _id: new ObjectId(id), userId });
 
         if (result.deletedCount === 0) {
-          console.warn(`⚠️ No cart item found to delete: ${id} for user ${userId}`);
           return res.status(404).json({ message: "Cart item not found" });
         }
 
         const updatedCart = await cart.find({ userId }).toArray();
-        return res.status(200).json(normalizeCartItems(updatedCart)); // ✅ Fixed normalization
+        return res.status(200).json(normalizeCartItems(updatedCart));
       } catch (err) {
-        console.error("❌ Failed to remove item from cart:", err.message);
-        return res.status(500).json({
-          message: "Failed to remove item",
-          error: err.message,
-        });
+        return res.status(500).json({ message: "Failed to remove item", error: err.message });
       }
     },
 
-    // 🔄 POST /cart/merge
-mergeGuestCart: async (req, res) => {
-  const userId = req.user?.userId;
-  const items = req.body?.items || [];
+    // 🧹 DELETE /cart/clear
+    clearCart: async (req, res) => {
+      const userId = req.user?.userId;
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
 
-  if (!userId) return res.status(401).json({ message: "Unauthorized" });
-  if (!Array.isArray(items)) return res.status(400).json({ message: "Invalid items payload" });
-
-  try {
-    const bulkOps = [];
-
-    for (const { productId, quantity } of items) {
-      if (!productId || typeof productId !== "string") continue;
-      const qty = Math.max(Number(quantity) || 1, 1);
-
-      const existing = await cart.findOne({ userId, productId });
-
-      if (existing) {
-        bulkOps.push({
-          updateOne: {
-            filter: { userId, productId },
-            update: { $inc: { quantity: qty } },
-          },
-        });
-      } else {
-        bulkOps.push({
-          insertOne: {
-            document: {
-              userId,
-              productId,
-              quantity: qty,
-              createdAt: new Date(),
-            },
-          },
-        });
+      try {
+        await cart.deleteMany({ userId });
+        res.status(200).json({ success: true, message: "Cart cleared" });
+      } catch (err) {
+        res.status(500).json({ message: "Failed to clear cart", error: err.message });
       }
-    }
+    },
 
-    if (bulkOps.length) {
-      await cart.bulkWrite(bulkOps);
-    }
+    // 🔁 POST /cart/merge
+    mergeGuestCart: async (req, res) => {
+      const userId = req.user?.userId;
+      const items = req.body?.items || [];
 
-    const updatedCart = await cart.find({ userId }).lean(); // ✅ FIXED
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+      if (!Array.isArray(items)) return res.status(400).json({ message: "Invalid items payload" });
 
-    const normalized = normalizeCartItems(updatedCart);
+      try {
+        const bulkOps = [];
 
-    res.status(200).json({ success: true, items: normalized });
-  } catch (err) {
-    console.error("❌ Merge cart failed:", err.message);
-    res.status(500).json({ message: "Failed to merge guest cart", error: err.message });
-  }
-}
+        for (const { productId, quantity } of items) {
+          if (!productId || typeof productId !== "string") continue;
+          if (!ObjectId.isValid(productId)) continue;
+
+          const qty = Math.min(Math.max(Number(quantity) || 1, 1), MAX_QTY);
+
+          const existing = await cart.findOne({ userId, productId });
+
+          if (existing) {
+            bulkOps.push({
+              updateOne: {
+                filter: { userId, productId },
+                update: { $inc: { quantity: qty }, $set: { updatedAt: new Date() } },
+              },
+            });
+          } else {
+            bulkOps.push({
+              insertOne: {
+                document: {
+                  userId,
+                  productId,
+                  quantity: qty,
+                  createdAt: new Date(),
+                  updatedAt: new Date(),
+                },
+              },
+            });
+          }
+        }
+
+        if (bulkOps.length) {
+          await cart.bulkWrite(bulkOps);
+        }
+
+        const updatedCart = await cart.find({ userId }).toArray();
+        const normalized = normalizeCartItems(updatedCart);
+
+        res.status(200).json({ success: true, items: normalized });
+      } catch (err) {
+        console.error("❌ Merge cart failed:", err.message);
+        res.status(500).json({ message: "Failed to merge guest cart", error: err.message });
+      }
+    },
+
+    // 💰 GET /cart/total
+    getCartTotal: async (req, res) => {
+      const userId = req.user?.userId;
+      if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+      try {
+        const cartItems = await cart.find({ userId }).toArray();
+        const normalized = normalizeCartItems(cartItems);
+
+        const productIds = normalized.map((item) => new ObjectId(item.productId));
+        const productMap = await products
+          .find({ _id: { $in: productIds } })
+          .toArray()
+          .then((docs) =>
+            docs.reduce((acc, p) => {
+              acc[p._id.toString()] = p;
+              return acc;
+            }, {})
+          );
+
+        const total = normalized.reduce((sum, item) => {
+          const product = productMap[item.productId];
+          const price = product?.price || 0;
+          return sum + price * item.quantity;
+        }, 0);
+
+        res.status(200).json({ total, items: normalized });
+      } catch (err) {
+        res.status(500).json({ message: "Failed to calculate total", error: err.message });
+      }
+    },
   };
 }

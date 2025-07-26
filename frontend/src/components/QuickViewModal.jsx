@@ -142,19 +142,13 @@ const QuickViewModal = ({
                   {imageLoading && (
                     <div className="absolute inset-0 bg-gray-200 animate-pulse" />
                   )}
-                  <motion.img
-                    key={selectedImageIndex}
-                    src={product.images?.[selectedImageIndex] || "/placeholder-product.jpg"}
-                    alt={product.name}
-                    className={`w-full h-full object-contain transition-opacity duration-300 ${
-                      imageLoading ? "opacity-0" : "opacity-100"
-                    }`}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: imageLoading ? 0 : 1 }}
-                    onLoad={handleImageLoad}
-                    onError={handleImageError}
-                    loading="eager"
-                  />
+                 <motion.img
+  key={selectedImageIndex}
+  src={product.images?.[selectedImageIndex] || "/placeholder-product.jpg"}
+  onLoad={handleImageLoad}
+  onError={handleImageError}
+/>
+
                 </div>
 
                 {product.images?.length > 1 && (

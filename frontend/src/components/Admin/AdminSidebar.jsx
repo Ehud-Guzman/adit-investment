@@ -22,12 +22,12 @@ export default function AdminSidebar({ onLogout }) {
     { path: '/admin/settings', label: 'System Settings', icon: <FiSettings /> },
   ];
 
-  return (
-    <aside className="w-64 bg-gradient-to-b from-gray-900 to-gray-800 text-white p-6 flex flex-col h-full">
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-2">
-          <FiShield className="text-indigo-300 text-2xl" />
-          <h2 className="text-xl font-bold">Admin</h2>
+ return (
+    <aside className="w-56 sm:w-64 bg-gradient-to-b from-gray-900 to-gray-800 text-white p-4 sm:p-6 flex flex-col h-full">
+      <div className="mb-6 sm:mb-8">
+        <div className="flex items-center gap-2 mb-1 sm:mb-2">
+          <FiShield className="text-indigo-300 text-xl sm:text-2xl" />
+          <h2 className="text-lg sm:text-xl font-bold">Admin</h2>
         </div>
         <p className="text-indigo-200 text-xs">
           E-Commerce Control Center
@@ -39,14 +39,14 @@ export default function AdminSidebar({ onLogout }) {
             key={item.path}
             to={item.path}
             className={({ isActive }) => 
-              `flex items-center gap-3 p-3 rounded-lg transition-colors ${
+              `flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg transition-colors text-sm sm:text-base ${
                 isActive 
                   ? 'bg-indigo-600 text-white font-medium shadow' 
                   : 'text-indigo-100 hover:bg-gray-700'
               }`
             }
           >
-            <span className="text-lg">{item.icon}</span>
+            <span className="text-base sm:text-lg">{item.icon}</span>
             {item.label}
           </NavLink>
         ))}
@@ -54,9 +54,9 @@ export default function AdminSidebar({ onLogout }) {
       
       <button
         onClick={handleLogout}
-        className="flex items-center gap-3 p-3 text-red-300 hover:bg-gray-700 rounded-lg mt-auto"
+        className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 text-red-300 hover:bg-gray-700 rounded-lg mt-auto text-sm sm:text-base"
       >
-        <FiLogOut className="text-lg" />
+        <FiLogOut className="text-base sm:text-lg" />
         Logout
       </button>
     </aside>

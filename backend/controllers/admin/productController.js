@@ -10,6 +10,7 @@ const findProductByIdFlexible = async (collection, id) => {
   return doc ? { product: doc, filter: { _id: id } } : { product: null, filter: null };
 };
 
+// 🚀 GET ALL PRODUCTS (ADMIN)
 export const getAdminProducts = async (req, res, products) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -44,10 +45,21 @@ export const getAdminProducts = async (req, res, products) => {
   }
 };
 
-
+// ✅ CREATE PRODUCT (with multiple image URLs)
 export const createProduct = async (req, res, products) => {
   try {
-    const { name, price, category } = req.body;
+    const {
+      name,
+      price,
+      category,
+      description = "",
+      stock = 0,
+      images = [],
+      isFeatured = false,
+      approved = true,
+      vendor = "",
+    } = req.body;
+
     if (!name || !price || !category) {
       return res.status(400).json({ message: "Missing name, price, or category" });
     }
@@ -56,6 +68,12 @@ export const createProduct = async (req, res, products) => {
       name,
       price: Number(price),
       category,
+      description,
+      stock: Number(stock),
+      images: Array.isArray(images) ? images : [images], // Enforce array
+      isFeatured: Boolean(isFeatured),
+      approved: Boolean(approved),
+      vendor,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -72,6 +90,7 @@ export const createProduct = async (req, res, products) => {
   }
 };
 
+// 🔁 UPDATE PRODUCT (same structure)
 export const updateProduct = async (req, res, products) => {
   try {
     const id = req.params.id;
@@ -83,6 +102,11 @@ export const updateProduct = async (req, res, products) => {
     const updateDoc = {
       $set: {
         ...updates,
+        price: Number(updates.price),
+        stock: Number(updates.stock),
+        isFeatured: Boolean(updates.isFeatured),
+        approved: Boolean(updates.approved),
+        images: Array.isArray(updates.images) ? updates.images : [updates.images],
         updatedAt: new Date(),
       },
     };
@@ -101,6 +125,7 @@ export const updateProduct = async (req, res, products) => {
   }
 };
 
+// ❌ DELETE PRODUCT
 export const deleteProduct = async (req, res, products) => {
   try {
     const id = req.params.id;

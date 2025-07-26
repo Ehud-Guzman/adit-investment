@@ -182,6 +182,36 @@ export default function ProductController(productsCollection) {
       }
     },
 
+    patch: async (req, res) => {
+  try {
+    const id = req.params.id;
+    if (!ObjectId.isValid(id)) {
+      return res.status(400).json({ success: false, message: "Invalid product ID" });
+    }
+
+    const updates = { ...req.body, updatedAt: new Date() };
+
+    // Optional: typecast booleans if necessary
+    if ("featured" in updates) updates.featured = Boolean(updates.featured);
+    if ("approved" in updates) updates.approved = Boolean(updates.approved);
+
+    const result = await productsCollection.updateOne(
+      { _id: new ObjectId(id) },
+      { $set: updates }
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ success: false, message: "Product not found" });
+    }
+
+    res.status(200).json({ success: true, message: "Product patched successfully" });
+  } catch (err) {
+    console.error("❌ Patch error:", err);
+    res.status(500).json({ success: false, message: "Failed to patch product" });
+  }
+},
+    
+
     remove: async (req, res) => {
       try {
         const id = req.params.id;
@@ -206,3 +236,4 @@ export default function ProductController(productsCollection) {
     },
   };
 }
+

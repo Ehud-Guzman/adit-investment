@@ -26,6 +26,11 @@ import createAdminDashboardRouter from "./routes/admin/dashboardRoutes.js";
 import createSettingsRouter from "./routes/settings.js";
 import createEmailRouter from "./routes/emailRoutes.js";
 
+
+import createOrderRoutes from "./routes/orderRoutes.js";
+
+
+
 // 📦 Non-DI Routes
 import uploadRoutes from "./routes/upload.js";
 import cleanupRoutes from "./routes/cleanup.js";
@@ -110,6 +115,8 @@ async function startServer() {
   try {
     console.log("🧠 Connecting to MongoDB...");
     const collections = await connectDB();
+    
+
     app.locals.db = collections._db || collections.db;
     console.log("✅ MongoDB connected successfully");
 
@@ -124,6 +131,11 @@ async function startServer() {
     app.use("/api/admin/users", createAdminUserRouter(collections.users));
     app.use("/api/admin/dashboard", createAdminDashboardRouter());
     app.use("/api/settings", createSettingsRouter(collections.adminSettings));
+  
+
+    app.use("/api/orders", createOrderRoutes(collections));
+
+
 
     // 🧱 Static/Utility Routes
     app.use("/api/upload", uploadRoutes);

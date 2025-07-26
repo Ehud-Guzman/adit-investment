@@ -1,14 +1,12 @@
 // src/pages/Admin.jsx
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-// 🔐 Auth & Data Hooks
+// 🔐 Auth & Hooks
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import useAdminProducts from "@/hooks/admin/useAdminProducts";
 
-// 🧱 Layout & UI
-import AdminLayout from "@/components/Admin/AdminLayout";
+// Components
 import AdminLoginForm from "@/components/Admin/AdminLoginForm";
 import ProductForm from "@/components/Admin/ProductForm";
 import ProductList from "@/components/Admin/ProductList";
@@ -18,11 +16,12 @@ import LoadingOverlay from "@/components/common/LoadingOverlay";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import AdminDashboard from "@/pages/admin/Dashboard";
 import SettingsPage from "@/components/Admin/settings/SettingsPage";
+import AdminNav from "@/components/Admin/AdminNav";
+import AdminOrdersPage from "@/pages/admin/AdminOrdersPage";
+
+
 
 export default function Admin() {
-  const navigate = useNavigate();
-
-  // ✅ Auth state
   const {
     currentUser,
     isAuthenticated,
@@ -32,11 +31,9 @@ export default function Admin() {
     isLoading,
   } = useAdminAuth();
 
-  // ✅ UI state
   const [view, setView] = useState("products");
   const [formError, setFormError] = useState(null);
 
-  // ✅ Product logic
   const {
     products,
     loading: productsLoading,
@@ -49,7 +46,6 @@ export default function Admin() {
     handleDelete,
   } = useAdminProducts();
 
-  // ✅ User filter state
   const [userFilters, setUserFilters] = useState({
     search: "",
     role: "all",
@@ -57,122 +53,31 @@ export default function Admin() {
     page: 1,
   });
 
-  // 🚀 Fetch products on load (if admin)
   useEffect(() => {
     if (isAdmin) {
       fetchProducts().catch((err) => {
-        const message =
-          err?.response?.data?.message || "Failed to load products.";
-        setFormError(message);
-        toast.error(message);
+        const msg = err?.response?.data?.message || "Failed to load products.";
+        setFormError(msg);
+        toast.error(msg);
       });
     }
   }, [isAdmin, fetchProducts]);
 
-  // 🔒 Notify after logout
-  useEffect(() => {
-    if (!isAuthenticated && !isLoading) {
-      const justLoggedOut = localStorage.getItem("adminLoggedOut");
-      if (justLoggedOut === "1") {
-        toast.info("👋 You’ve been securely logged out");
-        localStorage.removeItem("adminLoggedOut");
-      }
-    }
-  }, [isAuthenticated, isLoading]);
+  if (isLoading) return <LoadingOverlay message="Checking admin session..." />;
 
-  // 📤 Handle form submit
-  const handleSubmit = async (data) => {
-    setFormError(null);
-    try {
-      if (editing) {
-        await handleUpdate(editing._id, data);
-        toast.success("✅ Product updated");
-        setEditing(null);
-      } else {
-        await handleCreate(data);
-       
-      }
-    } catch (err) {
-      const message =
-        err?.response?.data?.message || "Product operation failed.";
-      setFormError(message);
-      toast.error(message);
-    }
-  };
-
-  // 🔓 Handle logout
-  const handleLogout = () => {
-    logout();
-  };
-
-  // ⏳ Loading session
-  if (isLoading) {
-    return <LoadingOverlay message="Checking admin session..." />;
-  }
-
-  // 🔐 Block unauthenticated access
   if (!isAuthenticated || !isAdmin) {
     return (
-      <AdminLayout>
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-          <AdminLoginForm onLogin={login} />
-        </div>
-      </AdminLayout>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+        <AdminLoginForm onLogin={login} />
+      </div>
     );
   }
 
-  // ✅ Main Admin UI
   return (
-    <AdminLayout user={currentUser} onLogout={handleLogout}>
-      <div className="space-y-8 p-4">
-        {/* 🧭 View Switcher */}
-        <div className="flex flex-wrap gap-4 mb-6">
-          <button
-            onClick={() => setView("products")}
-            className={`px-4 py-2 rounded ${
-              view === "products"
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-gray-700"
-            }`}
-          >
-            Manage Products
-          </button>
+    <div className="p-4 sm:p-6 max-w-screen-xl mx-auto grid grid-cols-1 sm:grid-cols-[220px_1fr] gap-6">
+      <AdminNav currentView={view} setView={setView} onLogout={logout} />
 
-          <button
-            onClick={() => setView("settings")}
-            className={`px-4 py-2 rounded ${
-              view === "settings"
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-gray-700"
-            }`}
-          >
-            Settings
-          </button>
-
-          <button
-            onClick={() => setView("users")}
-            className={`px-4 py-2 rounded ${
-              view === "users"
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-gray-700"
-            }`}
-          >
-            Manage Users
-          </button>
-
-          <button
-            onClick={() => setView("dashboard")}
-            className={`px-4 py-2 rounded ${
-              view === "dashboard"
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-gray-700"
-            }`}
-          >
-            Dashboard
-          </button>
-        </div>
-
-        {/* 📦 Product Management */}
+      <div className="space-y-8">
         {view === "products" && (
           <>
             <section className="bg-white p-6 rounded shadow">
@@ -183,7 +88,23 @@ export default function Admin() {
               <ProductForm
                 isEditing={!!editing}
                 initialData={editing || {}}
-                onSubmit={handleSubmit}
+                onSubmit={async (data) => {
+                  setFormError(null);
+                  try {
+                    if (editing) {
+                      await handleUpdate(editing._id, data);
+                      toast.success("✅ Product updated");
+                      setEditing(null);
+                    } else {
+                      await handleCreate(data);
+                      toast.success("✅ Product created");
+                    }
+                  } catch (err) {
+                    const msg = err?.response?.data?.message || "Product operation failed.";
+                    setFormError(msg);
+                    toast.error(msg);
+                  }
+                }}
                 onCancel={() => setEditing(null)}
               />
             </section>
@@ -210,31 +131,32 @@ export default function Admin() {
           </>
         )}
 
-        {/* ⚙️ Settings & Integrations */}
         {view === "settings" && (
-          <section className="bg-white p-6 rounded shadow space-y-6">
+          <section className="bg-white p-6 rounded shadow">
             <SettingsPage />
           </section>
         )}
 
-        {/* 👥 User Management */}
         {view === "users" && (
           <section className="bg-white p-6 rounded shadow space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold">Manage Users</h2>
-            </div>
+            <h2 className="text-2xl font-semibold">Manage Users</h2>
             <UserFilters filters={userFilters} setFilters={setUserFilters} />
             <UserTable filters={userFilters} />
           </section>
         )}
 
-        {/* 📊 Admin Dashboard */}
         {view === "dashboard" && (
-          <section className="bg-white p-6 rounded shadow space-y-6">
+          <section className="bg-white p-6 rounded shadow">
             <AdminDashboard />
           </section>
         )}
+
+        {view === "orders" && (
+          <section className="bg-white p-6 rounded shadow">
+            <AdminOrdersPage />
+          </section>
+        )}
       </div>
-    </AdminLayout>
+    </div>
   );
 }

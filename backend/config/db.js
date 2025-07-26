@@ -31,6 +31,8 @@ export async function connectDB() {
     collections.sessions = _db.collection("sessions");
     collections.adminSettings = _db.collection("adminSettings");
     collections.email_tokens = _db.collection("email_tokens"); // ✅ added
+    collections.orders = _db.collection("orders");
+
 
     // 🧾 Indexes (optimize queries, enforce constraints)
     await Promise.all([
@@ -45,6 +47,8 @@ export async function connectDB() {
       collections.sessions.createIndex({ userId: 1 }),
       collections.adminSettings.createIndex({ key: 1 }, { unique: true }),
       collections.email_tokens.createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 }), // ✅ token TTL
+      collections.orders.createIndex({ userId: 1, createdAt: -1 }),
+
     ]);
 
     console.log("✅ All indexes created successfully");

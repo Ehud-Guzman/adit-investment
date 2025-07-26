@@ -2,24 +2,29 @@
 import { api } from "./index.js";
 
 /**
+ * ✅ Utility to safely extract error info
+ */
+const formatError = (error) => ({
+  status: error.response?.status,
+  data: error.response?.data,
+});
+
+/**
  * 🧾 Fetch the authenticated user's wishlist.
  * Returns an array of wishlist items: [{ _id, userId, productId }]
  */
 export const getWishlist = async () => {
   try {
     const res = await api.get("/wishlist");
-    return res.data; // Expecting array
+    return res.data;
   } catch (error) {
-    const status = error.response?.status;
+    const { status, data } = formatError(error);
 
-    if (status === 401) {
-      // Guest user, return empty list without log
-      return [];
-    }
+    if (status === 401) return []; // Silent fail for guest
 
     console.error("❌ Get wishlist error:", {
       status,
-      data: error.response?.data,
+      data,
       endpoint: "/wishlist",
     });
     throw error;
@@ -39,9 +44,11 @@ export const addToWishlist = async (productId) => {
     const res = await api.post("/wishlist", { productId });
     return res.data;
   } catch (error) {
+    const { status, data } = formatError(error);
+
     console.error("❌ Add to wishlist error:", {
-      status: error.response?.status,
-      data: error.response?.data,
+      status,
+      data,
       productId,
       endpoint: "/wishlist",
     });
@@ -62,9 +69,11 @@ export const removeFromWishlist = async (wishlistItemId) => {
     const res = await api.delete(`/wishlist/${wishlistItemId}`);
     return res.data;
   } catch (error) {
+    const { status, data } = formatError(error);
+
     console.error("❌ Remove from wishlist error:", {
-      status: error.response?.status,
-      data: error.response?.data,
+      status,
+      data,
       wishlistItemId,
       endpoint: `/wishlist/${wishlistItemId}`,
     });
@@ -73,18 +82,30 @@ export const removeFromWishlist = async (wishlistItemId) => {
 };
 
 /**
- * 🧹 Clears all items in the authenticated user's wishlist
+ * 🧹 Clear all items in the authenticated user's wishlist
  */
 export const clearWishlist = async () => {
   try {
     const res = await api.delete("/wishlist/clear");
     return res.data;
   } catch (error) {
+    const { status, data } = formatError(error);
+
     console.error("❌ Clear wishlist error:", {
-      status: error.response?.status,
-      data: error.response?.data,
+      status,
+      data,
       endpoint: "/wishlist/clear",
     });
     throw error;
   }
+};
+
+/**
+ * ✅ Grouped exports for easy destructuring
+ */
+export const wishlist = {
+  getWishlist,
+  addToWishlist,
+  removeFromWishlist,
+  clearWishlist,
 };

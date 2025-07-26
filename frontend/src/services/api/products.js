@@ -63,6 +63,17 @@ export const getFeaturedProducts = async (limit = 4) => {
   }
 };
 
+export const patchProduct = async (id, updates) => {
+  try {
+    const response = await api.patch(`/products/${id}`, updates);
+    return response.data;
+  } catch (error) {
+    console.error("API Error - patchProduct:", error);
+    throw error;
+  }
+};
+
+
 export const getProductsByCategory = async (category, page = 1, limit = 12) => {
   try {
     const response = await api.get(`/products?category=${category}&page=${page}&limit=${limit}`);

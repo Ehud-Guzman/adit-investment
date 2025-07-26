@@ -105,3 +105,14 @@ body {
   }
 }
 
+/* globals.css */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 9999px;
+}
+.scroll-area {
+  scrollbar-gutter: stable both-edges;
+}

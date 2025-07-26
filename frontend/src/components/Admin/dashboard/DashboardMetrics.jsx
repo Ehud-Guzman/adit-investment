@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
   UsersIcon,
@@ -8,8 +8,11 @@ import {
   ArrowTrendingUpIcon,
   ArrowTrendingDownIcon,
 } from "@heroicons/react/24/outline";
+import { motion, AnimatePresence } from "framer-motion";
 
 const DashboardMetrics = ({ data, loading, error, onRetry }) => {
+  const [displayData, setDisplayData] = useState({});
+  
   // Metric configuration with colors and icons
   const metricsConfig = [
     {
@@ -44,17 +47,29 @@ const DashboardMetrics = ({ data, loading, error, onRetry }) => {
 
   // Format numbers with commas
   const formatNumber = (num) => {
+    if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
+    if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
     return num?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") || "0";
   };
+
+  // Animate values when data changes
+  useEffect(() => {
+    if (!loading && !error && data) {
+      setDisplayData(data);
+    }
+  }, [data, loading, error]);
 
   // Skeleton loader for metrics
   if (loading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {metricsConfig.map((metric) => (
-          <div
+          <motion.div
             key={metric.key}
             className="bg-white p-5 rounded-xl shadow-sm border border-gray-100"
+            initial={{ opacity: 0.5, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
           >
             <div className="flex justify-between items-start">
               <div className="space-y-3">
@@ -64,7 +79,7 @@ const DashboardMetrics = ({ data, loading, error, onRetry }) => {
               <div className={`h-12 w-12 rounded-full ${metric.color} animate-pulse`}></div>
             </div>
             <div className="mt-4 h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
-          </div>
+          </motion.div>
         ))}
       </div>
     );
@@ -73,7 +88,12 @@ const DashboardMetrics = ({ data, loading, error, onRetry }) => {
   // Error state
   if (error) {
     return (
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-red-100">
+      <motion.div
+        className="bg-white p-6 rounded-xl shadow-sm border border-red-100"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.3 }}
+      >
         <div className="text-center">
           <div className="mx-auto bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mb-4">
             <svg
@@ -97,35 +117,46 @@ const DashboardMetrics = ({ data, loading, error, onRetry }) => {
           <p className="text-gray-600 mb-4">{error}</p>
           <button
             onClick={onRetry}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium focus:ring-2 focus:ring-blue-300 focus:outline-none"
           >
             Retry
           </button>
         </div>
-      </div>
+      </motion.div>
     );
   }
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
       {metricsConfig.map((metric) => {
-        const value = data?.[metric.key] || 0;
-        const trend = data?.[`${metric.key}Trend`] || 0;
+        const value = displayData?.[metric.key] || 0;
+        const trend = displayData?.[`${metric.key}Trend`] || 0;
         const isPositive = trend >= 0;
 
         return (
-          <div
+          <motion.div
             key={metric.key}
             className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
+            whileHover={{ y: -5 }}
+            transition={{ type: "spring", stiffness: 300 }}
           >
             <div className="flex justify-between items-start">
               <div>
                 <h3 className="text-sm font-medium text-gray-500 mb-1">
                   {metric.title}
                 </h3>
-                <p className="text-2xl font-bold text-gray-800">
-                  {formatNumber(value)}
-                </p>
+                <AnimatePresence mode="wait">
+                  <motion.p
+                    key={`${metric.key}-${value}`}
+                    className="text-2xl font-bold text-gray-800"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {formatNumber(value)}
+                  </motion.p>
+                </AnimatePresence>
               </div>
               <div
                 className={`p-3 rounded-full ${metric.color} transition-transform hover:scale-110`}
@@ -147,12 +178,13 @@ const DashboardMetrics = ({ data, loading, error, onRetry }) => {
                   <ArrowTrendingDownIcon className="h-4 w-4 mr-1" />
                 )}
                 {trend !== 0 && `${Math.abs(trend)}%`}
+                {trend === 0 && "0%"}
               </div>
               <span className="text-sm text-gray-500 ml-2">
                 {isPositive ? "from last week" : "from last week"}
               </span>
             </div>
-          </div>
+          </motion.div>
         );
       })}
     </div>

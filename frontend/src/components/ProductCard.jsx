@@ -2,12 +2,15 @@ import { motion } from "framer-motion";
 import {
   FiHeart,
   FiEye,
-  FiShoppingCart
+  FiShoppingCart,
 } from "react-icons/fi";
 import { useState } from "react";
 import PropTypes from "prop-types";
 import RatingStars from "./RatingStars";
 import PriceDisplay from "./PriceDisplay";
+
+const getValidImage = (src) =>
+  src && typeof src === "string" && src.trim() !== "" && src !== "null";
 
 const ProductCard = ({
   product,
@@ -16,7 +19,7 @@ const ProductCard = ({
   onWishlistToggle = () => console.warn("⚠️ Missing 'onWishlistToggle' handler"),
   onQuickView = () => console.warn("⚠️ Missing 'onQuickView' handler"),
   isInWishlist = false,
-  loading = false
+  loading = false,
 }) => {
   const {
     _id,
@@ -33,16 +36,22 @@ const ProductCard = ({
     images = [],
   } = product || {};
 
-  const [imageLoading, setImageLoading] = useState(true);
+  const fallback = "/placeholder-product.jpg";
+  const validImages = images.filter(getValidImage);
+  const mainImage = getValidImage(imageUrl)
+    ? imageUrl
+    : validImages?.[0] || fallback;
+
+  const [selectedImage, setSelectedImage] = useState(mainImage);
   const [imageError, setImageError] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
 
-  const imageSrc = !imageError
-    ? imageUrl || images[0] || "/placeholder-product.jpg"
-    : "/placeholder-product.jpg";
+  const imageSrc = !imageError ? selectedImage : fallback;
 
-  const discount = originalPrice && originalPrice > price
-    ? Math.round(((originalPrice - price) / originalPrice) * 100)
-    : null;
+  const discount =
+    originalPrice && originalPrice > price
+      ? Math.round(((originalPrice - price) / originalPrice) * 100)
+      : null;
 
   const sizes = {
     small: {
@@ -112,38 +121,37 @@ const ProductCard = ({
       {/* Image */}
       <div className={`relative ${currentSize.image} overflow-hidden bg-gray-50`}>
         <motion.img
+          key={imageSrc}
           src={imageSrc}
           alt={imageError ? "Image not available" : name}
-          className={`w-full h-full object-contain transition-transform duration-300 group-hover:scale-105 ${
+          className={`w-full h-full object-contain transition-opacity duration-300 ease-in-out ${
             imageLoading ? "opacity-0" : "opacity-100"
           }`}
           onLoad={() => setImageLoading(false)}
           onError={() => {
-            setImageLoading(false);
             setImageError(true);
+            setImageLoading(false);
           }}
           loading="lazy"
-          width={300}
-          height={300}
         />
         {imageLoading && <div className="absolute inset-0 bg-gray-200 animate-pulse" />}
 
         {/* Badges */}
         <div className="absolute top-2 left-2 flex gap-1 z-[1]">
           {featured && (
-            <motion.span className={`bg-blue-600 text-white rounded-full font-medium ${currentSize.badge}`}>
+            <span className={`bg-blue-600 text-white rounded-full font-medium ${currentSize.badge}`}>
               Featured
-            </motion.span>
+            </span>
           )}
           {discount && (
-            <motion.span className={`bg-green-500 text-white rounded-full font-medium ${currentSize.badge}`}>
+            <span className={`bg-green-500 text-white rounded-full font-medium ${currentSize.badge}`}>
               {discount}% OFF
-            </motion.span>
+            </span>
           )}
           {stock <= 0 && (
-            <motion.span className={`bg-red-500 text-white rounded-full font-medium ${currentSize.badge}`}>
+            <span className={`bg-red-500 text-white rounded-full font-medium ${currentSize.badge}`}>
               Sold Out
-            </motion.span>
+            </span>
           )}
         </div>
 
@@ -181,11 +189,40 @@ const ProductCard = ({
             <FiEye className={`text-gray-700 hover:text-blue-600 ${currentSize.icon}`} />
           </motion.button>
         </div>
+
+        {/* Image thumbnails */}
+        {validImages.length > 1 && (
+          <div className="absolute bottom-1 left-1 right-1 flex justify-center gap-1 z-10">
+            {validImages.slice(0, 4).map((img, idx) => (
+              <button
+                key={idx}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedImage(img);
+                  setImageLoading(true);
+                  setImageError(false);
+                }}
+                className={`w-5 h-5 border rounded overflow-hidden ${
+                  selectedImage === img ? "ring-2 ring-blue-600" : "opacity-70 hover:opacity-100"
+                }`}
+              >
+                <img
+                  src={img}
+                  alt={`Thumb ${idx + 1}`}
+                  className="w-full h-full object-cover"
+                />
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Info */}
       <div className={`${currentSize.padding} flex-1 flex flex-col`}>
-        <h3 className={`${currentSize.text} font-medium text-gray-800 mb-1 leading-tight line-clamp-2`} title={name}>
+        <h3
+          className={`${currentSize.text} font-medium text-gray-800 mb-1 leading-tight line-clamp-2`}
+          title={name}
+        >
           {name}
         </h3>
 
@@ -199,7 +236,10 @@ const ProductCard = ({
         </div>
 
         {description && size !== "small" && (
-          <p className={`text-gray-500 mb-2 text-xs sm:text-sm line-clamp-${currentSize.descriptionLines}`} title={description}>
+          <p
+            className={`text-gray-500 mb-2 text-xs sm:text-sm line-clamp-${currentSize.descriptionLines}`}
+            title={description}
+          >
             {description}
           </p>
         )}
@@ -208,7 +248,6 @@ const ProductCard = ({
           <p className="text-xs text-gray-400 mb-1">SKU: {sku}</p>
         )}
 
-        {/* Price + Add to Cart */}
         <div className="mt-auto flex flex-col gap-2 sm:gap-3">
           <PriceDisplay
             price={price}

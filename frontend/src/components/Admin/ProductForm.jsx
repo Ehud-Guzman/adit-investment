@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { FiX, FiSave, FiPlus, FiImage } from 'react-icons/fi';
+import { FiX, FiSave, FiPlus, FiImage, FiTrash } from 'react-icons/fi';
 import { toast } from 'react-toastify';
-import { CATEGORIES } from '@/constants/categories'; // ✅ mapped categories
+import { CATEGORIES } from '@/constants/categories';
 
 export default function ProductForm({
   onSubmit,
@@ -16,7 +16,7 @@ export default function ProductForm({
     category: '',
     description: '',
     stock: '',
-    imageUrl: '',
+    images: [],
     isFeatured: false,
     approved: true,
     vendor: '',
@@ -32,7 +32,7 @@ export default function ProductForm({
       category: initialData.category ?? '',
       description: initialData.description ?? '',
       stock: initialData.stock?.toString() ?? '0',
-      imageUrl: initialData.imageUrl ?? '',
+      images: initialData.images ?? [],
       isFeatured: initialData.isFeatured ?? false,
       approved: initialData.approved ?? true,
       vendor: initialData.vendor ?? '',
@@ -82,7 +82,7 @@ export default function ProductForm({
       const data = await res.json();
       if (!res.ok || !data?.url) throw new Error(data?.message || 'Upload failed');
 
-      setForm((prev) => ({ ...prev, imageUrl: data.url }));
+      setForm((prev) => ({ ...prev, images: [...prev.images, data.url] }));
       toast.success('📷 Image uploaded!');
     } catch (err) {
       console.error('💥 Upload error:', err.message || err);
@@ -90,6 +90,13 @@ export default function ProductForm({
     } finally {
       setUploadingImage(false);
     }
+  };
+
+  const removeImage = (index) => {
+    setForm((prev) => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index),
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -100,7 +107,6 @@ export default function ProductForm({
       ...form,
       price: parseFloat(form.price),
       stock: parseInt(form.stock, 10) || 0,
-      imageUrl: form.imageUrl || null,
     };
 
     try {
@@ -128,8 +134,8 @@ export default function ProductForm({
         )}
       </div>
 
+      {/* Inputs */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Name */}
         <div>
           <label className="block font-medium text-gray-700 mb-1">Product Name *</label>
           <input
@@ -144,7 +150,6 @@ export default function ProductForm({
           {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
         </div>
 
-        {/* Price */}
         <div>
           <label className="block font-medium text-gray-700 mb-1">Price (Ksh) *</label>
           <input
@@ -162,7 +167,6 @@ export default function ProductForm({
           {errors.price && <p className="text-red-500 text-sm">{errors.price}</p>}
         </div>
 
-        {/* Category */}
         <div>
           <label className="block font-medium text-gray-700 mb-1">Category *</label>
           <select
@@ -183,7 +187,6 @@ export default function ProductForm({
           {errors.category && <p className="text-red-500 text-sm">{errors.category}</p>}
         </div>
 
-        {/* Stock */}
         <div>
           <label className="block font-medium text-gray-700 mb-1">Stock</label>
           <input
@@ -199,38 +202,40 @@ export default function ProductForm({
           {errors.stock && <p className="text-red-500 text-sm">{errors.stock}</p>}
         </div>
 
-        {/* Image Upload */}
+        {/* Multi-image Upload */}
         <div className="md:col-span-2">
-          <label className="block font-medium text-gray-700 mb-1">Image URL or Upload</label>
-          <div className="flex gap-3">
-            <input
-              name="imageUrl"
-              value={form.imageUrl}
-              onChange={handleChange}
-              className="flex-1 border p-3 rounded-lg focus:ring-2 border-gray-300"
-              placeholder="https://res.cloudinary.com/..."
-            />
-            <label className="cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg">
-              <input type="file" accept="image/*" hidden onChange={handleImageUpload} />
-              {uploadingImage ? (
-                <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
-              ) : (
-                <>
-                  <FiImage size={18} className="inline" /> Upload
-                </>
-              )}
-            </label>
+          <label className="block font-medium text-gray-700 mb-1">Images</label>
+          <div className="flex flex-wrap gap-3 mb-3">
+            {form.images.map((url, index) => (
+              <div key={index} className="relative group">
+                <img
+                  src={url}
+                  alt={`Image ${index + 1}`}
+                  className="h-28 w-28 object-cover rounded-lg border"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeImage(index)}
+                  className="absolute top-1 right-1 bg-black bg-opacity-50 text-white p-1 rounded-full hover:bg-opacity-75"
+                >
+                  <FiTrash size={16} />
+                </button>
+              </div>
+            ))}
           </div>
-          {form.imageUrl && (
-            <img
-              src={form.imageUrl}
-              alt="Preview"
-              className="mt-4 h-32 w-32 object-cover rounded-lg border"
-            />
-          )}
+
+          <label className="cursor-pointer inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg">
+            <input type="file" accept="image/*" hidden onChange={handleImageUpload} />
+            {uploadingImage ? (
+              <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
+            ) : (
+              <>
+                <FiImage size={18} className="inline" /> Upload Image
+              </>
+            )}
+          </label>
         </div>
 
-        {/* Description */}
         <div className="md:col-span-2">
           <label className="block font-medium text-gray-700 mb-1">Description</label>
           <textarea
@@ -244,7 +249,7 @@ export default function ProductForm({
         </div>
       </div>
 
-      {/* Toggles */}
+      {/* Toggles + Vendor */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t">
         <label className="flex items-center gap-2">
           <input
@@ -282,7 +287,7 @@ export default function ProductForm({
         </div>
       </div>
 
-      {/* Actions */}
+      {/* Submit */}
       <div className="flex justify-end gap-3 pt-6">
         {onCancel && (
           <button

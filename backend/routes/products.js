@@ -11,6 +11,9 @@ export default function createProductRouter(productsCollection) {
   router.post('/', controller.create);
   router.put('/:id', controller.update);
   router.delete('/:id', controller.remove);
+  router.patch('/:id', controller.patch);
+
+  
 
   return router;
 }

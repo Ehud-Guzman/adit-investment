@@ -12,12 +12,12 @@ const faqs = [
     answer: "Yes, feel free to call us anytime between 8am - 5pm (Mon-Sat).",
   },
   {
-    question: "Do you offer customer support on weekends?",
+    question: "Do you offer customer support on Sundays?",
     answer: "Not officially, but we monitor emails for urgent issues.",
   },
   {
     question: "What areas do you serve?",
-    answer: "We primarily serve businesses across East Africa, with offices in Kenya and Uganda.",
+    answer: "We primarily serve businesses across East Africa, with offices in Kenya",
   },
   {
     question: "Do you offer remote consultations?",

@@ -97,3 +97,4 @@ export * as health from "./health";
 export * as ping from "./ping";
 export * as publicApi from "./public";
 export * as email from "./email";
+export * as orders from "./orders";
