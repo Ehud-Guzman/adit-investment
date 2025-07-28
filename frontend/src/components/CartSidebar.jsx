@@ -26,7 +26,7 @@ const CartSidebar = ({
     }, 0) || 0, [cart, products]
   );
 
-  const shippingFee = subtotal > 100000 ? 0 : 500;
+  const shippingFee = subtotal > 100000 ? 0 : 200;
   const total = subtotal + shippingFee;
   const suggestions = useUpsellSuggestions(cart, products);
 
@@ -276,22 +276,23 @@ const CartSidebar = ({
                         const itemTotal = product.price * item.quantity;
 
                         return (
-                          <motion.div
-                            key={key}
-                            layout
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ 
-                              opacity: isRemoving ? 0.3 : 1, 
-                              y: 0,
-                              x: isRemoving ? 100 : 0
-                            }}
-                            exit={{ opacity: 0, scale: 0.9, x: 100 }}
-                            whileHover={{ 
-                              scale: 1.01,
-                              boxShadow: "0 8px 25px -8px rgba(0, 0, 0, 0.1)"
-                            }}
-                            className="bg-white rounded-xl p-4 shadow-sm border border-slate-200 hover:border-slate-300 transition-all duration-200"
-                          >
+                        <motion.div
+  key={key}
+  layout
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ 
+    opacity: isRemoving ? 0.3 : 1, 
+    y: 0,
+    x: isRemoving ? 100 : 0
+  }}
+  exit={{ opacity: 0, scale: 0.9, x: 100 }}
+  whileHover={{ 
+    scale: 1.01,
+    boxShadow: "0 8px 25px -8px rgba(0, 0, 0, 0.1)"
+  }}
+  className="group bg-white rounded-xl p-4 shadow-sm border border-slate-200 hover:border-slate-300 transition-all duration-200"
+>
+
                             {/* Subtle accent line */}
                             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-indigo-500" />
                             
@@ -330,7 +331,8 @@ const CartSidebar = ({
                                   <motion.button
                                     onClick={() => handleRemoveItem(item.id)}
                                     whileHover={{ scale: 1.1 }}
-                                    className="p-1 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors opacity-0 group-hover:opacity-100"
+                                    className="p-1 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+
                                     aria-label="Remove from cart"
                                   >
                                     <FiX size={16} />

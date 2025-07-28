@@ -3,6 +3,7 @@
 import asyncHandler from "express-async-handler";
 import { ObjectId } from "mongodb";
 
+
 let ordersCollection;
 let productsCollection;
 
@@ -16,7 +17,6 @@ export const injectCollections = (collections) => {
   ordersCollection = collections.orders;
   productsCollection = collections.products;
 
-  console.log("📦 Collections injected:", Object.keys(collections));
 };
 
 // 🧾 Secure: Create a new order
@@ -24,10 +24,6 @@ export const createOrder = asyncHandler(async (req, res) => {
   const { items, shippingAddress, paymentMethod } = req.body;
   const userId = req.user?.userId;
 
-  console.log("📥 Order Received:", req.body.items);
-
-
-  console.log("📥 Incoming Order Payload:", JSON.stringify(req.body, null, 2));
 
   // Validate user and items
   if (!userId || typeof userId !== "string" || !ObjectId.isValid(userId)) {
@@ -77,7 +73,8 @@ export const createOrder = asyncHandler(async (req, res) => {
 
     validatedItems.push({
       productId: product._id,
-      title: product.title || "Untitled",
+      title: product.title || product.name || "Unknown Product",
+
       image: product.images?.[0] || "",
       quantity,
       price,

@@ -20,6 +20,8 @@
     "axios": "^1.9.0",
     "card": "^2.5.4",
     "chart.js": "^4.5.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "compression": "^1.8.1",
     "date-fns": "^4.1.0",
     "firebase": "^11.7.1",
@@ -43,6 +45,7 @@
     "react-toastify": "^11.0.5",
     "react-tooltip": "^5.29.1",
     "shadcn": "^2.9.3",
+    "tailwind-merge": "^3.3.1",
     "tool-tip": "^4.2.5",
     "use-debounce": "^10.0.4",
     "yup": "^1.6.1"

@@ -1,15 +1,20 @@
 import { ObjectId } from "mongodb";
+import {
+  normalizeCartItems,
+  sanitizeGhostCartItems,
+  isValidObjectId,
+} from "../utils/cartHelpers.js";
 
 export default function CartController(cart, products) {
-  const normalizeCartItems = (items) =>
-    items.map((item) => ({
-      ...item,
-      id: item._id?.toString?.() || item.id,
-      _id: item._id?.toString?.(),
-      productId: item.productId?.toString?.(),
-    }));
-
   const MAX_QTY = 10;
+
+  const safeObjectId = (id) => {
+    try {
+      return ObjectId.isValid(id) ? new ObjectId(id) : null;
+    } catch {
+      return null;
+    }
+  };
 
   return {
     // 📦 GET /cart
@@ -18,6 +23,7 @@ export default function CartController(cart, products) {
       if (!userId) return res.status(401).json({ message: "Unauthorized" });
 
       try {
+        await sanitizeGhostCartItems(userId, cart, products);
         const items = await cart.find({ userId }).toArray();
         res.status(200).json(normalizeCartItems(items));
       } catch (err) {
@@ -29,15 +35,16 @@ export default function CartController(cart, products) {
     addToCart: async (req, res) => {
       const userId = req.user?.userId;
       const { productId, quantity = 1 } = req.body;
+      const safeId = safeObjectId(productId);
 
-      if (!userId || !productId || typeof productId !== "string" || !ObjectId.isValid(productId)) {
-        return res.status(400).json({ message: `Invalid or missing productId: ${productId}` });
+      if (!userId || !safeId) {
+        return res.status(400).json({ message: `Invalid product ID: ${productId}` });
       }
 
       const qty = Math.min(Math.max(Number(quantity) || 1, 1), MAX_QTY);
 
       try {
-        const product = await products.findOne({ _id: new ObjectId(productId) });
+        const product = await products.findOne({ _id: safeId });
         if (!product) return res.status(404).json({ message: "Product not found" });
 
         const existing = await cart.findOne({ userId, productId });
@@ -45,10 +52,7 @@ export default function CartController(cart, products) {
         if (existing) {
           await cart.updateOne(
             { userId, productId },
-            {
-              $inc: { quantity: qty },
-              $set: { updatedAt: new Date() },
-            }
+            { $inc: { quantity: qty }, $set: { updatedAt: new Date() } }
           );
         } else {
           await cart.insertOne({
@@ -60,10 +64,11 @@ export default function CartController(cart, products) {
           });
         }
 
+        await sanitizeGhostCartItems(userId, cart, products);
         const updatedCart = await cart.find({ userId }).toArray();
         res.status(200).json(normalizeCartItems(updatedCart));
       } catch (err) {
-        res.status(500).json({ message: "Failed to add to cart", error: err.message });
+        res.status(500).json({ message: "Add to cart failed", error: err.message });
       }
     },
 
@@ -72,8 +77,9 @@ export default function CartController(cart, products) {
       const userId = req.user?.userId;
       const { id } = req.params;
       const { quantity } = req.body;
+      const safeCartItemId = safeObjectId(id);
 
-      if (!ObjectId.isValid(id)) {
+      if (!safeCartItemId) {
         return res.status(400).json({ message: "Invalid cart item ID" });
       }
 
@@ -81,13 +87,8 @@ export default function CartController(cart, products) {
 
       try {
         const result = await cart.updateOne(
-          { _id: new ObjectId(id), userId },
-          {
-            $set: {
-              quantity: qty,
-              updatedAt: new Date(),
-            },
-          }
+          { _id: safeCartItemId, userId },
+          { $set: { quantity: qty, updatedAt: new Date() } }
         );
 
         if (result.matchedCount === 0) {
@@ -105,20 +106,19 @@ export default function CartController(cart, products) {
     removeItem: async (req, res) => {
       const userId = req.user?.userId;
       const { id } = req.params;
+      const safeCartItemId = safeObjectId(id);
 
       if (!userId) {
         return res.status(401).json({ message: "Unauthorized" });
       }
 
-      if (!ObjectId.isValid(id)) {
-        console.warn("🛑 Invalid cart item ID received:", id);
+      if (!safeCartItemId) {
         const fallbackCart = await cart.find({ userId }).toArray();
         return res.status(200).json(normalizeCartItems(fallbackCart));
       }
 
       try {
-        const result = await cart.deleteOne({ _id: new ObjectId(id), userId });
-
+        const result = await cart.deleteOne({ _id: safeCartItemId, userId });
         if (result.deletedCount === 0) {
           return res.status(404).json({ message: "Cart item not found" });
         }
@@ -130,7 +130,7 @@ export default function CartController(cart, products) {
       }
     },
 
-    // 🧹 DELETE /cart/clear
+    // 🛉 DELETE /cart/clear
     clearCart: async (req, res) => {
       const userId = req.user?.userId;
       if (!userId) return res.status(401).json({ message: "Unauthorized" });
@@ -155,8 +155,8 @@ export default function CartController(cart, products) {
         const bulkOps = [];
 
         for (const { productId, quantity } of items) {
-          if (!productId || typeof productId !== "string") continue;
-          if (!ObjectId.isValid(productId)) continue;
+          const safeId = safeObjectId(productId);
+          if (!safeId) continue;
 
           const qty = Math.min(Math.max(Number(quantity) || 1, 1), MAX_QTY);
 
@@ -184,17 +184,14 @@ export default function CartController(cart, products) {
           }
         }
 
-        if (bulkOps.length) {
-          await cart.bulkWrite(bulkOps);
-        }
+        if (bulkOps.length) await cart.bulkWrite(bulkOps);
 
+        await sanitizeGhostCartItems(userId, cart, products);
         const updatedCart = await cart.find({ userId }).toArray();
-        const normalized = normalizeCartItems(updatedCart);
-
-        res.status(200).json({ success: true, items: normalized });
+        res.status(200).json({ success: true, items: normalizeCartItems(updatedCart) });
       } catch (err) {
         console.error("❌ Merge cart failed:", err.message);
-        res.status(500).json({ message: "Failed to merge guest cart", error: err.message });
+        res.status(500).json({ message: "Failed to merge cart", error: err.message });
       }
     },
 
@@ -207,16 +204,16 @@ export default function CartController(cart, products) {
         const cartItems = await cart.find({ userId }).toArray();
         const normalized = normalizeCartItems(cartItems);
 
-        const productIds = normalized.map((item) => new ObjectId(item.productId));
-        const productMap = await products
-          .find({ _id: { $in: productIds } })
-          .toArray()
-          .then((docs) =>
-            docs.reduce((acc, p) => {
-              acc[p._id.toString()] = p;
-              return acc;
-            }, {})
-          );
+        const productIds = normalized
+          .map((item) => safeObjectId(item.productId))
+          .filter(Boolean);
+
+        const productsList = await products.find({ _id: { $in: productIds } }).toArray();
+
+        const productMap = productsList.reduce((acc, p) => {
+          acc[p._id.toString()] = p;
+          return acc;
+        }, {});
 
         const total = normalized.reduce((sum, item) => {
           const product = productMap[item.productId];

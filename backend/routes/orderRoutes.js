@@ -2,6 +2,7 @@ import express from "express";
 import * as orderController from "../controllers/orderController.js";
 import { protect, protectAdmin } from "../middleware/protectMiddleware.js";
 
+
 const createOrderRoutes = (collections) => {
   // 🧠 Inject collections to the controller
   orderController.injectCollections({

@@ -13,6 +13,12 @@ export const fetchAll = async () => {
   return res.data;
 };
 
+// 🧾 Fetch logged-in user's own orders
+export const fetchMyOrders = async () => {
+  const res = await api.get("/orders/my");
+  return res.data;
+};
+
 // 🔧 Update order status
 export const updateStatus = async ({ orderId, status }) => {
   const res = await api.patch(`/admin/orders/${orderId}/status`, { status });

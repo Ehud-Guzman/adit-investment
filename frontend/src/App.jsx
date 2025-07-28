@@ -15,6 +15,8 @@ import { useAdminAuth } from "@/hooks/useAdminAuth";
 // Shared Components
 import ScrollToTop from "@/components/ScrollToTop";
 import AuthModal from "@/components/AuthModal";
+import RequireAuth from "@/components/RequireAuth";
+import RequireRole from "@/components/RequireRole";
 
 // Pages
 import Home from "@/pages/Home";
@@ -25,17 +27,14 @@ import Contact from "@/pages/Contact";
 import Admin from "@/pages/Admin";
 import Checkout from "@/pages/Checkout";
 import ThankYou from "@/pages/ThankYou";
+import Account from "@/pages/Account/Account"; // ✅ Parent layout
+import MyOrders from "@/pages/Account/MyOrders"; // ✅ User orders page
+import AccountProfile from "@/pages/Account/AccountProfile"; // ✅ User profile page
 
-
-
-
-// Lazy
+// Lazy-loaded
 const SettingPage = lazy(() => import("@/components/Admin/settings/SettingsPage"));
 const VerifyEmail = lazy(() => import("@/pages/Auth/VerifyEmail"));
 const ResendVerification = lazy(() => import("@/pages/Auth/ResendVerification"));
-
-// Route Guard
-import RequireRole from "@/components/RequireRole";
 
 export default function App() {
   const [authModalOpen, setAuthModalOpen] = useState(false);
@@ -47,7 +46,7 @@ export default function App() {
   };
 
   const location = useLocation();
-  const { currentUser, logout } = useAdminAuth(); // ✅ Admin-specific hook
+  const { currentUser: adminUser, logout: adminLogout } = useAdminAuth();
 
   return (
     <>
@@ -56,38 +55,44 @@ export default function App() {
       <Suspense fallback={<div className="text-center py-10">Loading...</div>}>
         <Routes location={location}>
           {/* 🌍 Public Routes */}
-          {[
-            { path: "/", element: <Home /> },
-            { path: "/products", element: <Products /> },
-            { path: "/services", element: <Services /> },
-            { path: "/about", element: <About /> },
-            { path: "/contact", element: <Contact /> },
-            { path: "/checkout", element: <Checkout /> },
-            { path: "/order-confirmation", element: <ThankYou /> }
+          <Route
+            path="/"
+            element={<MainLayout setAuthModalOpen={setAuthModalOpen} setAuthMode={setAuthMode}><Home /></MainLayout>}
+          />
+          <Route
+            path="/products"
+            element={<MainLayout setAuthModalOpen={setAuthModalOpen} setAuthMode={setAuthMode}><Products /></MainLayout>}
+          />
+          <Route
+            path="/services"
+            element={<MainLayout setAuthModalOpen={setAuthModalOpen} setAuthMode={setAuthMode}><Services /></MainLayout>}
+          />
+          <Route
+            path="/about"
+            element={<MainLayout setAuthModalOpen={setAuthModalOpen} setAuthMode={setAuthMode}><About /></MainLayout>}
+          />
+          <Route
+            path="/contact"
+            element={<MainLayout setAuthModalOpen={setAuthModalOpen} setAuthMode={setAuthMode}><Contact /></MainLayout>}
+          />
+          <Route
+            path="/checkout"
+            element={<MainLayout setAuthModalOpen={setAuthModalOpen} setAuthMode={setAuthMode}><Checkout /></MainLayout>}
+          />
+          <Route
+            path="/order-confirmation"
+            element={<MainLayout setAuthModalOpen={setAuthModalOpen} setAuthMode={setAuthMode}><ThankYou /></MainLayout>}
+          />
 
-            
-
-          ].map(({ path, element }) => (
-            <Route
-              key={path}
-              path={path}
-              element={
-                <MainLayout setAuthModalOpen={setAuthModalOpen} setAuthMode={setAuthMode}>
-                  {element}
-                </MainLayout>
-              }
-            />
-          ))}
-
-          {/* 🔐 Auth pages */}
+          {/* 🔐 Auth routes */}
           <Route path="/verify-email/:token" element={<VerifyEmail />} />
           <Route path="/resend-verification" element={<ResendVerification />} />
 
-          {/* 🔒 Admin Routes */}
+          {/* 🧑‍💼 Admin Routes */}
           <Route
             path="/admin"
             element={
-              <AdminLayout user={currentUser} onLogout={logout}>
+              <AdminLayout user={adminUser} onLogout={adminLogout}>
                 <Admin />
               </AdminLayout>
             }
@@ -97,14 +102,30 @@ export default function App() {
             path="/admin/settings"
             element={
               <RequireRole allowedRoles={["superadmin"]}>
-                <AdminLayout user={currentUser} onLogout={logout}>
+                <AdminLayout user={adminUser} onLogout={adminLogout}>
                   <SettingPage />
                 </AdminLayout>
               </RequireRole>
             }
           />
 
-          {/* 🧼 Catch-all */}
+          {/* 👤 Account Routes (User Panel) */}
+          <Route
+            path="/account"
+            element={
+              <RequireAuth>
+                <MainLayout setAuthModalOpen={setAuthModalOpen} setAuthMode={setAuthMode}>
+                  <Account />
+                </MainLayout>
+              </RequireAuth>
+            }
+          >
+            <Route index element={<AccountProfile />} />
+            <Route path="profile" element={<AccountProfile />} />
+            <Route path="orders" element={<MyOrders />} />
+          </Route>
+
+          {/* 🧼 Fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>

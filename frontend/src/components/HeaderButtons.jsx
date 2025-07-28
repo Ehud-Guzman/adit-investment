@@ -1,6 +1,8 @@
-// components/HeaderButtons.jsx
+// src/components/HeaderButtons.jsx
 import React from "react";
-import { FiShoppingCart, FiLogOut } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
+import { FiShoppingCart, FiLogOut, FiUser, FiPackage } from "react-icons/fi";
+import { Menu } from "@headlessui/react";
 import { motion } from "framer-motion";
 import UserAvatar from "./UserAvatar";
 
@@ -12,67 +14,118 @@ const HeaderButtons = ({
   setAuthModalOpen,
   setAuthMode,
 }) => {
+  const navigate = useNavigate();
+
+  const handleNav = (path) => {
+    navigate(path);
+  };
+
   return (
-    <>
+    <div className="flex items-center gap-4 md:gap-5">
+      {/* 🛒 Cart Button - Enhanced with better spacing */}
       <motion.button
         onClick={handleCartClick}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        className="relative flex items-center gap-2 text-gray-700 hover:text-blue-600 transition-colors"
+        className="relative flex items-center gap-1.5 text-gray-700 hover:text-blue-600 transition-colors px-2 py-1.5 rounded-lg hover:bg-gray-50"
         aria-label="Cart"
       >
-        <FiShoppingCart size={22} />
+        <FiShoppingCart size={24} />
         {cartCount > 0 && (
-          <span className="absolute -top-2 -right-2 bg-blue-600 text-white w-5 h-5 flex items-center justify-center text-xs rounded-full">
+          <span className="absolute -top-1.5 -right-1.5 bg-blue-600 text-white w-5 h-5 flex items-center justify-center text-xs rounded-full font-medium">
             {cartCount}
           </span>
         )}
-        <span className="hidden lg:inline">Cart</span>
+        <span className="hidden md:inline text-sm font-medium ml-0.5">Cart</span>
       </motion.button>
 
+      {/* 🧑‍💼 Authenticated User Menu */}
       {currentUser ? (
-        <>
-          <UserAvatar user={currentUser} />
-          <motion.button
-            onClick={logout}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="text-gray-700 hover:text-blue-600 flex items-center gap-2 transition-colors"
-            aria-label="Logout"
-          >
-            <FiLogOut size={22} />
-            <span className="hidden lg:inline">Logout</span>
-          </motion.button>
-        </>
+        <Menu as="div" className="relative inline-block text-left z-50">
+          <Menu.Button as="div" className="cursor-pointer">
+            <UserAvatar user={currentUser} clickable />
+          </Menu.Button>
+
+          <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right bg-white border border-gray-200 rounded-xl shadow-lg ring-1 ring-black/5 focus:outline-none overflow-hidden">
+            <div className="py-1.5">
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    onClick={() => handleNav("/account/profile")}
+                    className={`${
+                      active ? "bg-gray-50" : ""
+                    } flex items-center gap-3 w-full px-4 py-2.5 text-base`}
+                  >
+                    <FiUser className="text-gray-500" size={18} /> 
+                    <span>Profile</span>
+                  </button>
+                )}
+              </Menu.Item>
+
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    onClick={() => handleNav("/account/orders")}
+                    className={`${
+                      active ? "bg-gray-50" : ""
+                    } flex items-center gap-3 w-full px-4 py-2.5 text-base`}
+                  >
+                    <FiPackage className="text-gray-500" size={18} /> 
+                    <span>Orders</span>
+                  </button>
+                )}
+              </Menu.Item>
+
+              <div className="border-t my-1 border-gray-150" />
+
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    onClick={logout}
+                    className={`${
+                      active ? "bg-red-50" : ""
+                    } flex items-center gap-3 w-full px-4 py-2.5 text-base text-red-600`}
+                  >
+                    <FiLogOut size={18} /> 
+                    <span>Logout</span>
+                  </button>
+                )}
+              </Menu.Item>
+            </div>
+          </Menu.Items>
+        </Menu>
       ) : (
-        <>
+        <div className="flex items-center gap-3">
+          {/* 🟦 Login Button */}
           <motion.button
             onClick={() => {
               setAuthModalOpen(true);
               setAuthMode("login");
             }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="text-gray-700 border border-gray-300 hover:border-blue-600 hover:text-blue-600 px-4 py-2 rounded-lg transition-all"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            className="text-gray-700 border border-gray-300 hover:border-blue-500 hover:text-blue-600 px-5 py-2.5 rounded-lg transition-all text-sm font-medium"
             aria-label="Login"
           >
             Login
           </motion.button>
+
+          {/* 🔷 Register Button */}
           <motion.button
             onClick={() => {
               setAuthModalOpen(true);
               setAuthMode("register");
             }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition-all"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            className="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-all text-sm font-medium shadow-sm"
             aria-label="Register"
           >
             Register
           </motion.button>
-        </>
+        </div>
       )}
-    </>
+    </div>
   );
 };
 

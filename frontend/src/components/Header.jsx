@@ -16,14 +16,14 @@ const Header = ({
   const [isMenuOpen, setMenuOpen] = useState(false);
   const { currentUser, logout } = useAuth();
 
-  // 🔔 Toast for unverified users
+  // 🔔 Notify unverified users
   useEffect(() => {
     if (currentUser && !currentUser.isVerified) {
       toast.info("⚠️ Please verify your email to unlock full access.");
     }
   }, [currentUser]);
 
-  // 📱 Close menu on outside click
+  // 📱 Close mobile menu on outside click
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (isMenuOpen && !e.target.closest(".mobile-menu-container")) {
@@ -31,10 +31,11 @@ const Header = ({
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutside);
   }, [isMenuOpen]);
 
-  // 🛒 Cart access control
+  // 🛒 Cart auth logic
   const handleCartClick = () => {
     if (!currentUser) {
       toast.info("Please log in to view your cart");
@@ -58,8 +59,8 @@ const Header = ({
       }`}
     >
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between">
-          {/* 🔵 Left - Logo or Title */}
+        <div className="flex items-center justify-between gap-4">
+          {/* 🔵 Left - Logo/Title */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -81,7 +82,7 @@ const Header = ({
           </motion.div>
 
           {/* 🖥️ Right - Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-4">
+          <nav className="hidden md:flex items-center gap-5 pr-1">
             <HeaderButtons
               cartCount={cartCount}
               currentUser={currentUser}
@@ -108,7 +109,7 @@ const Header = ({
           </button>
         </div>
 
-        {/* 📱 Mobile Nav Menu */}
+        {/* 📱 Mobile Menu */}
         <AnimatePresence>
           {isMenuOpen && (
             <motion.nav

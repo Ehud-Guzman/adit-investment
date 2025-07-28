@@ -25,6 +25,9 @@ import createAdminUserRouter from "./routes/admin/users.js";
 import createAdminDashboardRouter from "./routes/admin/dashboardRoutes.js";
 import createSettingsRouter from "./routes/settings.js";
 import createEmailRouter from "./routes/emailRoutes.js";
+import createAdminOrderRoutes from "./routes/admin/orders.js";
+import { injectCollections } from "./controllers/orderController.js";
+
 
 
 import createOrderRoutes from "./routes/orderRoutes.js";
@@ -119,6 +122,9 @@ async function startServer() {
 
     app.locals.db = collections._db || collections.db;
     console.log("✅ MongoDB connected successfully");
+    injectCollections({ orders: collections.orders, products: collections.products });
+console.log("🧩 Order controller collections injected");
+
 
     // 🔌 DI Routes
     app.use("/api/auth", createAuthRouter(collections.users, collections.sessions, collections.db));
@@ -131,6 +137,10 @@ async function startServer() {
     app.use("/api/admin/users", createAdminUserRouter(collections.users));
     app.use("/api/admin/dashboard", createAdminDashboardRouter());
     app.use("/api/settings", createSettingsRouter(collections.adminSettings));
+    app.use("/api/admin/orders", createAdminOrderRoutes(collections));
+
+    
+    
   
 
     app.use("/api/orders", createOrderRoutes(collections));
