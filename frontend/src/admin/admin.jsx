@@ -1,4 +1,4 @@
-// src/pages/Admin/AddICTProduct.jsx
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -48,34 +48,33 @@ const ProductAdmin = () => {
     setProduct(prev => ({ ...prev, specs: newSpecs }));
   };
 
-const handleImageUpload = async (e) => {
-  const files = Array.from(e.target.files);
-  if (files.length === 0) return;
+  const handleImageUpload = async (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
 
-  const uploadedImages = [];
+    const uploadedImages = [];
 
-  for (const file of files) {
-    const formData = new FormData();
-    formData.append('image', file);
+    for (const file of files) {
+      const formData = new FormData();
+      formData.append('image', file);
 
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/upload`, {
-        method: 'POST',
-        body: formData
-      });
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/upload`, {
+          method: 'POST',
+          body: formData
+        });
 
-      const data = await response.json();
-      if (!response.ok) throw new Error(data?.message || 'Upload failed');
+        const data = await response.json();
+        if (!response.ok) throw new Error(data?.message || 'Upload failed');
 
-      uploadedImages.push(data.url);
-    } catch (err) {
-      console.error('Upload failed:', err);
+        uploadedImages.push(data.url);
+      } catch (err) {
+        console.error('Upload failed:', err);
+      }
     }
-  }
 
-  setProduct(prev => ({ ...prev, images: [...prev.images, ...uploadedImages] }));
-};
-
+    setProduct(prev => ({ ...prev, images: [...prev.images, ...uploadedImages] }));
+  };
 
   const removeImage = (index) => {
     const newImages = product.images.filter((_, i) => i !== index);
@@ -114,7 +113,7 @@ const handleImageUpload = async (e) => {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-6">Add New ICT Product</h1>
-      
+
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
           {error}
@@ -236,9 +235,9 @@ const handleImageUpload = async (e) => {
               <div className="mt-2 flex flex-wrap gap-2">
                 {product.images.map((img, index) => (
                   <div key={index} className="relative">
-                    <img 
-                      src={img} 
-                      alt={`Product ${index + 1}`} 
+                    <img
+                      src={img}
+                      alt={`Product ${index + 1}`}
                       className="h-20 w-20 object-cover rounded border"
                     />
                     <button

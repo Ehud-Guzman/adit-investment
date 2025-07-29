@@ -77,16 +77,23 @@ export default function ProductForm({
       const res = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
+        // credentials: 'include', // uncomment if you need cookies/auth
       });
 
-      const data = await res.json();
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        throw new Error('Upload failed: Server returned invalid response');
+      }
+
       if (!res.ok || !data?.url) throw new Error(data?.message || 'Upload failed');
 
       setForm((prev) => ({ ...prev, images: [...prev.images, data.url] }));
       toast.success('📷 Image uploaded!');
     } catch (err) {
       console.error('💥 Upload error:', err.message || err);
-      toast.error('❌ Upload failed');
+      toast.error('❌ Upload failed: ' + (err.message || 'Something went wrong'));
     } finally {
       setUploadingImage(false);
     }
@@ -122,6 +129,7 @@ export default function ProductForm({
       onSubmit={handleSubmit}
       className="space-y-6 bg-white p-6 rounded-xl shadow-lg w-full max-w-3xl"
     >
+      {/* Header */}
       <div className="flex justify-between items-center border-b pb-4">
         <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
           {isEditing ? 'Update Product' : 'Create New Product'}
@@ -210,7 +218,7 @@ export default function ProductForm({
               <div key={index} className="relative group">
                 <img
                   src={url}
-                  alt={`Image ${index + 1}`}
+                  alt={`Uploaded product image ${index + 1}`}
                   className="h-28 w-28 object-cover rounded-lg border"
                 />
                 <button
@@ -236,6 +244,7 @@ export default function ProductForm({
           </label>
         </div>
 
+        {/* Description */}
         <div className="md:col-span-2">
           <label className="block font-medium text-gray-700 mb-1">Description</label>
           <textarea
