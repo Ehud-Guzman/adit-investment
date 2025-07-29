@@ -4,53 +4,53 @@
 
 /* 🌍 Global Font & Smoothing */
 body {
-  @apply font-inter text-text bg-white antialiased;
+  @apply font-inter text-text bg-white antialiased selection:bg-primary selection:text-white;
   scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* 🌟 Text Selection */
-::selection {
-  background-color: #00A651;
-  color: white;
-}
-
-/* ✨ Scrollbar Styling */
+/* ✨ Scrollbar — Universal & Class-Based */
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: #00A651;
+  background-color: rgba(0, 166, 81, 0.5); /* Safaricom green */
   border-radius: 6px;
 }
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 166, 81, 0.7);
+}
 ::-webkit-scrollbar-track {
-  background: #f0f0f0;
+  background: #f9f9f9;
 }
 
-/* 🧩 Navbar Z-Stack */
-.navbar {
-  z-index: 50;
+/* Or use class="custom-scrollbar" */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
 }
-.auth-modal,
-.search-filters {
-  z-index: 60;
-  position: relative;
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 9999px;
 }
-
-/* 🖼️ Modals */
-.modal-content {
-  position: relative;
-}
-.modal-close {
-  font-size: 1.5rem;
+.scroll-area {
+  scrollbar-gutter: stable both-edges;
 }
 
-/* 🛒 Cart Sidebar */
-#cart-sidebar {
-  overflow-y: auto;
-}
-.cart-close {
-  font-size: 1.5rem;
-}
+/* 🧠 Z-Layer Management */
+.navbar      { z-index: 50; position: relative; }
+.auth-modal  { z-index: 60; position: relative; }
+.search-filters { z-index: 60; position: relative; }
+
+/* 🖼️ Modal Controls */
+.modal-content { @apply relative; }
+.modal-close   { font-size: 1.5rem; }
+
+/* 🛒 Cart Sidebar + Scroll */
+#cart-sidebar  { overflow-y: auto; }
+.cart-close    { font-size: 1.5rem; }
+
 .cart-items::-webkit-scrollbar {
   width: 8px;
 }
@@ -64,55 +64,80 @@ body {
 
 /* 📦 Product Card Hover Effects */
 .product-card {
-  @apply transition-all duration-300 ease-in-out relative;
+  @apply relative transition-all duration-300 ease-in-out;
+  transform-style: preserve-3d;
 }
 .product-card img {
-  @apply transition-transform duration-300 ease-in-out;
+  @apply transition-transform duration-300 ease-in-out scale-100;
+}
+.product-card:hover img {
+  @apply scale-105;
 }
 .product-actions {
-  @apply opacity-0 transition-opacity duration-300 absolute top-2 right-2;
+  @apply opacity-0 absolute top-2 right-2 transition-opacity duration-300;
 }
 .product-card:hover .product-actions {
-  opacity: 1 !important;
+  @apply opacity-100;
 }
 
-/* 🔢 Pagination */
+/* 🔢 Pagination Buttons */
 .pagination-btn {
-  @apply px-3 py-2 rounded-md border text-sm font-medium transition-colors bg-white text-gray-700 border-gray-300 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed;
+  @apply px-3 py-2 rounded-md border text-sm font-medium bg-white text-gray-700 border-gray-300 transition-colors hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed;
 }
 .page-btn {
   @apply transition-colors;
 }
 .page-btn:hover {
-  background-color: #e2e8f0;
+  @apply bg-slate-200;
 }
 
-/* 📌 Footer Brand Hover Pulse */
+/* 📌 Branding Glow */
 .brand-glow:hover {
-  animation: pulse-scale 2s infinite;
+  animation: pulse-scale 2s ease-in-out infinite;
 }
 
-/* 🧠 Custom Keyframes */
+/* 🧠 Custom Animations */
 @keyframes pulse-scale {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
 }
 
-/* globals.css */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 8px;
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 9999px;
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-.scroll-area {
-  scrollbar-gutter: stable both-edges;
+
+/* ✨ Utility Animation Classes */
+.animate-pulse-scale {
+  animation: pulse-scale 2s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out forwards;
+}
+
+/* 🔧 Misc Accessibility & Mobile Fixes */
+:focus-visible {
+  @apply outline-none ring-2 ring-primary;
+}
+
+img {
+  image-rendering: -webkit-optimize-contrast;
+  backface-visibility: hidden;
 }

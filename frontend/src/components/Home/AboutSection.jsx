@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import MarqueeAd from "@/components/ads/MarqueeAd";
 
-import PromoBadge from "@/components/ads/PromoBadge";
+
 
 const features = [
   "10+ years industry experience",
@@ -76,10 +76,7 @@ const AboutSection = () => {
             viewport={{ once: true }}
           >
             <div className="relative w-full rounded-2xl overflow-hidden shadow-xl bg-white group hover:shadow-[0_20px_60px_-10px_rgba(0,166,81,0.4)] transition-all duration-500">
-              <PromoBadge
-                text="🔥 % Off Pro Networking Kits"
-                position="top-4 left-4"
-              />
+            
               <img
                 src="/assets/images/services/adit cover photo.jpg"
                 alt="ADIT Investment Office"
