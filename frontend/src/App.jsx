@@ -21,15 +21,16 @@ import RequireRole from "@/components/RequireRole";
 // Pages
 import Home from "@/pages/Home";
 import Products from "@/pages/Products";
+import ProductDetails from "@/pages/ProductDetails"; // ✅ ADDED
 import Services from "@/pages/Services";
 import About from "@/pages/About";
 import Contact from "@/pages/Contact";
 import Admin from "@/pages/Admin";
 import Checkout from "@/pages/Checkout";
 import ThankYou from "@/pages/ThankYou";
-import Account from "@/pages/Account/Account"; // ✅ Parent layout
-import MyOrders from "@/pages/Account/MyOrders"; // ✅ User orders page
-import AccountProfile from "@/pages/Account/AccountProfile"; // ✅ User profile page
+import Account from "@/pages/Account/Account";
+import MyOrders from "@/pages/Account/MyOrders";
+import AccountProfile from "@/pages/Account/AccountProfile";
 
 // Lazy-loaded
 const SettingPage = lazy(() => import("@/components/Admin/settings/SettingsPage"));
@@ -39,14 +40,13 @@ const ResendVerification = lazy(() => import("@/pages/Auth/ResendVerification"))
 export default function App() {
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
+  const location = useLocation();
+  const { currentUser: adminUser, logout: adminLogout } = useAdminAuth();
 
   const handleCloseAuthModal = () => {
     setAuthModalOpen(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-
-  const location = useLocation();
-  const { currentUser: adminUser, logout: adminLogout } = useAdminAuth();
 
   return (
     <>
@@ -54,37 +54,73 @@ export default function App() {
 
       <Suspense fallback={<div className="text-center py-10">Loading...</div>}>
         <Routes location={location}>
-          {/* 🌍 Public Routes */}
+          {/* 🌍 Public Pages */}
           <Route
             path="/"
-            element={<MainLayout setAuthModalOpen={setAuthModalOpen} setAuthMode={setAuthMode}><Home /></MainLayout>}
+            element={
+              <MainLayout setAuthModalOpen={setAuthModalOpen} setAuthMode={setAuthMode}>
+                <Home />
+              </MainLayout>
+            }
           />
           <Route
             path="/products"
-            element={<MainLayout setAuthModalOpen={setAuthModalOpen} setAuthMode={setAuthMode}><Products /></MainLayout>}
+            element={
+              <MainLayout setAuthModalOpen={setAuthModalOpen} setAuthMode={setAuthMode}>
+                <Products />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/products/:id"
+            element={
+              <MainLayout setAuthModalOpen={setAuthModalOpen} setAuthMode={setAuthMode}>
+                <ProductDetails />
+              </MainLayout>
+            }
           />
           <Route
             path="/services"
-            element={<MainLayout setAuthModalOpen={setAuthModalOpen} setAuthMode={setAuthMode}><Services /></MainLayout>}
+            element={
+              <MainLayout setAuthModalOpen={setAuthModalOpen} setAuthMode={setAuthMode}>
+                <Services />
+              </MainLayout>
+            }
           />
           <Route
             path="/about"
-            element={<MainLayout setAuthModalOpen={setAuthModalOpen} setAuthMode={setAuthMode}><About /></MainLayout>}
+            element={
+              <MainLayout setAuthModalOpen={setAuthModalOpen} setAuthMode={setAuthMode}>
+                <About />
+              </MainLayout>
+            }
           />
           <Route
             path="/contact"
-            element={<MainLayout setAuthModalOpen={setAuthModalOpen} setAuthMode={setAuthMode}><Contact /></MainLayout>}
+            element={
+              <MainLayout setAuthModalOpen={setAuthModalOpen} setAuthMode={setAuthMode}>
+                <Contact />
+              </MainLayout>
+            }
           />
           <Route
             path="/checkout"
-            element={<MainLayout setAuthModalOpen={setAuthModalOpen} setAuthMode={setAuthMode}><Checkout /></MainLayout>}
+            element={
+              <MainLayout setAuthModalOpen={setAuthModalOpen} setAuthMode={setAuthMode}>
+                <Checkout />
+              </MainLayout>
+            }
           />
           <Route
             path="/order-confirmation"
-            element={<MainLayout setAuthModalOpen={setAuthModalOpen} setAuthMode={setAuthMode}><ThankYou /></MainLayout>}
+            element={
+              <MainLayout setAuthModalOpen={setAuthModalOpen} setAuthMode={setAuthMode}>
+                <ThankYou />
+              </MainLayout>
+            }
           />
 
-          {/* 🔐 Auth routes */}
+          {/* 🔐 Email Verification Routes */}
           <Route path="/verify-email/:token" element={<VerifyEmail />} />
           <Route path="/resend-verification" element={<ResendVerification />} />
 
@@ -97,7 +133,6 @@ export default function App() {
               </AdminLayout>
             }
           />
-
           <Route
             path="/admin/settings"
             element={
@@ -109,7 +144,7 @@ export default function App() {
             }
           />
 
-          {/* 👤 Account Routes (User Panel) */}
+          {/* 👤 User Account Routes */}
           <Route
             path="/account"
             element={
@@ -125,7 +160,7 @@ export default function App() {
             <Route path="orders" element={<MyOrders />} />
           </Route>
 
-          {/* 🧼 Fallback */}
+          {/* ❌ Catch-All */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
@@ -140,7 +175,7 @@ export default function App() {
         />
       </div>
 
-      {/* 🍞 Toasts */}
+      {/* 🍞 Toast Notifications */}
       <ToastContainer
         position="bottom-right"
         autoClose={3000}

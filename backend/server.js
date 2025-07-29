@@ -10,16 +10,18 @@ import slowDown from "express-slow-down";
 import hpp from "hpp";
 import cookieParser from "cookie-parser";
 
+// 🧠 Config & DB
 import { connectDB } from "./config/db.js";
 import { validateEnv } from "./config/envCheck.js";
 
-// 🧩 Route Factories
+// 🧩 Dependency Injection Route Factories
 import createAuthRouter from "./routes/auth.js";
 import createUserRouter from "./routes/users.js";
 import createProductRouter from "./routes/products.js";
 import createCartRouter from "./routes/cart.js";
 import createWishlistRouter from "./routes/wishlist.js";
 import createReviewRouter from "./routes/reviews.js";
+import createOrderRoutes from "./routes/orderRoutes.js";
 import createAdminProductRouter from "./routes/adminProducts.js";
 import createAdminUserRouter from "./routes/admin/users.js";
 import createAdminDashboardRouter from "./routes/admin/dashboardRoutes.js";
@@ -28,35 +30,29 @@ import createEmailRouter from "./routes/emailRoutes.js";
 import createAdminOrderRoutes from "./routes/admin/orders.js";
 import { injectCollections } from "./controllers/orderController.js";
 
-
-
-import createOrderRoutes from "./routes/orderRoutes.js";
-
-
-
 // 📦 Non-DI Routes
 import uploadRoutes from "./routes/upload.js";
 import cleanupRoutes from "./routes/cleanup.js";
 
-// 🌍 Environment Setup
+// 🌍 Load env & validate
 dotenv.config();
 validateEnv();
 
 const app = express();
 
-// 🔒 Security & Hardening
+// 🔐 Security Middleware
 app.use(helmet());
 app.use(hpp());
 app.use(cookieParser());
 
-// 🔄 Parsers
+// 🔄 Parsing Middleware
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 
-// ⚡ Performance
+// ⚡ Performance Middleware
 app.use(compression());
 
-// 🧼 Input Sanitization Middleware
+// 🧼 Basic Request Sanitization
 app.use((req, _res, next) => {
   const sanitize = (obj) => {
     for (const key in obj) {
@@ -91,7 +87,7 @@ app.use(
   })
 );
 
-// 🛡️ Rate Limiting
+// 🛡️ Rate Limiting & Slowdown Middleware
 app.use(
   "/api",
   rateLimit({
@@ -113,52 +109,46 @@ app.get("/api/health", (_req, res) => {
   res.status(200).json({ status: "✅ API is healthy" });
 });
 
-// 🧠 Server Boot Function
+// 🧠 Bootstraps the app
 async function startServer() {
   try {
     console.log("🧠 Connecting to MongoDB...");
     const collections = await connectDB();
-    
 
     app.locals.db = collections._db || collections.db;
     console.log("✅ MongoDB connected successfully");
+
     injectCollections({ orders: collections.orders, products: collections.products });
-console.log("🧩 Order controller collections injected");
+    console.log("🧩 Order controller collections injected");
 
-
-    // 🔌 DI Routes
+    // ✅ Dependency-injected routes
     app.use("/api/auth", createAuthRouter(collections.users, collections.sessions, collections.db));
     app.use("/api/users", createUserRouter(collections.users));
     app.use("/api/products", createProductRouter(collections.products));
     app.use("/api/cart", createCartRouter(collections.cart));
     app.use("/api/wishlist", createWishlistRouter(collections.wishlist));
     app.use("/api/reviews", createReviewRouter(collections.reviews, collections.users));
+    app.use("/api/orders", createOrderRoutes(collections));
     app.use("/api/admin/products", createAdminProductRouter(collections.products));
     app.use("/api/admin/users", createAdminUserRouter(collections.users));
     app.use("/api/admin/dashboard", createAdminDashboardRouter());
     app.use("/api/settings", createSettingsRouter(collections.adminSettings));
     app.use("/api/admin/orders", createAdminOrderRoutes(collections));
 
-    
-    
-  
-
-    app.use("/api/orders", createOrderRoutes(collections));
-
-
-
-    // 🧱 Static/Utility Routes
+    // 🧱 Non-DI routes
     app.use("/api/upload", uploadRoutes);
     app.use("/api/cleanup", cleanupRoutes);
 
-    // ❌ 404 Catch-All
+    // ❌ 404 Fallback
     app.use((req, res) => {
       res.status(404).json({ message: `❌ Route not found: ${req.originalUrl}` });
     });
 
-    // 🚀 Start Server
+    // 🚀 Fire it up
     const PORT = process.env.PORT || 8080;
-    app.listen(PORT, () => console.log(`🚀 Server live at http://localhost:${PORT}`));
+    app.listen(PORT, () =>
+      console.log(`🚀 Server live at http://localhost:${PORT}`)
+    );
   } catch (err) {
     console.error("💥 Server startup failed:", err.message);
     process.exit(1);
@@ -176,5 +166,5 @@ process.on("unhandledRejection", (err) => {
   process.exit(1);
 });
 
-// 🧠 Start
+// 🧠 Start the server
 startServer();

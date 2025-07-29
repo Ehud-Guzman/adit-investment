@@ -154,7 +154,6 @@ export default function ProductController(productsCollection) {
           updatedAt: new Date(),
         };
 
-        // Cast values if needed
         if (updates.price !== undefined) updates.price = parseFloat(updates.price);
         if (updates.rating !== undefined) updates.rating = parseFloat(updates.rating);
         if (updates.stock !== undefined) updates.stock = parseInt(updates.stock);
@@ -183,34 +182,32 @@ export default function ProductController(productsCollection) {
     },
 
     patch: async (req, res) => {
-  try {
-    const id = req.params.id;
-    if (!ObjectId.isValid(id)) {
-      return res.status(400).json({ success: false, message: "Invalid product ID" });
-    }
+      try {
+        const id = req.params.id;
+        if (!ObjectId.isValid(id)) {
+          return res.status(400).json({ success: false, message: "Invalid product ID" });
+        }
 
-    const updates = { ...req.body, updatedAt: new Date() };
+        const updates = { ...req.body, updatedAt: new Date() };
 
-    // Optional: typecast booleans if necessary
-    if ("featured" in updates) updates.featured = Boolean(updates.featured);
-    if ("approved" in updates) updates.approved = Boolean(updates.approved);
+        if ("featured" in updates) updates.featured = Boolean(updates.featured);
+        if ("approved" in updates) updates.approved = Boolean(updates.approved);
 
-    const result = await productsCollection.updateOne(
-      { _id: new ObjectId(id) },
-      { $set: updates }
-    );
+        const result = await productsCollection.updateOne(
+          { _id: new ObjectId(id) },
+          { $set: updates }
+        );
 
-    if (result.matchedCount === 0) {
-      return res.status(404).json({ success: false, message: "Product not found" });
-    }
+        if (result.matchedCount === 0) {
+          return res.status(404).json({ success: false, message: "Product not found" });
+        }
 
-    res.status(200).json({ success: true, message: "Product patched successfully" });
-  } catch (err) {
-    console.error("❌ Patch error:", err);
-    res.status(500).json({ success: false, message: "Failed to patch product" });
-  }
-},
-    
+        res.status(200).json({ success: true, message: "Product patched successfully" });
+      } catch (err) {
+        console.error("❌ Patch error:", err);
+        res.status(500).json({ success: false, message: "Failed to patch product" });
+      }
+    },
 
     remove: async (req, res) => {
       try {
@@ -234,6 +231,32 @@ export default function ProductController(productsCollection) {
         res.status(500).json({ success: false, message: "Internal Server Error" });
       }
     },
+
+    getRandom: async (req, res) => {
+      try {
+        const randomProduct = await productsCollection.aggregate([
+          { $match: { approved: true } },
+          { $sample: { size: 1 } }
+        ]).toArray();
+
+        if (randomProduct.length === 0) {
+          return res.status(404).json({
+            success: false,
+            message: "No products available"
+          });
+        }
+
+        res.status(200).json({
+          success: true,
+          data: randomProduct[0]
+        });
+      } catch (err) {
+        console.error("❌ Failed to fetch random product:", err);
+        res.status(500).json({
+          success: false,
+          message: "Internal Server Error"
+        });
+      }
+    },
   };
 }
-

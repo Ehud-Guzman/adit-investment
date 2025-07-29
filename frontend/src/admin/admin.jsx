@@ -48,30 +48,34 @@ const ProductAdmin = () => {
     setProduct(prev => ({ ...prev, specs: newSpecs }));
   };
 
-  const handleImageUpload = async (e) => {
-    const files = Array.from(e.target.files);
-    if (files.length === 0) return;
+const handleImageUpload = async (e) => {
+  const files = Array.from(e.target.files);
+  if (files.length === 0) return;
 
-    const uploadedImages = [];
-    
-    for (const file of files) {
-      const formData = new FormData();
-      formData.append('image', file);
+  const uploadedImages = [];
 
-      try {
-        const response = await fetch('/api/upload', {
-          method: 'POST',
-          body: formData
-        });
-        const data = await response.json();
-        uploadedImages.push(data.url);
-      } catch (err) {
-        console.error('Upload failed:', err);
-      }
+  for (const file of files) {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/upload`, {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data?.message || 'Upload failed');
+
+      uploadedImages.push(data.url);
+    } catch (err) {
+      console.error('Upload failed:', err);
     }
+  }
 
-    setProduct(prev => ({ ...prev, images: [...prev.images, ...uploadedImages] }));
-  };
+  setProduct(prev => ({ ...prev, images: [...prev.images, ...uploadedImages] }));
+};
+
 
   const removeImage = (index) => {
     const newImages = product.images.filter((_, i) => i !== index);

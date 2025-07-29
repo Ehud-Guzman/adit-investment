@@ -52,16 +52,11 @@ export const getProductById = async (id) => {
     return null;
   }
 };
+export async function getFeaturedProducts(limit = 5) {
+  const res = await api.get(`/products?featured=true&limit=${limit}`);
+  return res.data?.data || [];
+}
 
-export const getFeaturedProducts = async (limit = 4) => {
-  try {
-    const response = await api.get(`/products/featured?limit=${limit}`);
-    return Array.isArray(response.data.data) ? response.data.data : [];
-  } catch (error) {
-    console.error('API Error - getFeaturedProducts:', error);
-    return [];
-  }
-};
 
 export const patchProduct = async (id, updates) => {
   try {
@@ -70,6 +65,17 @@ export const patchProduct = async (id, updates) => {
   } catch (error) {
     console.error("API Error - patchProduct:", error);
     throw error;
+  }
+};
+
+// api/products.js
+export const getRandomProduct = async () => {
+  try {
+    const response = await api.get(`/products/random`);
+    return response.data.data || null;
+  } catch (error) {
+    console.error('API Error - getRandomProduct:', error);
+    return null;
   }
 };
 
