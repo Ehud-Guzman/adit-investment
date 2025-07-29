@@ -65,6 +65,7 @@ export default function ProductForm({
 
 const handleImageUpload = async (e) => {
   const file = e.target.files?.[0];
+  console.log("📁 Selected file:", file);
   if (!file || !file.type.startsWith("image/")) {
     toast.error("🚫 Invalid image file");
     return;
