@@ -15,11 +15,8 @@ console.log("🌍 Using API baseURL:", baseURL);
 // 🔧 Create Axios instance
 const api = axios.create({
   baseURL,
-  timeout: 20000,                // ⏱ 20s timeout
-  withCredentials: true,         // 🍪 Needed for cookie auth
-  headers: {
-    "Content-Type": "application/json",
-  },
+  timeout: 20000,
+  withCredentials: true,
 });
 
 
