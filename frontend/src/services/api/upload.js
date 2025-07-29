@@ -1,28 +1,24 @@
 import { api } from "./index";
 
+// Helper to cleanly unwrap responses and handle errors
+const unwrap = (promise) =>
+  promise
+    .then((res) => res.data)
+    .catch((err) => {
+      console.error("❌ API error:", err);
+      throw err.response?.data || new Error("Unexpected error");
+    });
+
+// Image Uploads
 export const uploadImage = (formData) =>
-  api.post("/upload", formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  }).then((res) => res.data);
+  unwrap(api.post("/upload", formData)); // Let Axios set headers
+
 export const deleteImage = (imageUrl) =>
-  api.delete("/upload", { data: { imageUrl } })
-    .then((res) => res.data)
-    .catch((err) => {
-      console.error("Failed to delete image:", err);
-      throw err.response?.data || new Error("Image deletion failed");
-    });
+  unwrap(api.delete("/upload", { data: { imageUrl } }));
+
+// File Uploads
 export const uploadFile = (formData) =>
-  api.post("/upload/file", formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  }).then((res) => res.data)
-    .catch((err) => {
-      console.error("Failed to upload file:", err);
-      throw err.response?.data || new Error("File upload failed");
-    });
+  unwrap(api.post("/upload/file", formData));
+
 export const deleteFile = (fileUrl) =>
-  api.delete("/upload/file", { data: { fileUrl } })
-    .then((res) => res.data)
-    .catch((err) => {
-      console.error("Failed to delete file:", err);
-      throw err.response?.data || new Error("File deletion failed");
-    }); 
+  unwrap(api.delete("/upload/file", { data: { fileUrl } }));
