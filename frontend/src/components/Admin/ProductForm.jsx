@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { FiX, FiSave, FiPlus, FiImage, FiTrash } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import { CATEGORIES } from '@/constants/categories';
+import { uploadImage } from "@/services/api/upload";
 
 export default function ProductForm({
   onSubmit,
@@ -62,42 +63,29 @@ export default function ProductForm({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleImageUpload = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file || !file.type.startsWith('image/')) {
-      toast.error('🚫 Invalid image file');
-      return;
-    }
+const handleImageUpload = async (e) => {
+  const file = e.target.files?.[0];
+  if (!file || !file.type.startsWith("image/")) {
+    toast.error("🚫 Invalid image file");
+    return;
+  }
 
-    try {
-      setUploadingImage(true);
-      const formData = new FormData();
-      formData.append('image', file);
+  try {
+    setUploadingImage(true);
+    const formData = new FormData();
+    formData.append("image", file);
 
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-        // credentials: 'include', // uncomment if you need cookies/auth
-      });
+    const data = await uploadImage(formData); // 🔥 Hits correct backend via Axios
 
-      let data;
-      try {
-        data = await res.json();
-      } catch {
-        throw new Error('Upload failed: Server returned invalid response');
-      }
-
-      if (!res.ok || !data?.url) throw new Error(data?.message || 'Upload failed');
-
-      setForm((prev) => ({ ...prev, images: [...prev.images, data.url] }));
-      toast.success('📷 Image uploaded!');
-    } catch (err) {
-      console.error('💥 Upload error:', err.message || err);
-      toast.error('❌ Upload failed: ' + (err.message || 'Something went wrong'));
-    } finally {
-      setUploadingImage(false);
-    }
-  };
+    setForm((prev) => ({ ...prev, images: [...prev.images, data.url] }));
+    toast.success("📷 Image uploaded!");
+  } catch (err) {
+    console.error("💥 Upload error:", err.message || err);
+    toast.error("❌ Upload failed: " + (err.message || "Something went wrong"));
+  } finally {
+    setUploadingImage(false);
+  }
+};
 
   const removeImage = (index) => {
     setForm((prev) => ({
