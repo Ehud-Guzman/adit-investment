@@ -1,4 +1,4 @@
-// src/components/HeaderButtons.jsx
+// components/HeaderButtons.jsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FiShoppingCart, FiLogOut, FiUser, FiPackage } from "react-icons/fi";
@@ -22,7 +22,7 @@ const HeaderButtons = ({
 
   return (
     <div className="flex items-center gap-4 md:gap-5">
-      {/* 🛒 Cart Button - Enhanced with better spacing */}
+      {/* 🛒 Cart Button */}
       <motion.button
         onClick={handleCartClick}
         whileHover={{ scale: 1.05 }}
@@ -39,14 +39,20 @@ const HeaderButtons = ({
         <span className="hidden md:inline text-sm font-medium ml-0.5">Cart</span>
       </motion.button>
 
-      {/* 🧑‍💼 Authenticated User Menu */}
+      {/* 🧑‍💼 User Menu */}
       {currentUser ? (
         <Menu as="div" className="relative inline-block text-left z-50">
-          <Menu.Button as="div" className="cursor-pointer">
+          <Menu.Button as="div" className="cursor-pointer flex items-center gap-2 group">
             <UserAvatar user={currentUser} clickable />
+
+            {/* 👤 Icon + Label */}
+            <div className="hidden md:flex items-center gap-1 text-sm font-medium text-gray-700 group-hover:text-blue-700 transition">
+              <FiUser size={16} />
+              <span>My Account</span>
+            </div>
           </Menu.Button>
 
-          <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right bg-white border border-gray-200 rounded-xl shadow-lg ring-1 ring-black/5 focus:outline-none overflow-hidden">
+          <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right bg-white border border-gray-200 rounded-xl shadow-lg ring-1 ring-black/5 focus:outline-none overflow-hidden z-[9999]">
             <div className="py-1.5">
               <Menu.Item>
                 {({ active }) => (
@@ -96,7 +102,7 @@ const HeaderButtons = ({
         </Menu>
       ) : (
         <div className="flex items-center gap-3">
-          {/* 🟦 Login Button */}
+          {/* 🔓 Login Button */}
           <motion.button
             onClick={() => {
               setAuthModalOpen(true);
@@ -110,7 +116,7 @@ const HeaderButtons = ({
             Login
           </motion.button>
 
-          {/* 🔷 Register Button */}
+          {/* 🆕 Register Button */}
           <motion.button
             onClick={() => {
               setAuthModalOpen(true);
