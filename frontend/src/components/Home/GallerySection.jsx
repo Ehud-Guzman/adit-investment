@@ -77,7 +77,7 @@ const galleryItems = [
     title: "Laptop Sales",
     category: "selling",
     image: "/assets/images/services/laptop sales.jpg",
-    description: "Brand new laptops at competitive prices"
+    description: "Laptops at competitive prices"
   },
   {
     id: 11,

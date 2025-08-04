@@ -11,18 +11,25 @@ const PaymentMethodForm = ({ form, handleChange }) => {
       </h2>
 
       <div className="space-y-3">
-        {/* Cash on Delivery */}
-        <label className="flex items-center space-x-3">
-          <input
-            type="radio"
-            name="paymentMethod"
-            value="cash"
-            checked={form.paymentMethod === "cash"}
-            onChange={handleChange}
-            className="accent-blue-600"
-          />
-          <span className="text-gray-700">Cash on Delivery</span>
-        </label>
+        {/* Pay Upon Pickup */}
+<label className="flex items-start space-x-3">
+  <input
+    type="radio"
+    name="paymentMethod"
+    value="cash"
+    checked={form.paymentMethod === "cash"}
+    onChange={handleChange}
+    className="accent-blue-600 mt-1"
+  />
+  <span className="text-gray-700">
+    <span className="font-medium">Pay Upon Pickup</span>
+    <br />
+    <span className="text-sm text-gray-500">
+      Only available if you collect your order at our shop. Not valid for delivery.
+    </span>
+  </span>
+</label>
+
 
         {/* M-Pesa Option */}
         <label className="flex items-center space-x-3">

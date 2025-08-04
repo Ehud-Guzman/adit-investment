@@ -50,9 +50,9 @@ const ContactAndShippingForm = ({ formData, setFormData }) => {
         />
         <input
           type="text"
-          name="city"
-          placeholder="City"
-          value={formData.city}
+          name="town"
+          placeholder="town"
+          value={formData.town}
           onChange={handleChange}
           className="w-full mb-3 px-4 py-2 border rounded-md"
         />

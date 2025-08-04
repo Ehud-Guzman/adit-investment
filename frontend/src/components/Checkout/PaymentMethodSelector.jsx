@@ -1,12 +1,16 @@
 import React from "react";
 
 const PaymentMethodSelector = ({ paymentMethod, setPaymentMethod }) => {
-  const options = [
-    { value: "card", label: "Credit/Debit Card" },
-    { value: "mpesa", label: "M-PESA" },
-    { value: "paypal", label: "PayPal" },
-    { value: "cash", label: "Cash on Delivery" },
-  ];
+const options = [
+  { value: "card", label: "Credit/Debit Card (Coming Soon)", disabled: true },
+  { value: "mpesa", label: "M-PESA (STK Push)" },
+  { value: "paypal", label: "PayPal (Coming Soon)", disabled: true },
+  {
+    value: "cash",
+    label: "Pay Upon Pickup",
+    description: "In-store pickup only. Not available for deliveries.",
+  },
+];
 
   return (
     <div className="bg-white p-6 mt-6 rounded-lg border">

@@ -58,6 +58,7 @@ export default function NavAd() {
 
     // Loop interval
     adTimerRef.current = setInterval(() => {
+      
       if (!isVisible && !isHovered && !cooldownRef.current) {
         fetchProduct();
       }

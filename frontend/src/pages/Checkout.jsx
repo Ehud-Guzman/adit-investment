@@ -21,7 +21,7 @@ const Checkout = () => {
     email: "",
     phone: "",
     address: "",
-    city: "",
+    town: "",
     postalCode: "",
     shippingNote: "",
     paymentMethod: "cash",
@@ -62,10 +62,10 @@ const Checkout = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { fullName, phone, address, city, postalCode, paymentMethod } =
+    const { fullName, phone, address, town, postalCode, paymentMethod } =
       formData;
 
-    if (!fullName || !phone || !address || !city || !postalCode) {
+    if (!fullName || !phone || !address || !town|| !postalCode) {
       toast.error("🚫 Please fill out all required fields.");
       return;
     }
@@ -82,7 +82,7 @@ const Checkout = () => {
 
     const shippingAddress = {
       address,
-      city,
+      town,
       postalCode,
       note: formData.shippingNote || "",
     };
@@ -125,7 +125,7 @@ const Checkout = () => {
     }
   }, [formData.paymentMethod, formData.phone]);
 
-  const requiredFields = ["fullName", "phone", "address", "city", "postalCode"];
+  const requiredFields = ["fullName", "phone", "address", "town", "postalCode"];
   const completed = requiredFields.filter((f) => formData[f]?.trim()).length;
   const completionPercentage = Math.round((completed / requiredFields.length) * 100);
 
