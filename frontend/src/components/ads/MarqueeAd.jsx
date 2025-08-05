@@ -19,7 +19,7 @@ const MarqueeAd = () => {
   {
     icon: "🖨️",
     text: "Laptop, Printer & ICT Equipment Sales",
-    color: "from-teal-400 to-emerald-400",
+    color: "from-teal-400 to-emerald-500",
   },
   {
     icon: "🚀",
