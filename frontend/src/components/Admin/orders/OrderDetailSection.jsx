@@ -4,10 +4,7 @@ export default function OrderDetailSection({ icon, title, children, variant = "d
   const sectionId = `section-${title.toLowerCase().replace(/\s+/g, "-")}`;
 
   return (
-    <section
-      className="space-y-3 animate-fade-in"
-      aria-labelledby={sectionId}
-    >
+    <section className="space-y-3 animate-fade-in" aria-labelledby={sectionId}>
       <div className="flex items-center gap-2">
         <div className="text-primary">{icon}</div>
         <h3

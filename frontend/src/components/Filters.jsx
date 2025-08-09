@@ -15,8 +15,6 @@ const CATEGORIES = [
 
 const SORT_OPTIONS = [
   { value: "featured", label: "Featured", icon: "⭐" },
-  { value: "price-low", label: "Price: Low to High", icon: "⬆️" },
-  { value: "price-high", label: "Price: High to Low", icon: "⬇️" },
   { value: "name-asc", label: "Name: A-Z", icon: "🔤" },
   { value: "name-desc", label: "Name: Z-A", icon: "🔠" },
   { value: "rating-high", label: "Highest Rated", icon: "🌟" },
@@ -188,27 +186,57 @@ const Filters = ({
         </div>
       )}
 
-      {/* Categories */}
-      <div
-        className={`${filtersOpen ? "block" : "hidden md:block"} mb-2 md:mb-4`}
+      
+{/* Categories Section */}
+<div
+  className={`${filtersOpen ? "block" : "hidden md:block"} mb-4`}
+>
+  <div className="flex flex-wrap gap-2">
+    {CATEGORIES.map(({ value, label, icon }) => (
+      <button
+        key={value}
+        onClick={() => handleCategoryChange(value)}
+        className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${
+          category === value
+            ? "bg-blue-600 text-white"
+            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+        }`}
       >
-        <div className="flex flex-wrap gap-2">
-          {CATEGORIES.map(({ value, label, icon }) => (
-            <button
-              key={value}
-              onClick={() => handleCategoryChange(value)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                category === value
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
-              <span>{icon}</span>
-              {label}
-            </button>
-          ))}
-        </div>
-      </div>
+        <span>{icon}</span>
+        {label}
+      </button>
+    ))}
+  </div>
+</div>
+
+{/* Price Sorting Buttons (separate block) */}
+<div
+  className={`${filtersOpen ? "block" : "hidden md:block"} mb-4`}
+>
+  <div className="flex gap-2">
+    <button
+      onClick={() => setSortBy("price-low")}
+      className={`px-4 py-2 rounded-full text-sm font-medium transition-all border ${
+        sortBy === "price-low"
+          ? "bg-blue-600 text-white border-blue-600"
+          : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+      }`}
+    >
+      Price ↑
+    </button>
+    <button
+      onClick={() => setSortBy("price-high")}
+      className={`px-4 py-2 rounded-full text-sm font-medium transition-all border ${
+        sortBy === "price-high"
+          ? "bg-blue-600 text-white border-blue-600"
+          : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+      }`}
+    >
+      Price ↓
+    </button>
+  </div>
+</div>
+
 
       {/* Pagination Footer */}
       {totalItems > 0 && (

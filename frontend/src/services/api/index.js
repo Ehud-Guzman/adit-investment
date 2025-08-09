@@ -8,7 +8,7 @@ if (!import.meta.env.VITE_API_URL) {
 }
 
 const baseURL = import.meta.env.VITE_API_URL;
-console.log("🌍 Using API baseURL:", baseURL);
+
 
 
 
@@ -26,7 +26,8 @@ api.interceptors.request.use(
   (config) => {
     if (config._suppressAuth) return config; // Allow bypassing auth
 
-    const token = localStorage.getItem(TOKEN_KEY); // e.g., "adminAccessToken"
+    const token = localStorage.getItem(TOKEN_KEY);
+ 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

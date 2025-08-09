@@ -76,10 +76,16 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin: (origin, cb) => {
-      if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
+    origin: (origin, callback) => {
+      // Flutter and other native apps often send no origin header, allow those requests
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
       console.warn("⛔️ Blocked CORS origin:", origin);
-      cb(new Error("CORS not allowed from " + origin));
+      return callback(new Error("CORS not allowed from " + origin));
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
@@ -134,6 +140,7 @@ async function startServer() {
     app.use("/api/admin/dashboard", createAdminDashboardRouter());
     app.use("/api/settings", createSettingsRouter(collections.adminSettings));
     app.use("/api/admin/orders", createAdminOrderRoutes(collections));
+    
 
     // 🧱 Non-DI routes
     app.use("/api/upload", uploadRoutes);

@@ -1,4 +1,4 @@
-// components/Admin/orders/OrderDetails.jsx
+// components/Admin/orders/OrderDetailsPanel.jsx
 
 import { useState, useEffect } from "react";
 import { ShoppingBag, MapPin, CreditCard, Truck, CheckCircle } from "lucide-react";
@@ -8,6 +8,7 @@ import PaymentBadge from "./PaymentBadge";
 import OrderDetailSection from "./OrderDetailSection";
 import { Skeleton } from "@/components/ui/skeleton";
 import { normalizeCartItems } from "@/utils/cartNormalizer";
+
 
 export default function OrderDetails({ order }) {
   const [enrichedItems, setEnrichedItems] = useState([]);

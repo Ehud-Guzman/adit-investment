@@ -1,5 +1,5 @@
 // src/components/ui/select.jsx
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { ChevronUpDownIcon, CheckIcon } from "@heroicons/react/20/solid";
 
@@ -8,7 +8,7 @@ export function Select({
   onChange,
   children,
   className = "",
-  disabled = false
+  disabled = false,
 }) {
   return (
     <Listbox value={value} onChange={onChange} disabled={disabled}>
@@ -30,9 +30,11 @@ export function SelectTrigger({ children, className = "" }) {
   );
 }
 
-export function SelectValue({ placeholder }) {
+export function SelectValue({ value, placeholder }) {
   return (
-    <span className="block truncate capitalize text-gray-800">{placeholder}</span>
+    <span className="block truncate capitalize text-gray-800">
+      {value || placeholder}
+    </span>
   );
 }
 
@@ -44,9 +46,7 @@ export function SelectContent({ children }) {
       leaveFrom="opacity-100"
       leaveTo="opacity-0"
     >
-      <Listbox.Options
-        className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
-      >
+      <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
         {children}
       </Listbox.Options>
     </Transition>
@@ -56,12 +56,12 @@ export function SelectContent({ children }) {
 export function SelectItem({ children, value, className = "" }) {
   return (
     <Listbox.Option
+      value={value}
       className={({ active }) =>
         `relative cursor-pointer select-none py-2 pl-10 pr-4 ${
           active ? "bg-blue-100 text-blue-900" : "text-gray-900"
         } ${className}`
       }
-      value={value}
     >
       {({ selected }) => (
         <>

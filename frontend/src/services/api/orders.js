@@ -21,6 +21,13 @@ export const fetchMyOrders = async () => {
 
 // 🔧 Update order status
 export const updateStatus = async ({ orderId, status }) => {
-  const res = await api.patch(`/admin/orders/${orderId}/status`, { status });
+  const res = await api.patch(`/orders/${orderId}/status`, { status });
+ 
+  return res.data;
+};
+
+// 💳 Update payment status
+export const updatePaymentStatus = async ({ orderId, paymentStatus }) => {
+  const res = await api.patch(`/orders/${orderId}/payment`, { paymentStatus });
   return res.data;
 };
