@@ -8,4 +8,6 @@ export const CATEGORIES = [
   'Computers',
   'Storage',
   'Cartridge',
+  'CCTV',
+  'Networking'
 ];
