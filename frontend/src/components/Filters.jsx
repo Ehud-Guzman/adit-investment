@@ -11,6 +11,8 @@ const CATEGORIES = [
   { value: "storage", label: "Storage", icon: "💾" },
   { value: "toners", label: "Toners", icon: "🖨️" },
   { value: "cartridge", label: "Cartridge", icon: "🖨️" },
+  { value: "cctv", label: "CCTV", icon: "📹" },
+  { value: "networking", label: "Networking", icon: "🌐" },
 ];
 
 const SORT_OPTIONS = [

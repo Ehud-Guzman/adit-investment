@@ -99,16 +99,16 @@ const testimonials = [
   },
   {
     id: 2,
-    name: "Sarah Kiptoo",
-    position: "IT Manager, GlimmerWave Hotels",
-    content: "The security systems they installed have given us peace of mind. Excellent after-sales support too.",
+    name: "John",
+    position: "Operations Manager, Stirling Medical Center",
+    content: "CCTV Installation and Supply: The security systems they installed have given us peace of mind. Excellent after-sales support too.",
     rating: 5
   },
   {
     id: 3,
-    name: "David Omondi",
-    position: "Operations Director, Kisumu Logistics",
-    content: "Their computer repair team saved us from losing critical data. Highly recommended for any business.",
+    name: "Paul",
+    position: "General Manager, Ayoti Distributers Ltd",
+    content: "Software installation and System Maintenance.",
     rating: 4
   }
 ];

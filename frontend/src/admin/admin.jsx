@@ -25,7 +25,8 @@ const ProductAdmin = () => {
     'networking',
     'storage',
     'accessories',
-    'software'
+    'software',
+    'cctv'
   ];
 
   const handleChange = (e) => {

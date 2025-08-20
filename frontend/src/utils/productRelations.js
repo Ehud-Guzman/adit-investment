@@ -4,7 +4,7 @@ const productRelations = {
   laptops: ["accessories", "computers"],
   computers: ["accessories", "monitors"],
   toners: ["printers"],
-  accessories: ["monitors", "laptops", "computers", "phones"],
+  accessories: ["monitors", "laptops", "computers", "phones" , "CCTV"],
 };
 
 export default productRelations;
