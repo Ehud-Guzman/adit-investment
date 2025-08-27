@@ -152,11 +152,12 @@ const OrderReceiptPDF = ({ order }) => {
         {/* Header */}
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 20 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 15 }}>
-            <img
-              src={`${window.location.origin}/assets/images/services/logo.jpg`}
-              alt="Logo"
-              style={{ width: 60, height: 60, borderRadius: "50%" }}
-            />
+           <img
+  src="/assets/images/services/logo.jpg" // <— direct public path
+  alt="Logo"
+  style={{ width: 60, height: 60, borderRadius: "50%" }}
+/>
+
             <div>
               <h1 style={{ margin: 0, fontSize: 22, color: colors.primary }}>ADIT INVESTMENT LTD</h1>
               <p style={{ margin: 0, fontSize: 12, color: colors.mediumGray }}>
