@@ -30,7 +30,7 @@ export default function AdminOrdersPage() {
     retry: 1,
   });
 
-  console.log("Orders data from API:", data);
+  
 
   // ✅ Use the correct array from API response
   const ordersList = data?.orders ?? [];

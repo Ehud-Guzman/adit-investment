@@ -20,7 +20,7 @@ export default function PaymentStatusSelect({
   );
 
   const handleChange = (val) => {
-    console.log("💳 New payment status selected:", val);
+    
     if (val === selected) return;
 
     setSelected(val); // required to control the UI
