@@ -22,34 +22,30 @@ const OrderReceiptPDF = ({ order }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Fetch full order if partial data
   useEffect(() => {
     const fetchOrder = async () => {
-      if (!order || !order._id) {
-        setFullOrder(order);
-        return;
-      }
+      if (!order || !order._id) return setFullOrder(order);
 
-      // Use order if it has sufficient data
+      // Use order if complete
       if (order.userName && order.userEmail && order.shippingAddress && order.items) {
         orderCache.set(order._id, order);
         setFullOrder(order);
         return;
       }
 
-      // Check cache
       if (orderCache.has(order._id)) {
         setFullOrder(orderCache.get(order._id));
         return;
       }
 
-      // Fetch additional data
       try {
         setIsLoading(true);
         const res = await axios.get(`/api/orders/${order._id}`);
         const fetchedOrder = res.data.order;
         orderCache.set(order._id, fetchedOrder);
         setFullOrder(fetchedOrder);
-      } catch (err) {
+      } catch {
         setError("Failed to fetch order details. Using available data.");
         setFullOrder(order);
       } finally {
@@ -60,34 +56,54 @@ const OrderReceiptPDF = ({ order }) => {
     fetchOrder();
   }, [order]);
 
+  // Multi-page PDF download for large orders
   const handleDownloadPDF = async () => {
-    if (!receiptRef.current) return;
+    if (!receiptRef.current || !fullOrder) return;
 
-    const canvas = await html2canvas(receiptRef.current, {
-      scale: 2, // Restored for better quality
-      useCORS: true,
-      backgroundColor: "#ffffff",
-      logging: false,
-    });
-
-    const imgData = canvas.toDataURL("image/jpeg", 0.9); // Slightly higher quality
+    const element = receiptRef.current;
     const pdf = new jsPDF({ unit: "pt", format: "a4" });
     const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+    const pdfHeight = pdf.internal.pageSize.getHeight();
 
-    pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
-    pdf.save(`Adit_Receipt_${fullOrder._id.slice(-8).toUpperCase()}.pdf`);
+    const elementHeight = element.scrollHeight;
+    const sections = Math.ceil(elementHeight / pdfHeight);
+
+    for (let i = 0; i < sections; i++) {
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#fff",
+        y: i * pdfHeight,
+        height: pdfHeight,
+        logging: false,
+      });
+
+      const imgData = canvas.toDataURL("image/jpeg", 0.9);
+      const canvasPDFHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      if (i > 0) pdf.addPage();
+      pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, canvasPDFHeight);
+    }
+
+    pdf.save(
+      `Adit_Receipt_${fullOrder._id?.slice(-8).toUpperCase() || "UNKNOWN"}.pdf`
+    );
   };
 
-  // Default values
+  // Safe access with defaults
   const userName = fullOrder?.userName || fullOrder?.user?.name || "Customer";
   const userEmail = fullOrder?.userEmail || fullOrder?.user?.email || "N/A";
   const userPhone =
-    fullOrder?.shippingAddress?.phone || fullOrder?.userPhone || fullOrder?.user?.phone || "N/A";
-  const orderDate = fullOrder?.createdAt ? format(new Date(fullOrder.createdAt), "PPP p") : "N/A";
+    fullOrder?.shippingAddress?.phone ||
+    fullOrder?.userPhone ||
+    fullOrder?.user?.phone ||
+    "N/A";
+  const orderDate = fullOrder?.createdAt
+    ? format(new Date(fullOrder.createdAt), "PPP p")
+    : "N/A";
   const orderItems = useMemo(() => fullOrder?.items || [], [fullOrder]);
 
-  // Error state
+  // Show error fallback
   if (error) {
     return (
       <div style={{ padding: 20, fontFamily: "'Inter', sans-serif", color: colors.darkGray }}>
@@ -103,7 +119,7 @@ const OrderReceiptPDF = ({ order }) => {
     );
   }
 
-  // Skeleton UI with shimmer animation
+  // Skeleton while loading
   if (isLoading) {
     return (
       <div style={{ padding: 20, fontFamily: "'Inter', sans-serif", color: colors.darkGray }}>
@@ -120,38 +136,12 @@ const OrderReceiptPDF = ({ order }) => {
             }
           `}
         </style>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 15 }}>
-            <div style={{ width: 60, height: 60, borderRadius: "50%" }} className="skeleton" />
-            <div>
-              <div style={{ width: 150, height: 20, marginBottom: 5 }} className="skeleton" />
-              <div style={{ width: 100, height: 15 }} className="skeleton" />
-            </div>
-          </div>
-          <div style={{ textAlign: "right" }}>
-            <div style={{ width: 60, height: 20, borderRadius: 10, marginBottom: 5 }} className="skeleton" />
-            <div style={{ width: 80, height: 15, marginBottom: 5 }} className="skeleton" />
-            <div style={{ width: 100, height: 15 }} className="skeleton" />
-          </div>
-        </div>
-        <div style={{ display: "flex", gap: 15, marginBottom: 20 }}>
-          <div style={{ flex: 1, padding: 15, border: `1px solid ${colors.accent}`, borderRadius: 10 }}>
-            <div style={{ width: "80%", height: 15, marginBottom: 10 }} className="skeleton" />
-            <div style={{ width: "60%", height: 15, marginBottom: 10 }} className="skeleton" />
-            <div style={{ width: "70%", height: 15 }} className="skeleton" />
-          </div>
-          <div style={{ flex: 1, padding: 15, border: `1px solid ${colors.accent}`, borderRadius: 10 }}>
-            <div style={{ width: "80%", height: 15, marginBottom: 10 }} className="skeleton" />
-            <div style={{ width: "60%", height: 15 }} className="skeleton" />
-          </div>
-        </div>
-        <div style={{ width: "100%", height: 20, marginBottom: 10 }} className="skeleton" />
-        <div style={{ width: "100%", height: 150 }} className="skeleton" />
+        <div className="skeleton" style={{ width: "100%", height: 200, marginBottom: 20 }} />
+        <div className="skeleton" style={{ width: "100%", height: 150, marginBottom: 20 }} />
       </div>
     );
   }
 
-  // Main receipt UI
   return (
     <>
       <div
@@ -168,7 +158,7 @@ const OrderReceiptPDF = ({ order }) => {
           background: "#fff",
         }}
       >
-        {/* Reduced watermarks for performance */}
+        {/* Watermarks */}
         {[
           { top: "20%", left: "15%", rotate: -30, size: 40 },
           { top: "65%", left: "65%", rotate: -25, size: 45 },
@@ -191,7 +181,7 @@ const OrderReceiptPDF = ({ order }) => {
         ))}
 
         {/* Header */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 20 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 15 }}>
             <img
               src="/assets/images/services/logo.jpg"
@@ -199,7 +189,9 @@ const OrderReceiptPDF = ({ order }) => {
               style={{ width: 60, height: 60, borderRadius: "50%" }}
             />
             <div>
-              <h1 style={{ margin: 0, fontSize: 22, color: colors.primary }}>ADIT INVESTMENT LTD</h1>
+              <h1 style={{ margin: 0, fontSize: 22, color: colors.primary }}>
+                ADIT INVESTMENT LTD
+              </h1>
               <p style={{ margin: 0, fontSize: 12, color: colors.mediumGray }}>
                 Premium Quality • Exceptional Service
               </p>
@@ -218,12 +210,13 @@ const OrderReceiptPDF = ({ order }) => {
                 alignItems: "center",
                 justifyContent: "center",
                 minWidth: 60,
-                textAlign: "center",
               }}
             >
-              {fullOrder.orderStatus || "PENDING"}
+              {fullOrder?.orderStatus || "PENDING"}
             </div>
-            <p style={{ margin: 2, fontSize: 11 }}>Invoice: #{fullOrder._id.slice(-8).toUpperCase()}</p>
+            <p style={{ margin: 2, fontSize: 11 }}>
+              Invoice: #{fullOrder?._id?.slice(-8).toUpperCase() || "UNKNOWN"}
+            </p>
             <p style={{ margin: 2, fontSize: 11 }}>Date: {orderDate}</p>
           </div>
         </div>
@@ -238,47 +231,23 @@ const OrderReceiptPDF = ({ order }) => {
           </div>
           <div style={{ flex: 1, padding: 15, border: `1px solid ${colors.accent}`, borderRadius: 10 }}>
             <h3 style={{ margin: 0, color: colors.primary, fontSize: 14 }}>Shipping</h3>
-            {fullOrder.shippingAddress ? (
-              <>
-                <p>{fullOrder.shippingAddress.address || "N/A"}</p>
-                <p>
-                  {fullOrder.shippingAddress.town || "N/A"},{" "}
-                  {fullOrder.shippingAddress.postalCode || "N/A"}
-                </p>
-                {fullOrder.shippingAddress.note && (
-                  <p style={{ fontStyle: "italic" }}>📝 {fullOrder.shippingAddress.note}</p>
-                )}
-              </>
-            ) : (
-              <p>No address provided</p>
+            <p>{fullOrder?.shippingAddress?.address || "N/A"}</p>
+            <p>
+              {fullOrder?.shippingAddress?.town || "N/A"},{" "}
+              {fullOrder?.shippingAddress?.postalCode || "N/A"}
+            </p>
+            {fullOrder?.shippingAddress?.note && (
+              <p style={{ fontStyle: "italic" }}>📝 {fullOrder.shippingAddress.note}</p>
             )}
           </div>
         </div>
 
         {/* Order Summary */}
-        <h3
-          style={{
-            textAlign: "center",
-            color: colors.primary,
-            fontSize: 16,
-            marginTop: 30,
-            marginBottom: 10,
-            zIndex: 1,
-            position: "relative",
-          }}
-        >
+        <h3 style={{ textAlign: "center", color: colors.primary, fontSize: 16, marginTop: 30, marginBottom: 10 }}>
           Order Summary
         </h3>
 
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            fontSize: 12,
-            zIndex: 1,
-            position: "relative",
-          }}
-        >
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
           <thead style={{ background: colors.primary, color: "#fff" }}>
             <tr>
               <th style={{ padding: "8px 5px", textAlign: "left" }}>Item</th>
@@ -291,13 +260,13 @@ const OrderReceiptPDF = ({ order }) => {
             {orderItems.length > 0 ? (
               orderItems.map((item, idx) => (
                 <tr key={idx} style={{ background: idx % 2 === 0 ? "#fff" : colors.accent }}>
-                  <td style={{ padding: "8px 5px" }}>{item.title || "N/A"}</td>
-                  <td style={{ padding: "8px 5px", textAlign: "center" }}>{item.quantity || 0}</td>
+                  <td style={{ padding: "8px 5px" }}>{item?.title || "N/A"}</td>
+                  <td style={{ padding: "8px 5px", textAlign: "center" }}>{item?.quantity || 0}</td>
                   <td style={{ padding: "8px 5px", textAlign: "right" }}>
-                    Ksh {(item.price || 0).toLocaleString()}
+                    Ksh {(item?.price || 0).toLocaleString()}
                   </td>
                   <td style={{ padding: "8px 5px", textAlign: "right", fontWeight: 700 }}>
-                    Ksh {((item.price || 0) * (item.quantity || 0)).toLocaleString()}
+                    Ksh {((item?.price || 0) * (item?.quantity || 0)).toLocaleString()}
                   </td>
                 </tr>
               ))
@@ -312,7 +281,7 @@ const OrderReceiptPDF = ({ order }) => {
         </table>
 
         <div style={{ textAlign: "right", fontWeight: 700, marginTop: 10, fontSize: 13 }}>
-          GRAND TOTAL: Ksh {(fullOrder.totalAmount || 0).toLocaleString()}
+          GRAND TOTAL: Ksh {(fullOrder?.totalAmount || 0).toLocaleString()}
         </div>
 
         {/* Footer */}
