@@ -164,7 +164,7 @@ const OrderReceiptPDF = ({ order }) => {
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 20 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 15 }}>
          <img
-  src="/assets/images/services/logo.jpg"
+  src={`${window.location.origin}/assets/images/services/logo.jpg`}
   alt="Logo"
   style={{ width: 60, height: 60, borderRadius: "50%" }}
 />
