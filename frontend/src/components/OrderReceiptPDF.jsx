@@ -27,7 +27,6 @@ const OrderReceiptPDF = ({ order }) => {
     const fetchOrder = async () => {
       if (!order || !order._id) return setFullOrder(order);
 
-      // Use order if complete
       if (order.userName && order.userEmail && order.shippingAddress && order.items) {
         orderCache.set(order._id, order);
         setFullOrder(order);
@@ -56,41 +55,7 @@ const OrderReceiptPDF = ({ order }) => {
     fetchOrder();
   }, [order]);
 
-  // Multi-page PDF download for large orders
-  const handleDownloadPDF = async () => {
-    if (!receiptRef.current || !fullOrder) return;
-
-    const element = receiptRef.current;
-    const pdf = new jsPDF({ unit: "pt", format: "a4" });
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = pdf.internal.pageSize.getHeight();
-
-    const elementHeight = element.scrollHeight;
-    const sections = Math.ceil(elementHeight / pdfHeight);
-
-    for (let i = 0; i < sections; i++) {
-      const canvas = await html2canvas(element, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: "#fff",
-        y: i * pdfHeight,
-        height: pdfHeight,
-        logging: false,
-      });
-
-      const imgData = canvas.toDataURL("image/jpeg", 0.9);
-      const canvasPDFHeight = (canvas.height * pdfWidth) / canvas.width;
-
-      if (i > 0) pdf.addPage();
-      pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, canvasPDFHeight);
-    }
-
-    pdf.save(
-      `Adit_Receipt_${fullOrder._id?.slice(-8).toUpperCase() || "UNKNOWN"}.pdf`
-    );
-  };
-
-  // Safe access with defaults
+  const orderItems = useMemo(() => fullOrder?.items || [], [fullOrder]);
   const userName = fullOrder?.userName || fullOrder?.user?.name || "Customer";
   const userEmail = fullOrder?.userEmail || fullOrder?.user?.email || "N/A";
   const userPhone =
@@ -101,9 +66,55 @@ const OrderReceiptPDF = ({ order }) => {
   const orderDate = fullOrder?.createdAt
     ? format(new Date(fullOrder.createdAt), "PPP p")
     : "N/A";
-  const orderItems = useMemo(() => fullOrder?.items || [], [fullOrder]);
 
-  // Show error fallback
+  // PDF download logic
+  const handleDownloadPDF = async () => {
+    if (!receiptRef.current || !fullOrder) return;
+
+    const element = receiptRef.current;
+
+    // Make it temporarily visible
+    element.style.position = "static";
+    element.style.top = "auto";
+    element.style.left = "auto";
+    element.style.opacity = "1";
+
+    await new Promise((r) => setTimeout(r, 100)); // let browser render
+
+    const canvas = await html2canvas(element, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: "#fff",
+    });
+
+    const imgData = canvas.toDataURL("image/jpeg", 0.95);
+    const pdf = new jsPDF({ unit: "pt", format: "a4" });
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+
+    const canvasHeight = (canvas.height * pdfWidth) / canvas.width;
+    let heightLeft = canvasHeight;
+    let position = 0;
+
+    pdf.addImage(imgData, "JPEG", 0, position, pdfWidth, canvasHeight);
+    heightLeft -= pdfHeight;
+
+    while (heightLeft > 0) {
+      position = heightLeft - canvasHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, "JPEG", 0, position, pdfWidth, canvasHeight);
+      heightLeft -= pdfHeight;
+    }
+
+    pdf.save(`Adit_Receipt_${fullOrder._id?.slice(-8).toUpperCase() || "UNKNOWN"}.pdf`);
+
+    // Hide again
+    element.style.position = "absolute";
+    element.style.top = "-20000px";
+    element.style.left = "-20000px";
+    element.style.opacity = "0";
+  };
+
   if (error) {
     return (
       <div style={{ padding: 20, fontFamily: "'Inter', sans-serif", color: colors.darkGray }}>
@@ -119,7 +130,6 @@ const OrderReceiptPDF = ({ order }) => {
     );
   }
 
-  // Skeleton while loading
   if (isLoading) {
     return (
       <div style={{ padding: 20, fontFamily: "'Inter', sans-serif", color: colors.darkGray }}>
@@ -156,42 +166,40 @@ const OrderReceiptPDF = ({ order }) => {
           fontFamily: "'Inter', sans-serif",
           color: colors.darkGray,
           background: "#fff",
+          opacity: 0,
         }}
       >
         {/* Watermarks */}
-        {[
-          { top: "20%", left: "15%", rotate: -30, size: 40 },
-          { top: "65%", left: "65%", rotate: -25, size: 45 },
-        ].map((wm, idx) => (
-          <div
-            key={idx}
-            style={{
-              position: "absolute",
-              top: wm.top,
-              left: wm.left,
-              fontSize: wm.size,
-              color: `${colors.primary}22`,
-              transform: `translate(-50%, -50%) rotate(${wm.rotate}deg)`,
-              pointerEvents: "none",
-              zIndex: 0,
-            }}
-          >
-            ICT HUB
-          </div>
-        ))}
+        {[{ top: "20%", left: "15%", rotate: -30, size: 40 }, { top: "65%", left: "65%", rotate: -25, size: 45 }].map(
+          (wm, idx) => (
+            <div
+              key={idx}
+              style={{
+                position: "absolute",
+                top: wm.top,
+                left: wm.left,
+                fontSize: wm.size,
+                color: `${colors.primary}22`,
+                transform: `translate(-50%, -50%) rotate(${wm.rotate}deg)`,
+                pointerEvents: "none",
+                zIndex: 0,
+              }}
+            >
+              ICT HUB
+            </div>
+          )
+        )}
 
         {/* Header */}
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 20 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 15 }}>
             <img
-              src="/assets/images/services/logo.jpg"
+              src={`${window.location.origin}/assets/images/services/logo.jpg`}
               alt="Logo"
               style={{ width: 60, height: 60, borderRadius: "50%" }}
             />
             <div>
-              <h1 style={{ margin: 0, fontSize: 22, color: colors.primary }}>
-                ADIT INVESTMENT LTD
-              </h1>
+              <h1 style={{ margin: 0, fontSize: 22, color: colors.primary }}>ADIT INVESTMENT LTD</h1>
               <p style={{ margin: 0, fontSize: 12, color: colors.mediumGray }}>
                 Premium Quality • Exceptional Service
               </p>
@@ -233,12 +241,9 @@ const OrderReceiptPDF = ({ order }) => {
             <h3 style={{ margin: 0, color: colors.primary, fontSize: 14 }}>Shipping</h3>
             <p>{fullOrder?.shippingAddress?.address || "N/A"}</p>
             <p>
-              {fullOrder?.shippingAddress?.town || "N/A"},{" "}
-              {fullOrder?.shippingAddress?.postalCode || "N/A"}
+              {fullOrder?.shippingAddress?.town || "N/A"}, {fullOrder?.shippingAddress?.postalCode || "N/A"}
             </p>
-            {fullOrder?.shippingAddress?.note && (
-              <p style={{ fontStyle: "italic" }}>📝 {fullOrder.shippingAddress.note}</p>
-            )}
+            {fullOrder?.shippingAddress?.note && <p style={{ fontStyle: "italic" }}>📝 {fullOrder.shippingAddress.note}</p>}
           </div>
         </div>
 
@@ -262,9 +267,7 @@ const OrderReceiptPDF = ({ order }) => {
                 <tr key={idx} style={{ background: idx % 2 === 0 ? "#fff" : colors.accent }}>
                   <td style={{ padding: "8px 5px" }}>{item?.title || "N/A"}</td>
                   <td style={{ padding: "8px 5px", textAlign: "center" }}>{item?.quantity || 0}</td>
-                  <td style={{ padding: "8px 5px", textAlign: "right" }}>
-                    Ksh {(item?.price || 0).toLocaleString()}
-                  </td>
+                  <td style={{ padding: "8px 5px", textAlign: "right" }}>Ksh {(item?.price || 0).toLocaleString()}</td>
                   <td style={{ padding: "8px 5px", textAlign: "right", fontWeight: 700 }}>
                     Ksh {((item?.price || 0) * (item?.quantity || 0)).toLocaleString()}
                   </td>
@@ -286,12 +289,12 @@ const OrderReceiptPDF = ({ order }) => {
 
         {/* Footer */}
         <div style={{ textAlign: "center", fontSize: 11, color: colors.mediumGray, marginTop: 20 }}>
-          Thank you for shopping with Adit Investment Limited!<br />
+          Thank you for shopping with Adit Investment Limited!
+          <br />
           Computer-generated receipt • No signature required
         </div>
       </div>
 
-      {/* Download Button */}
       <button
         onClick={handleDownloadPDF}
         className="mt-4 px-6 py-3 bg-gradient-to-r from-[#002B5B] to-[#00478E] text-white rounded-lg shadow hover:shadow-lg transition"
