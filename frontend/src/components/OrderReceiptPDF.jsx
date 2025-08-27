@@ -13,7 +13,6 @@ const colors = {
   darkGray: "#495057",
 };
 
-// Simple in-memory cache for order data
 const orderCache = new Map();
 
 const OrderReceiptPDF = ({ order }) => {
@@ -22,7 +21,6 @@ const OrderReceiptPDF = ({ order }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch full order if partial data
   useEffect(() => {
     const fetchOrder = async () => {
       if (!order || !order._id) return setFullOrder(order);
@@ -59,63 +57,51 @@ const OrderReceiptPDF = ({ order }) => {
   const userName = fullOrder?.userName || fullOrder?.user?.name || "Customer";
   const userEmail = fullOrder?.userEmail || fullOrder?.user?.email || "N/A";
   const userPhone =
-    fullOrder?.shippingAddress?.phone ||
-    fullOrder?.userPhone ||
-    fullOrder?.user?.phone ||
-    "N/A";
-  const orderDate = fullOrder?.createdAt
-    ? format(new Date(fullOrder.createdAt), "PPP p")
-    : "N/A";
+    fullOrder?.shippingAddress?.phone || fullOrder?.userPhone || fullOrder?.user?.phone || "N/A";
+  const orderDate = fullOrder?.createdAt ? format(new Date(fullOrder.createdAt), "PPP p") : "N/A";
 
-  // PDF download logic
   const handleDownloadPDF = async () => {
     if (!receiptRef.current || !fullOrder) return;
 
     const element = receiptRef.current;
 
-    // Make it temporarily visible
+    // Show hidden receipt for canvas render
     element.style.position = "static";
-    element.style.top = "auto";
-    element.style.left = "auto";
     element.style.opacity = "1";
 
-    await new Promise((r) => setTimeout(r, 100)); // let browser render
+    await new Promise((r) => setTimeout(r, 150)); // wait to render images/fonts
 
-    const canvas = await html2canvas(element, {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: "#fff",
-    });
+    const canvas = await html2canvas(element, { scale: 2, useCORS: true, backgroundColor: "#fff" });
+    const imgData = canvas.toDataURL("image/jpeg", 1.0);
 
-    const imgData = canvas.toDataURL("image/jpeg", 0.95);
-    const pdf = new jsPDF({ unit: "pt", format: "a4" });
+    const pdf = new jsPDF("p", "pt", "a4");
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = pdf.internal.pageSize.getHeight();
 
-    const canvasHeight = (canvas.height * pdfWidth) / canvas.width;
-    let heightLeft = canvasHeight;
+    const imgProps = pdf.getImageProperties(imgData);
+    const pdfImgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+    let heightLeft = pdfImgHeight;
     let position = 0;
 
-    pdf.addImage(imgData, "JPEG", 0, position, pdfWidth, canvasHeight);
+    pdf.addImage(imgData, "JPEG", 0, position, pdfWidth, pdfImgHeight);
     heightLeft -= pdfHeight;
 
     while (heightLeft > 0) {
-      position = heightLeft - canvasHeight;
+      position = heightLeft - pdfImgHeight;
       pdf.addPage();
-      pdf.addImage(imgData, "JPEG", 0, position, pdfWidth, canvasHeight);
+      pdf.addImage(imgData, "JPEG", 0, position, pdfWidth, pdfImgHeight);
       heightLeft -= pdfHeight;
     }
 
     pdf.save(`Adit_Receipt_${fullOrder._id?.slice(-8).toUpperCase() || "UNKNOWN"}.pdf`);
 
-    // Hide again
+    // Hide receipt again
     element.style.position = "absolute";
-    element.style.top = "-20000px";
-    element.style.left = "-20000px";
     element.style.opacity = "0";
   };
 
-  if (error) {
+  if (error)
     return (
       <div style={{ padding: 20, fontFamily: "'Inter', sans-serif", color: colors.darkGray }}>
         <p style={{ color: "red" }}>{error}</p>
@@ -128,32 +114,26 @@ const OrderReceiptPDF = ({ order }) => {
         </button>
       </div>
     );
-  }
 
-  if (isLoading) {
+  if (isLoading)
     return (
       <div style={{ padding: 20, fontFamily: "'Inter', sans-serif", color: colors.darkGray }}>
-        <style>
-          {`
-            @keyframes shimmer {
-              0% { background-position: -200% 0; }
-              100% { background-position: 200% 0; }
-            }
-            .skeleton {
-              background: linear-gradient(90deg, ${colors.accent} 25%, #f0f0f0 50%, ${colors.accent} 75%);
-              background-size: 200% 100%;
-              animation: shimmer 1.5s infinite;
-            }
-          `}
-        </style>
-        <div className="skeleton" style={{ width: "100%", height: 200, marginBottom: 20 }} />
-        <div className="skeleton" style={{ width: "100%", height: 150, marginBottom: 20 }} />
+        <div
+          style={{
+            width: "100%",
+            height: 200,
+            marginBottom: 20,
+            background: `linear-gradient(90deg, ${colors.accent} 25%, #f0f0f0 50%, ${colors.accent} 75%)`,
+            backgroundSize: "200% 100%",
+            animation: "shimmer 1.5s infinite",
+          }}
+        />
       </div>
     );
-  }
 
   return (
     <>
+      {/* Hidden Receipt */}
       <div
         ref={receiptRef}
         style={{
@@ -169,27 +149,6 @@ const OrderReceiptPDF = ({ order }) => {
           opacity: 0,
         }}
       >
-        {/* Watermarks */}
-        {[{ top: "20%", left: "15%", rotate: -30, size: 40 }, { top: "65%", left: "65%", rotate: -25, size: 45 }].map(
-          (wm, idx) => (
-            <div
-              key={idx}
-              style={{
-                position: "absolute",
-                top: wm.top,
-                left: wm.left,
-                fontSize: wm.size,
-                color: `${colors.primary}22`,
-                transform: `translate(-50%, -50%) rotate(${wm.rotate}deg)`,
-                pointerEvents: "none",
-                zIndex: 0,
-              }}
-            >
-              ICT HUB
-            </div>
-          )
-        )}
-
         {/* Header */}
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 20 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 15 }}>
@@ -251,7 +210,6 @@ const OrderReceiptPDF = ({ order }) => {
         <h3 style={{ textAlign: "center", color: colors.primary, fontSize: 16, marginTop: 30, marginBottom: 10 }}>
           Order Summary
         </h3>
-
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
           <thead style={{ background: colors.primary, color: "#fff" }}>
             <tr>
@@ -287,7 +245,6 @@ const OrderReceiptPDF = ({ order }) => {
           GRAND TOTAL: Ksh {(fullOrder?.totalAmount || 0).toLocaleString()}
         </div>
 
-        {/* Footer */}
         <div style={{ textAlign: "center", fontSize: 11, color: colors.mediumGray, marginTop: 20 }}>
           Thank you for shopping with Adit Investment Limited!
           <br />
