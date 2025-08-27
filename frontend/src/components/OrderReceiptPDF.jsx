@@ -21,6 +21,7 @@ const OrderReceiptPDF = ({ order }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Fetch full order if needed
   useEffect(() => {
     const fetchOrder = async () => {
       if (!order || !order._id) return setFullOrder(order);
@@ -65,40 +66,50 @@ const OrderReceiptPDF = ({ order }) => {
 
     const element = receiptRef.current;
 
-    // Show hidden receipt for canvas render
-    element.style.position = "static";
+    // Temporarily show receipt in viewport
+    element.style.position = "absolute";
+    element.style.top = "0";
+    element.style.left = "0";
     element.style.opacity = "1";
+    element.style.zIndex = 1000;
 
-    await new Promise((r) => setTimeout(r, 150)); // wait to render images/fonts
+    await new Promise((r) => setTimeout(r, 500)); // wait for images/fonts
 
-    const canvas = await html2canvas(element, { scale: 2, useCORS: true, backgroundColor: "#fff" });
-    const imgData = canvas.toDataURL("image/jpeg", 1.0);
+    try {
+      const canvas = await html2canvas(element, { scale: 2, useCORS: true, backgroundColor: "#fff" });
+      const imgData = canvas.toDataURL("image/jpeg", 1.0);
 
-    const pdf = new jsPDF("p", "pt", "a4");
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = pdf.internal.pageSize.getHeight();
+      const pdf = new jsPDF("p", "pt", "a4");
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
 
-    const imgProps = pdf.getImageProperties(imgData);
-    const pdfImgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfImgHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-    let heightLeft = pdfImgHeight;
-    let position = 0;
+      let heightLeft = pdfImgHeight;
+      let position = 0;
 
-    pdf.addImage(imgData, "JPEG", 0, position, pdfWidth, pdfImgHeight);
-    heightLeft -= pdfHeight;
-
-    while (heightLeft > 0) {
-      position = heightLeft - pdfImgHeight;
-      pdf.addPage();
       pdf.addImage(imgData, "JPEG", 0, position, pdfWidth, pdfImgHeight);
       heightLeft -= pdfHeight;
+
+      while (heightLeft > 0) {
+        position = heightLeft - pdfImgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, "JPEG", 0, position, pdfWidth, pdfImgHeight);
+        heightLeft -= pdfHeight;
+      }
+
+      pdf.save(`Adit_Receipt_${fullOrder._id?.slice(-8).toUpperCase() || "UNKNOWN"}.pdf`);
+    } catch (err) {
+      console.error("PDF generation error:", err);
+      alert("Failed to generate PDF. Please try again.");
+    } finally {
+      element.style.position = "absolute";
+      element.style.top = "-20000px";
+      element.style.left = "-20000px";
+      element.style.opacity = "0";
+      element.style.zIndex = -1;
     }
-
-    pdf.save(`Adit_Receipt_${fullOrder._id?.slice(-8).toUpperCase() || "UNKNOWN"}.pdf`);
-
-    // Hide receipt again
-    element.style.position = "absolute";
-    element.style.opacity = "0";
   };
 
   if (error)
@@ -152,8 +163,8 @@ const OrderReceiptPDF = ({ order }) => {
         {/* Header */}
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 20 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 15 }}>
-           <img
-  src="/assets/images/services/logo.jpg" // <— direct public path
+         <img
+  src="/assets/images/services/logo.jpg"
   alt="Logo"
   style={{ width: 60, height: 60, borderRadius: "50%" }}
 />
