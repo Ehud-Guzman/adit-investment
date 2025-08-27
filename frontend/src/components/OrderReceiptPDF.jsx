@@ -66,14 +66,26 @@ const OrderReceiptPDF = ({ order }) => {
 
     const element = receiptRef.current;
 
-    // Temporarily show receipt in viewport
-    element.style.position = "absolute";
-    element.style.top = "0";
-    element.style.left = "0";
+    // Make hidden receipt temporarily visible for rendering
     element.style.opacity = "1";
     element.style.zIndex = 1000;
 
-    await new Promise((r) => setTimeout(r, 500)); // wait for images/fonts
+    // Wait for all images inside the receipt to load
+    await new Promise((resolve) => {
+      const images = element.querySelectorAll("img");
+      let loaded = 0;
+      if (images.length === 0) return resolve();
+      images.forEach((img) => {
+        if (img.complete) loaded++;
+        else img.onload = img.onerror = () => {
+          loaded++;
+          if (loaded === images.length) resolve();
+        };
+      });
+      if (images.length === loaded) resolve();
+    });
+
+    await new Promise((r) => setTimeout(r, 200)); // small buffer
 
     try {
       const canvas = await html2canvas(element, { scale: 2, useCORS: true, backgroundColor: "#fff" });
@@ -104,9 +116,7 @@ const OrderReceiptPDF = ({ order }) => {
       console.error("PDF generation error:", err);
       alert("Failed to generate PDF. Please try again.");
     } finally {
-      element.style.position = "absolute";
-      element.style.top = "-20000px";
-      element.style.left = "-20000px";
+      // Hide receipt again
       element.style.opacity = "0";
       element.style.zIndex = -1;
     }
@@ -149,8 +159,8 @@ const OrderReceiptPDF = ({ order }) => {
         ref={receiptRef}
         style={{
           position: "absolute",
-          top: "-20000px",
-          left: "-20000px",
+          top: 0,
+          left: 0,
           width: 595,
           minHeight: 842,
           padding: 30,
@@ -158,17 +168,18 @@ const OrderReceiptPDF = ({ order }) => {
           color: colors.darkGray,
           background: "#fff",
           opacity: 0,
+          pointerEvents: "none",
         }}
       >
         {/* Header */}
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 20 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 15 }}>
-         <img
-  src={`${window.location.origin}/assets/images/services/logo.jpg`}
-  alt="Logo"
-  style={{ width: 60, height: 60, borderRadius: "50%" }}
-/>
-
+            <img
+              src="https://res.cloudinary.com/dcywqtljq/image/upload/v1756300712/logo_adifcq.jpg"
+              alt="Logo"
+              crossOrigin="anonymous"
+              style={{ width: 60, height: 60, borderRadius: "50%" }}
+            />
             <div>
               <h1 style={{ margin: 0, fontSize: 22, color: colors.primary }}>ADIT INVESTMENT LTD</h1>
               <p style={{ margin: 0, fontSize: 12, color: colors.mediumGray }}>
