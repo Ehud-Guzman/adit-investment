@@ -415,11 +415,11 @@ const MyOrders = () => {
                       </motion.div>
                     )}
                     <div className="mt-4 flex justify-end">
-                      {order ? (
+                    {/* {order ? (
                         <OrderReceiptPDF order={order} />
                       ) : (
                         <p>Loading receipt...</p>
-                      )}
+                      )} */}
                     </div>
                   </AnimatePresence>
                 </CardContent>
