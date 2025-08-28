@@ -18,7 +18,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import CancelOrderButton from "@/components/CancelOrderButton";
-import OrderReceiptPDF from "@/components/OrderReceiptPDF";
+//import OrderReceiptPDF from "@/components/OrderReceiptPDF";
 
 // 🔧 Status styling map
 const statusConfig = {
