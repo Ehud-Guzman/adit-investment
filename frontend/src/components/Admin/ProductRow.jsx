@@ -111,9 +111,9 @@ export default function ProductRow({ product, onEdit, onDelete, refetch }) {
             </button>
 
             <button
-              onClick={() => handleToggle("isFeatured")}
+              onClick={() => handleToggle("featured")}
               className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition ${
-                product.isFeatured
+                product.featured
                   ? "bg-purple-100 text-purple-800 hover:bg-purple-200"
                   : "bg-gray-100 text-gray-500 hover:bg-gray-200"
               }`}
@@ -124,7 +124,7 @@ export default function ProductRow({ product, onEdit, onDelete, refetch }) {
               ) : (
                 <>
                   <FiStar size={12} />
-                  {product.isFeatured ? "Featured" : "Feature"}
+                  {product.featured ? "Featured" : "Feature"}
                 </>
               )}
             </button>

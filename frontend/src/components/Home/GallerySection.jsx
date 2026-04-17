@@ -1,5 +1,8 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+
+const ITEMS_PER_PAGE = 6;
 
 const categories = ['repairs', 'installation', 'selling', 'maintenance'];
 
@@ -146,21 +149,31 @@ const galleryItems = [
   }
 ];
 
-
-
-
-
-
-
 const GallerySection = () => {
   const [activeFilter, setActiveFilter] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const gridRef = useRef(null);
 
   const filteredItems =
     activeFilter === 'all'
-      ? categories
-          .map(cat => galleryItems.find(item => item.category === cat))
-          .filter(Boolean)
+      ? galleryItems
       : galleryItems.filter(item => item.category === activeFilter);
+
+  const totalPages = Math.ceil(filteredItems.length / ITEMS_PER_PAGE);
+  const paginatedItems = filteredItems.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  const handleFilterChange = (category) => {
+    setActiveFilter(category);
+    setCurrentPage(1);
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    gridRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8 bg-light text-dark relative z-10">
@@ -182,7 +195,7 @@ const GallerySection = () => {
               key={category}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => setActiveFilter(category)}
+              onClick={() => handleFilterChange(category)}
               className={`px-5 py-2 rounded-full font-medium capitalize transition-colors duration-300 border ${
                 activeFilter === category
                   ? 'bg-primary text-white border-primary shadow-md'
@@ -195,36 +208,78 @@ const GallerySection = () => {
         </div>
 
         {/* Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredItems.map(item => (
-            <motion.div
-              key={item.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-              className="group relative overflow-hidden rounded-xl bg-white shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300"
-            >
-              {/* Image */}
-              <div className="w-full h-60 overflow-hidden">
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-              </div>
+        <div ref={gridRef} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 min-h-[400px]">
+          <AnimatePresence mode="wait">
+            {paginatedItems.map((item, index) => (
+              <motion.div
+                key={`${item.id}-${currentPage}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.35, delay: index * 0.05 }}
+                className="group relative overflow-hidden rounded-xl bg-white shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300"
+              >
+                {/* Image */}
+                <div className="w-full h-60 overflow-hidden">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                </div>
 
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                <h3 className="text-white text-xl font-bold mb-1">{item.title}</h3>
-                <p className="text-secondary text-sm">{item.description}</p>
-                <span className="mt-2 px-3 py-1 text-xs bg-white text-primary font-semibold rounded-full capitalize w-max">
-                  {item.category}
-                </span>
-              </div>
-            </motion.div>
-          ))}
+                {/* Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                  <h3 className="text-white text-xl font-bold mb-1">{item.title}</h3>
+                  <p className="text-secondary text-sm">{item.description}</p>
+                  <span className="mt-2 px-3 py-1 text-xs bg-white text-primary font-semibold rounded-full capitalize w-max">
+                    {item.category}
+                  </span>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2 mt-12">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="p-2 rounded-full border border-gray-300 text-gray-500 hover:border-primary hover:text-primary transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              <FiChevronLeft size={18} />
+            </button>
+
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+              <button
+                key={page}
+                onClick={() => handlePageChange(page)}
+                className={`w-9 h-9 rounded-full text-sm font-medium border transition-colors ${
+                  page === currentPage
+                    ? 'bg-primary text-white border-primary shadow-md'
+                    : 'bg-white text-text border-gray-300 hover:border-primary hover:text-primary'
+                }`}
+              >
+                {page}
+              </button>
+            ))}
+
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="p-2 rounded-full border border-gray-300 text-gray-500 hover:border-primary hover:text-primary transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              <FiChevronRight size={18} />
+            </button>
+          </div>
+        )}
+
+        {/* Item count */}
+        <p className="text-center text-sm text-gray-400 mt-4">
+          Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1}–{Math.min(currentPage * ITEMS_PER_PAGE, filteredItems.length)} of {filteredItems.length} items
+        </p>
       </div>
     </section>
   );

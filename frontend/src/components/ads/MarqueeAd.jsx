@@ -1,11 +1,8 @@
 // components/ads/MarqueeAd.jsx
-import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 const MarqueeAd = () => {
-  const [isHovered, setIsHovered] = useState(false);
-
- const messages = [
+  const messages = [
   {
     icon: "💻",
     text: "Web Development, UX/UI, and Software Installations",
@@ -62,122 +59,33 @@ const MarqueeAd = () => {
         }}
       />
 
-      {/* Subtle particle effect */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(8)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-white/20 rounded-full"
-            animate={{
-              x: [-10, window.innerWidth + 10],
-              opacity: [0, 1, 0],
-            }}
-            transition={{
-              duration: 6 + i * 0.5,
-              repeat: Infinity,
-              ease: "linear",
-              delay: i * 0.8,
-            }}
-            style={{
-              top: `${20 + i * 8}%`,
-            }}
-          />
-        ))}
-      </div>
 
-      <motion.div
-        className="relative py-3 px-4"
-        onHoverStart={() => setIsHovered(true)}
-        onHoverEnd={() => setIsHovered(false)}
-        animate={{
-          scale: isHovered ? 1.01 : 1,
-        }}
-        transition={{ duration: 0.3 }}
-      >
-        <div className="flex whitespace-nowrap">
-          {/* First marquee instance */}
+      <div className="relative py-3 px-4">
+        <div className="flex whitespace-nowrap overflow-hidden">
+          {/* Single track with items doubled — animate to -50% for seamless loop */}
           <motion.div
             className="flex items-center"
-            animate={{
-              x: [0, -100 * messages.length * 6], // Adjust based on content width
-            }}
+            animate={{ x: ["0%", "-50%"] }}
             transition={{
               duration: 40,
               repeat: Infinity,
               ease: "linear",
+              repeatType: "loop",
             }}
+            style={{ willChange: "transform" }}
           >
-            {messages.map((message, index) => (
-              <div key={`first-${index}`} className="flex items-center mx-8">
-                <motion.span
-                  className="text-2xl mr-3"
-                  animate={{
-                    rotate: [0, 10, -10, 0],
-                    scale: [1, 1.1, 1],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    delay: index * 0.5,
-                  }}
-                >
-                  {message.icon}
-                </motion.span>
+            {[...messages, ...messages].map((message, index) => (
+              <div key={index} className="flex items-center mx-8">
+                <span className="text-2xl mr-3">{message.icon}</span>
                 <span className={`text-sm sm:text-base font-semibold bg-gradient-to-r ${message.color} bg-clip-text text-transparent tracking-wide`}>
                   {message.text}
                 </span>
-                <div className="mx-6 w-2 h-2 rounded-full bg-gradient-to-r from-white/40 to-white/20" />
-              </div>
-            ))}
-          </motion.div>
-
-          {/* Second marquee instance for seamless loop */}
-          <motion.div
-            className="flex items-center"
-            animate={{
-              x: [0, -100 * messages.length * 6],
-            }}
-            transition={{
-              duration: 40,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-          >
-            {messages.map((message, index) => (
-              <div key={`second-${index}`} className="flex items-center mx-8">
-                <motion.span
-                  className="text-2xl mr-3"
-                  animate={{
-                    rotate: [0, 10, -10, 0],
-                    scale: [1, 1.1, 1],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    delay: index * 0.5,
-                  }}
-                >
-                  {message.icon}
-                </motion.span>
-                <span className={`text-sm sm:text-base font-semibold bg-gradient-to-r ${message.color} bg-clip-text text-transparent tracking-wide`}>
-                  {message.text}
-                </span>
-                <div className="mx-6 w-2 h-2 rounded-full bg-gradient-to-r from-white/40 to-white/20" />
+                <div className="mx-6 w-2 h-2 rounded-full bg-gradient-to-r from-white/40 to-white/20 flex-shrink-0" />
               </div>
             ))}
           </motion.div>
         </div>
-
-        {/* Subtle glow effect on hover */}
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent pointer-events-none"
-          animate={{
-            opacity: isHovered ? 1 : 0,
-            scaleY: isHovered ? 1 : 0.8,
-          }}
-          transition={{ duration: 0.3 }}
-        />
-      </motion.div>
+      </div>
 
       {/* Edge fade effects */}
       <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-slate-900 to-transparent pointer-events-none z-10" />

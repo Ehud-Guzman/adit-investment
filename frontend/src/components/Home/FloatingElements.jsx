@@ -1,30 +1,46 @@
+import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 
+const BLOB_COUNT = 15;
+
 const FloatingElements = () => {
+  const blobs = useMemo(() =>
+    Array.from({ length: BLOB_COUNT }, (_, i) => ({
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      width: Math.random() * 6 + 4,
+      height: Math.random() * 6 + 4,
+      opacity: Math.random() * 0.2 + 0.1,
+      driftY: Math.random() * 40 - 20,
+      driftX: Math.random() * 40 - 20,
+      duration: Math.random() * 15 + 10,
+    })),
+  []);
+
   return (
     <>
       {/* ✨ Soft-floating blurred background dots */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        {[...Array(15)].map((_, i) => (
+        {blobs.map((b, i) => (
           <motion.div
             key={i}
             className="absolute rounded-full bg-gradient-to-r from-primary/10 to-accent/10"
-            initial={{
-              x: Math.random() * 100 + '%',
-              y: Math.random() * 100 + '%',
-              width: Math.random() * 6 + 4 + 'rem',
-              height: Math.random() * 6 + 4 + 'rem',
-              opacity: Math.random() * 0.2 + 0.1
+            style={{
+              left: `${b.left}%`,
+              top: `${b.top}%`,
+              width: `${b.width}rem`,
+              height: `${b.height}rem`,
+              opacity: b.opacity,
             }}
             animate={{
-              y: [0, Math.random() * 40 - 20],
-              x: [0, Math.random() * 40 - 20],
-              transition: {
-                duration: Math.random() * 15 + 10,
-                repeat: Infinity,
-                repeatType: 'reverse',
-                ease: 'easeInOut'
-              }
+              y: [0, b.driftY],
+              x: [0, b.driftX],
+            }}
+            transition={{
+              duration: b.duration,
+              repeat: Infinity,
+              repeatType: 'reverse',
+              ease: 'easeInOut',
             }}
           />
         ))}

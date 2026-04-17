@@ -38,8 +38,8 @@ export default function ProductList({
 
       const matchesFeatured =
         filters.featured === "all" ||
-        (filters.featured === "featured" && product?.isFeatured) ||
-        (filters.featured === "regular" && !product?.isFeatured);
+        (filters.featured === "featured" && product?.featured) ||
+        (filters.featured === "regular" && !product?.featured);
 
       const matchesVendor =
         filters.vendor === "all" ||

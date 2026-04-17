@@ -57,7 +57,8 @@ export const createProduct = async (req, res, products) => {
       description = "",
       stock = 0,
       images = [],
-      isFeatured = false,
+      featured = false,
+      isFeatured,               // accept old name too
       approved = true,
       vendor = "",
     } = req.body;
@@ -73,7 +74,7 @@ export const createProduct = async (req, res, products) => {
       description,
       stock: Number(stock),
       images: Array.isArray(images) ? images : [images], // Enforce array
-      isFeatured: Boolean(isFeatured),
+      featured: Boolean(featured ?? isFeatured),
       approved: Boolean(approved),
       vendor,
       createdAt: new Date(),
@@ -106,7 +107,7 @@ export const updateProduct = async (req, res, products) => {
         ...updates,
         price: Number(updates.price),
         stock: Number(updates.stock),
-        isFeatured: Boolean(updates.isFeatured),
+        featured: Boolean(updates.featured ?? updates.isFeatured),
         approved: Boolean(updates.approved),
         images: Array.isArray(updates.images) ? updates.images : [updates.images],
         updatedAt: new Date(),

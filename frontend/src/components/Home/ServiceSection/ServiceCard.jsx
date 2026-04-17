@@ -15,7 +15,7 @@ export default function ServiceCard({
     >
       <div className="p-8">
         {/* Icon Circle */}
-        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-6 shadow-md">
+        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-6 shadow-md text-white">
           {icon}
         </div>
 

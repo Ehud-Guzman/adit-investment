@@ -43,7 +43,7 @@ const coreServices = [
 
 export default function SoftwareServices() {
   return (
-    <div className="mb-20">
+    <div>
       <h3 className="text-2xl font-bold mb-8 text-black">
         Software & Digital Solutions
       </h3>

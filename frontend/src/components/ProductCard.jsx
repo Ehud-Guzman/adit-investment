@@ -55,7 +55,6 @@ const ProductCard = ({
 
   const sizes = {
     small: {
-      container: "max-w-[160px] sm:max-w-[180px]",
       image: "aspect-[3/2.5] sm:aspect-[3/2.8]",
       text: "text-xs sm:text-[13px]",
       padding: "p-2 sm:p-2.5",
@@ -67,7 +66,6 @@ const ProductCard = ({
       ratingSize: "sm",
     },
     medium: {
-      container: "max-w-[220px] sm:max-w-[240px]",
       image: "aspect-[4/3] sm:aspect-[4/3.2]",
       text: "text-sm sm:text-[15px]",
       padding: "p-3 sm:p-3.5",
@@ -79,7 +77,6 @@ const ProductCard = ({
       ratingSize: "md",
     },
     large: {
-      container: "max-w-[280px] sm:max-w-[300px]",
       image: "aspect-[1/1] sm:aspect-[1/0.9]",
       text: "text-base sm:text-[16px]",
       padding: "p-4 sm:p-5",
@@ -108,9 +105,9 @@ const ProductCard = ({
       animate={{ opacity: 1 }}
       whileHover={{ y: -4, boxShadow: "0 6px 12px rgba(0,0,0,0.1)" }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      className={`bg-white rounded-lg shadow-sm overflow-hidden flex flex-col h-full group relative ${
+      className={`bg-white rounded-lg shadow-sm overflow-hidden flex flex-col h-full w-full group relative ${
         loading ? "opacity-70 pointer-events-none" : ""
-      } ${currentSize.container}`}
+      }`}
       role="article"
       aria-label={`Product card for ${name}`}
     >

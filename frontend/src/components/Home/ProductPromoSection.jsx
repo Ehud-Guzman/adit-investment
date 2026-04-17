@@ -44,7 +44,7 @@ export default function ProductPromoSectionPro() {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   return (
-    <section className="relative bg-gradient-to-br from-gray-800 to-gray-900 text-white text-center rounded-2xl border border-white/10 py-14 px-4 sm:px-6 lg:px-10 max-w-6xl mx-auto mt-24 mb-16 shadow-xl overflow-hidden">
+    <section className="relative bg-gradient-to-br from-gray-800 to-gray-900 text-white text-center rounded-2xl border border-white/10 py-14 px-4 sm:px-6 lg:px-10 max-w-6xl mx-auto my-12 shadow-xl overflow-hidden">
       <div className="absolute inset-0 opacity-5 bg-[url('/assets/images/pattern.svg')] bg-cover bg-center pointer-events-none" />
 
       <div className="relative z-10">

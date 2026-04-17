@@ -5,6 +5,7 @@ import {
   useCallback,
   useRef,
 } from "react";
+import { createPortal } from "react-dom";
 import {
   useQuery,
   useMutation,
@@ -12,6 +13,7 @@ import {
 } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { debounce } from "lodash";
+import { FiFilter, FiSearch, FiX } from "react-icons/fi";
 import {
   getProducts,
   getProductById,
@@ -23,9 +25,8 @@ import {
 import { useCart } from "@/hooks/useCart";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useAuth } from "@/hooks/useAuth";
-import Header from "@/components/Header";
-import BenefitsBar from "@/components/BenefitsBar";
 import Filters from "@/components/Filters";
+import HeaderButtons from "@/components/HeaderButtons";
 import ProductList from "@/components/ProductList";
 import AuthModal from "@/components/AuthModal";
 import QuickViewModal from "@/components/QuickView/QuickViewModal";
@@ -40,13 +41,14 @@ const Products = () => {
   const [category, setCategory] = useState("all");
   const [sortBy, setSortBy] = useState("featured");
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchInput, setSearchInput] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(24);
   const [isCartOpen, setCartOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
   const [quickViewProductId, setQuickViewProductId] = useState(null);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const scrollPositionRef = useRef(0);
 
   const queryClient = useQueryClient();
@@ -185,91 +187,151 @@ const Products = () => {
   const closeQuickView = useCallback(() => setQuickViewProductId(null), []);
 
   useEffect(() => {
-    const onScroll = () => setIsScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
     document.body.style.overflow = authModalOpen ? "hidden" : "auto";
   }, [authModalOpen]);
 
+  const handleCartClick = () => {
+    if (!currentUser) {
+      toast.info("Please log in to view your cart");
+      setAuthMode("login");
+      setAuthModalOpen(true);
+    } else if (!currentUser.isVerified) {
+      toast.warning("Please verify your email before using the cart.");
+    } else {
+      setCartOpen(true);
+    }
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchInput(e.target.value);
+    debouncedSearch(e.target.value);
+  };
+
+  const clearSearch = () => {
+    setSearchInput("");
+    debouncedSearch("");
+  };
+
+  // Only block the page for product/user loads — cart & wishlist load silently
   const isLoading = useMemo(
-    () =>
-      isLoadingProducts || isLoadingUser || isLoadingCart || isLoadingWishlist,
-    [isLoadingProducts, isLoadingUser, isLoadingCart, isLoadingWishlist]
+    () => isLoadingProducts || isLoadingUser,
+    [isLoadingProducts, isLoadingUser]
   );
 
   return (
     <ErrorBoundary>
-      <div className="relative min-h-screen bg-gray-50">
-        {/* === Header/Nav === */}
-        <div className="sticky top-0 z-[100] bg-white shadow-md transition-all duration-300">
-          <Header
-            currentUser={currentUser}
-            cartCount={cartCount}
-            setCartOpen={setCartOpen}
-            setAuthModalOpen={setAuthModalOpen}
-            setAuthMode={setAuthMode}
-            logout={logout}
-            isScrolled={isScrolled}
-          />
+      <div className="min-h-screen bg-gray-50">
+
+        {/* ── Slim top bar: search + cart/account ── */}
+        <div className="sticky top-16 md:top-20 z-[90] bg-white border-b border-gray-200 shadow-sm">
+          <div className="px-4 sm:px-6 py-2.5 flex items-center gap-3">
+            {/* Mobile filter toggle */}
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="md:hidden flex items-center gap-1.5 text-sm font-medium text-gray-600 border border-gray-200 px-3 py-1.5 rounded-lg hover:bg-gray-50 shrink-0"
+            >
+              <FiFilter size={14} /> Filters
+            </button>
+
+            {/* Search */}
+            <div className="flex-1 relative">
+              <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
+              <input
+                type="text"
+                value={searchInput}
+                onChange={handleSearchChange}
+                placeholder="Search products..."
+                className="w-full pl-9 pr-8 py-2 border border-gray-200 rounded-full text-sm bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              {searchInput && (
+                <button onClick={clearSearch} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                  <FiX size={13} />
+                </button>
+              )}
+            </div>
+
+            {/* Cart + Account */}
+            <HeaderButtons
+              cartCount={cartCount}
+              currentUser={currentUser}
+              handleCartClick={handleCartClick}
+              logout={logout}
+              setAuthModalOpen={setAuthModalOpen}
+              setAuthMode={setAuthMode}
+            />
+          </div>
         </div>
 
-        <main className="container mx-auto px-4 sm:px-6 pt-8">
-          {isLoading && (
-            <div className="fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50" style={{ top: 72 }}>
-              <LoadingSpinner size="lg" />
-            </div>
-          )}
+        {/* ── Sidebar + content ── */}
+        <div className="flex">
 
-          <BenefitsBar />
-
-          <Filters
-            category={category}
-            setCategory={(val) => {
-              setCategory(val);
-              setCurrentPage(1);
-              debouncedSearch("");
-            }}
-            sortBy={sortBy}
-            setSortBy={(val) => {
-              setSortBy(val);
-              setCurrentPage(1);
-            }}
-            itemsPerPage={itemsPerPage}
-            setItemsPerPage={(val) => {
-              setItemsPerPage(val);
-              setCurrentPage(1);
-            }}
-            onSearch={debouncedSearch}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-            totalItems={productsData?.pagination?.total || 0}
-            isScrolled={isScrolled}
-          />
-
-          {isError ? (
-            <div className="text-center text-red-600 py-8">
-              {productsError?.message ||
-                "Something went wrong while loading products."}
-            </div>
-          ) : (
-            <ProductList
-              products={productsData?.products || []}
-              loading={isLoadingProducts}
-              error={productsError}
-              pagination={productsData?.pagination}
-              onPageChange={handlePageChange}
-              onAddToCart={addToCart}
-              onWishlistToggle={handleWishlistToggle}
-              onQuickView={openQuickView}
-              wishlistItems={wishlist}
+          {/* Desktop sidebar */}
+          <aside className="hidden md:block w-60 shrink-0 sticky top-[116px] md:top-[132px] self-start h-[calc(100vh-116px)] md:h-[calc(100vh-132px)] overflow-y-auto bg-white border-r border-gray-200">
+            <Filters
+              category={category}
+              setCategory={(val) => { setCategory(val); setCurrentPage(1); }}
+              sortBy={sortBy}
+              setSortBy={(val) => { setSortBy(val); setCurrentPage(1); }}
               itemsPerPage={itemsPerPage}
+              setItemsPerPage={(val) => { setItemsPerPage(val); setCurrentPage(1); }}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              totalItems={productsData?.pagination?.total || 0}
             />
-          )}
-        </main>
+          </aside>
 
+          {/* Mobile sidebar drawer */}
+          {sidebarOpen && createPortal(
+            <div className="fixed inset-0 z-[150] flex">
+              <div className="absolute inset-0 bg-black/40" onClick={() => setSidebarOpen(false)} />
+              <div className="relative w-72 max-w-[85vw] bg-white h-full overflow-y-auto shadow-xl">
+                <Filters
+                  category={category}
+                  setCategory={(val) => { setCategory(val); setCurrentPage(1); }}
+                  sortBy={sortBy}
+                  setSortBy={(val) => { setSortBy(val); setCurrentPage(1); }}
+                  itemsPerPage={itemsPerPage}
+                  setItemsPerPage={(val) => { setItemsPerPage(val); setCurrentPage(1); }}
+                  currentPage={currentPage}
+                  setCurrentPage={setCurrentPage}
+                  totalItems={productsData?.pagination?.total || 0}
+                  onClose={() => setSidebarOpen(false)}
+                />
+              </div>
+            </div>,
+            document.body
+          )}
+
+          {/* Main content */}
+          <main className="flex-1 min-w-0 px-4 sm:px-6 py-6">
+            {isLoading && (
+              <div className="fixed inset-0 bg-white/75 flex items-center justify-center z-50">
+                <LoadingSpinner size="lg" />
+              </div>
+            )}
+
+            {isError ? (
+              <div className="text-center text-red-600 py-8">
+                {productsError?.message || "Something went wrong while loading products."}
+              </div>
+            ) : (
+              <ProductList
+                products={productsData?.products || []}
+                loading={isLoadingProducts}
+                error={productsError}
+                pagination={productsData?.pagination}
+                onPageChange={handlePageChange}
+                onAddToCart={addToCart}
+                onWishlistToggle={handleWishlistToggle}
+                onQuickView={openQuickView}
+                wishlistItems={wishlist}
+                itemsPerPage={itemsPerPage}
+              />
+            )}
+          </main>
+        </div>
+
+        {/* ── Modals & overlays ── */}
         <AuthModal
           isOpen={authModalOpen}
           onClose={() => setAuthModalOpen(false)}
@@ -288,9 +350,7 @@ const Products = () => {
           addToCart={addToCart}
           toggleWishlist={toggleWishlist}
           removeFromWishlist={removeFromWishlist}
-          isInWishlist={wishlist.some(
-            (item) => item.productId === quickViewProductId
-          )}
+          isInWishlist={wishlist.some((item) => item.productId === quickViewProductId)}
           reviews={reviews}
           currentUser={currentUser}
           submitReview={submitReviewMutation.mutate}
@@ -312,8 +372,6 @@ const Products = () => {
         />
 
         <LipaNaMpesa />
-
-
       </div>
     </ErrorBoundary>
   );

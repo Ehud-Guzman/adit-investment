@@ -18,7 +18,7 @@ export default function ProductForm({
     description: '',
     stock: '',
     images: [],
-    isFeatured: false,
+    featured: false,
     approved: true,
     vendor: '',
   });
@@ -34,7 +34,7 @@ export default function ProductForm({
       description: initialData.description ?? '',
       stock: initialData.stock?.toString() ?? '0',
       images: initialData.images ?? [],
-      isFeatured: initialData.isFeatured ?? false,
+      featured: initialData.featured ?? false,
       approved: initialData.approved ?? true,
       vendor: initialData.vendor ?? '',
     });
@@ -252,9 +252,9 @@ const handleImageUpload = async (e) => {
         <label className="flex items-center gap-2">
           <input
             type="checkbox"
-            name="isFeatured"
-            checked={form.isFeatured}
-            onChange={(e) => setForm((prev) => ({ ...prev, isFeatured: e.target.checked }))}
+            name="featured"
+            checked={form.featured}
+            onChange={(e) => setForm((prev) => ({ ...prev, featured: e.target.checked }))}
           />
           Featured
         </label>
