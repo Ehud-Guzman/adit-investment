@@ -1,47 +1,62 @@
 // AboutHero.jsx
 import { motion } from "framer-motion";
-import { FiArrowRight } from "react-icons/fi";
+import { FiArrowRight, FiUsers } from "react-icons/fi";
 
 export default function AboutHero() {
   return (
-    <section className="relative py-16 sm:py-20 md:py-24 bg-white text-gray-900 border-b border-gray-100">
-      <div className="container mx-auto relative z-10"> {/* Removed px classes */}
+    <section className="relative py-24 sm:py-28 md:py-32 bg-white overflow-hidden">
+      {/* Decorative blobs */}
+      <div className="absolute -top-28 -left-28 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-28 -right-28 w-96 h-96 bg-accent/10 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+        <motion.span
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="inline-block mb-5 px-4 py-1.5 bg-primary/10 text-primary text-sm font-semibold rounded-full tracking-wide"
+        >
+          Who We Are
+        </motion.span>
+
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight"
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-dark mb-6 leading-tight"
         >
           Driving{" "}
-          <span className="text-primary">Tech Innovation</span> in East Africa
+          <span className="text-primary">Tech Innovation</span>
+          <br className="hidden sm:block" /> in East Africa
         </motion.h1>
 
         <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.6 }}
-          className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mb-6"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-lg sm:text-xl text-textLight max-w-2xl mx-auto mb-10"
         >
-          Empowering businesses with tailored ICT solutions since 2018.
+          Empowering businesses with tailored ICT solutions since 2018 — from
+          Busia, Kenya to the wider East African region.
         </motion.p>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.6 }}
-          className="flex flex-wrap justify-center gap-3"
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="flex flex-wrap justify-center gap-4"
         >
           <a
             href="#story"
-            className="px-5 py-2.5 sm:px-6 sm:py-3 rounded-md bg-primary text-white font-semibold shadow-md hover:bg-primary/90 transition-all text-sm sm:text-base"
+            className="inline-flex items-center gap-2 px-7 py-3.5 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/30 hover:bg-primary/90 transition-colors"
           >
-            Our Story
+            Our Story <FiArrowRight />
           </a>
           <a
             href="#team"
-            className="px-5 py-2.5 sm:px-6 sm:py-3 rounded-md border border-gray-300 hover:border-primary text-gray-700 hover:text-primary transition-all font-medium text-sm sm:text-base"
+            className="inline-flex items-center gap-2 px-7 py-3.5 border-2 border-gray-200 hover:border-primary text-dark hover:text-primary font-semibold rounded-xl transition-colors"
           >
-            Meet the Team
+            <FiUsers className="w-4 h-4" /> Meet the Team
           </a>
         </motion.div>
       </div>

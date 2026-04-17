@@ -1,64 +1,70 @@
 // AboutMissionVision.jsx
 import { motion } from "framer-motion";
+import { FiTarget, FiEye } from "react-icons/fi";
 
 export default function AboutMissionVision() {
   return (
-    <section className="relative py-16 sm:py-20 md:py-24 bg-white text-gray-900 border-y border-gray-100">
-      {/* Background pattern */}
-      <div className="absolute inset-0 bg-[url('/circuit-pattern.svg')] bg-repeat opacity-5 pointer-events-none z-0" />
-
-      <div className="container mx-auto relative z-10"> {/* Removed px classes */}
-        {/* Section Header */}
+    <section className="py-20 sm:py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.5 }}
           viewport={{ once: true }}
-          className="text-center mb-10 sm:mb-14"
+          className="text-center mb-14"
         >
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-gray-800">
-            Our Core Beliefs
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-dark mb-3">
+            Our Core <span className="text-primary">Beliefs</span>
           </h2>
-          <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-textLight max-w-xl mx-auto">
             Guiding principles that drive everything we do
           </p>
         </motion.div>
 
-        {/* Mission & Vision Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 lg:gap-10">
+        {/* Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Mission */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.2 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
             viewport={{ once: true }}
-            className="bg-gray-50 p-5 sm:p-6 md:p-7 rounded-xl sm:rounded-2xl shadow-md hover:shadow-lg transition-all border-l-4 border-primary/80"
+            className="bg-muted rounded-2xl p-8 border-l-4 border-primary shadow-sm hover:shadow-md transition-shadow"
           >
-            <h3 className="text-xl sm:text-2xl font-bold mb-4 text-gray-800">Mission</h3>
-            <p className="text-gray-600 text-base sm:text-lg leading-relaxed mb-6">
-              To deliver innovative, reliable, and affordable ICT solutions that empower businesses to thrive in the digital economy.
+            <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-5">
+              <FiTarget className="w-6 h-6" />
+            </div>
+            <h3 className="text-xl font-bold text-dark mb-3">Mission</h3>
+            <p className="text-textLight leading-relaxed mb-6">
+              To deliver innovative, reliable, and affordable ICT solutions that
+              empower businesses to thrive in the digital economy.
             </p>
-            <div className="flex items-center space-x-2">
-              <div className="w-10 h-1 bg-primary/80"></div>
-              <span className="text-sm font-medium text-gray-500">Delivering excellence daily</span>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-0.5 bg-primary rounded-full" />
+              <span className="text-sm text-textLight font-medium">Delivering excellence daily</span>
             </div>
           </motion.div>
 
           {/* Vision */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.4 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
             viewport={{ once: true }}
-            className="bg-gray-50 p-5 sm:p-6 md:p-7 rounded-xl sm:rounded-2xl shadow-md hover:shadow-lg transition-all border-l-4 border-blue-500/80"
+            className="bg-muted rounded-2xl p-8 border-l-4 border-accent shadow-sm hover:shadow-md transition-shadow"
           >
-            <h3 className="text-xl sm:text-2xl font-bold mb-4 text-gray-800">Vision</h3>
-            <p className="text-gray-600 text-base sm:text-lg leading-relaxed mb-6">
-              To be East Africa's most trusted technology partner, transforming businesses through cutting-edge digital solutions.
+            <div className="w-12 h-12 rounded-xl bg-accent/10 text-accent flex items-center justify-center mb-5">
+              <FiEye className="w-6 h-6" />
+            </div>
+            <h3 className="text-xl font-bold text-dark mb-3">Vision</h3>
+            <p className="text-textLight leading-relaxed mb-6">
+              To be East Africa's most trusted technology partner, transforming
+              businesses through cutting-edge digital solutions.
             </p>
-            <div className="flex items-center space-x-2">
-              <div className="w-10 h-1 bg-blue-500/80"></div>
-              <span className="text-sm font-medium text-gray-500">Building the future</span>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-0.5 bg-accent rounded-full" />
+              <span className="text-sm text-textLight font-medium">Building the future</span>
             </div>
           </motion.div>
         </div>

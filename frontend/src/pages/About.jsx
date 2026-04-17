@@ -9,16 +9,14 @@ import AboutCTA from "@/components/About/AboutCTA";
 
 export default function About() {
   return (
-    <main className="bg-white text-gray-900">
-      <div className="w-full px-4 sm:px-6 lg:px-8"> {/* Added controlled padding here */}
-        <AboutHero />
-        <AboutStory />
-        <AboutMissionVision />
-        <AboutStats />
-        <AboutTeam />
-        <AboutValues />
-        <AboutCTA />
-      </div>
+    <main className="bg-white font-inter text-dark">
+      <AboutHero />
+      <AboutStory />
+      <AboutMissionVision />
+      <AboutStats />
+      <AboutTeam />
+      <AboutValues />
+      <AboutCTA />
     </main>
   );
 }
