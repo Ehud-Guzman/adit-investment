@@ -1,0 +1,942 @@
+[
+  {
+    "public_id": "adit-products/106A_OFFICE_POINT",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755175761/adit-products/106A_OFFICE_POINT.png",
+    "filename": "106A_OFFICE_POINT"
+  },
+  {
+    "public_id": "adit-products/1TB_TOSHIBA_EXTERNAL_DRIVE",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755180406/adit-products/1TB_TOSHIBA_EXTERNAL_DRIVE.jpg",
+    "filename": "1TB_TOSHIBA_EXTERNAL_DRIVE"
+  },
+  {
+    "public_id": "adit-products/25W_TYPE_C_ADAPTER_CABLE",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163722/adit-products/25W_TYPE_C_ADAPTER_CABLE.webp",
+    "filename": "25W_TYPE_C_ADAPTER_CABLE"
+  },
+  {
+    "public_id": "adit-products/2MP_COLOURVU_CCTV_CAMERA",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755175754/adit-products/2MP_COLOURVU_CCTV_CAMERA.webp",
+    "filename": "2MP_COLOURVU_CCTV_CAMERA"
+  },
+  {
+    "public_id": "adit-products/2MP_SMART_HYBRID_CCTV_CAMERA",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163758/adit-products/2MP_SMART_HYBRID_CCTV_CAMERA.jpg",
+    "filename": "2MP_SMART_HYBRID_CCTV_CAMERA"
+  },
+  {
+    "public_id": "adit-products/3.0_EXTERNAL_HARDISK_DATA_CABLE",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755155846/adit-products/3.0_EXTERNAL_HARDISK_DATA_CABLE.png",
+    "filename": "3.0_EXTERNAL_HARDISK_DATA_CABLE"
+  },
+  {
+    "public_id": "adit-products/45W_TYPE_C_ADAPTER_CABLE",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163727/adit-products/45W_TYPE_C_ADAPTER_CABLE.jpg",
+    "filename": "45W_TYPE_C_ADAPTER_CABLE"
+  },
+  {
+    "public_id": "adit-products/4GB_HIKSEMI_USB_FLASH_DISK",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755155850/adit-products/4GB_HIKSEMI_USB_FLASH_DISK.jpg",
+    "filename": "4GB_HIKSEMI_USB_FLASH_DISK"
+  },
+  {
+    "public_id": "adit-products/4K_HDMI_CABLE_10M",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163742/adit-products/4K_HDMI_CABLE_10M.webp",
+    "filename": "4K_HDMI_CABLE_10M"
+  },
+  {
+    "public_id": "Adit-products/a9tf9dki4ndc0zsg6ibi",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755677098/Adit-products/a9tf9dki4ndc0zsg6ibi.jpg",
+    "filename": "a9tf9dki4ndc0zsg6ibi"
+  },
+  {
+    "public_id": "adit-products/ACP_MIFI",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755180393/adit-products/ACP_MIFI.jpg",
+    "filename": "ACP_MIFI"
+  },
+  {
+    "public_id": "Adit-products/akofjysirkq0twkl9sp5",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1754990202/Adit-products/akofjysirkq0twkl9sp5.jpg",
+    "filename": "akofjysirkq0twkl9sp5"
+  },
+  {
+    "public_id": "adit-products/AMIGO_CAT_6_CABLE",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755180400/adit-products/AMIGO_CAT_6_CABLE.jpg",
+    "filename": "AMIGO_CAT_6_CABLE"
+  },
+  {
+    "public_id": "Adit-products/antmyhe190asopwyyjsi",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1754989879/Adit-products/antmyhe190asopwyyjsi.webp",
+    "filename": "antmyhe190asopwyyjsi"
+  },
+  {
+    "public_id": "adit-products/ASTA_131A_BLACK",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163760/adit-products/ASTA_131A_BLACK.jpg",
+    "filename": "ASTA_131A_BLACK"
+  },
+  {
+    "public_id": "adit-products/ASTA_131A_CYANBLUE",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163755/adit-products/ASTA_131A_CYANBLUE.webp",
+    "filename": "ASTA_131A_CYANBLUE"
+  },
+  {
+    "public_id": "adit-products/BACK_TO_BACK_POWER_CABLE",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755155837/adit-products/BACK_TO_BACK_POWER_CABLE.jpg",
+    "filename": "BACK_TO_BACK_POWER_CABLE"
+  },
+  {
+    "public_id": "adit-products/BILITONG_USB_DATA_CABLE",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755155841/adit-products/BILITONG_USB_DATA_CABLE.jpg",
+    "filename": "BILITONG_USB_DATA_CABLE"
+  },
+  {
+    "public_id": "adit-products/BNC_CONNECTOR",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755087897/adit-products/BNC_CONNECTOR.webp",
+    "filename": "BNC_CONNECTOR"
+  },
+  {
+    "public_id": "adit-products/BONTEL_T1000_LANDLINE_PHONE",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755175762/adit-products/BONTEL_T1000_LANDLINE_PHONE.jpg",
+    "filename": "BONTEL_T1000_LANDLINE_PHONE"
+  },
+  {
+    "public_id": "adit-products/BULB_CCTV_CAMERA_-SINGLE_LENS",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163759/adit-products/BULB_CCTV_CAMERA_-SINGLE_LENS.png",
+    "filename": "BULB_CCTV_CAMERA_-SINGLE_LENS"
+  },
+  {
+    "public_id": "adit-products/BULB_CCTV_CAMERAS-DOUBLE_LENS",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755175750/adit-products/BULB_CCTV_CAMERAS-DOUBLE_LENS.webp",
+    "filename": "BULB_CCTV_CAMERAS-DOUBLE_LENS"
+  },
+  {
+    "public_id": "adit-products/CAT_6_INDOOR_BOX",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755180402/adit-products/CAT_6_INDOOR_BOX.webp",
+    "filename": "CAT_6_INDOOR_BOX"
+  },
+  {
+    "public_id": "adit-products/CCTV_OPEN_POWER_SUPPLY_10AMP",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163744/adit-products/CCTV_OPEN_POWER_SUPPLY_10AMP.webp",
+    "filename": "CCTV_OPEN_POWER_SUPPLY_10AMP"
+  },
+  {
+    "public_id": "adit-products/COMPLETE_NORMAL_HOME_CHARGER",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755155843/adit-products/COMPLETE_NORMAL_HOME_CHARGER.jpg",
+    "filename": "COMPLETE_NORMAL_HOME_CHARGER"
+  },
+  {
+    "public_id": "adit-products/CURSOR_UPS_700VA",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755180399/adit-products/CURSOR_UPS_700VA.png",
+    "filename": "CURSOR_UPS_700VA"
+  },
+  {
+    "public_id": "Adit-products/cyahtk3agccqlvikhwld",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1753793082/Adit-products/cyahtk3agccqlvikhwld.jpg",
+    "filename": "cyahtk3agccqlvikhwld"
+  },
+  {
+    "public_id": "Adit-products/d9qvucf1byywwtvvnjz2",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1753787723/Adit-products/d9qvucf1byywwtvvnjz2.jpg",
+    "filename": "d9qvucf1byywwtvvnjz2"
+  },
+  {
+    "public_id": "adit-products/DAHUA_128GB_3.2_USB_FLASHDISK",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163753/adit-products/DAHUA_128GB_3.2_USB_FLASHDISK.jpg",
+    "filename": "DAHUA_128GB_3.2_USB_FLASHDISK"
+  },
+  {
+    "public_id": "adit-products/DAHUA_2.5_SATA_256GB_SSD",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755175763/adit-products/DAHUA_2.5_SATA_256GB_SSD.webp",
+    "filename": "DAHUA_2.5_SATA_256GB_SSD"
+  },
+  {
+    "public_id": "adit-products/DAHUA_256GB_MEMORY_CARD",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755175741/adit-products/DAHUA_256GB_MEMORY_CARD.webp",
+    "filename": "DAHUA_256GB_MEMORY_CARD"
+  },
+  {
+    "public_id": "adit-products/DAHUA_256GB_SINGLE_NOTCH",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755180389/adit-products/DAHUA_256GB_SINGLE_NOTCH.webp",
+    "filename": "DAHUA_256GB_SINGLE_NOTCH"
+  },
+  {
+    "public_id": "adit-products/DAHUA_32GB_3.0_USB_FLASHDISK",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163718/adit-products/DAHUA_32GB_3.0_USB_FLASHDISK.webp",
+    "filename": "DAHUA_32GB_3.0_USB_FLASHDISK"
+  },
+  {
+    "public_id": "adit-products/DAHUA_64GB_3.2_USB_FLASDISK",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163734/adit-products/DAHUA_64GB_3.2_USB_FLASDISK.webp",
+    "filename": "DAHUA_64GB_3.2_USB_FLASDISK"
+  },
+  {
+    "public_id": "adit-products/DAHUA_M.2_DOUBLE_NOTCH_512GB",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755180405/adit-products/DAHUA_M.2_DOUBLE_NOTCH_512GB.webp",
+    "filename": "DAHUA_M.2_DOUBLE_NOTCH_512GB"
+  },
+  {
+    "public_id": "adit-products/DAHUA_NVME_DOUBLE_NOTCH_SSD",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755180392/adit-products/DAHUA_NVME_DOUBLE_NOTCH_SSD.webp",
+    "filename": "DAHUA_NVME_DOUBLE_NOTCH_SSD"
+  },
+  {
+    "public_id": "adit-products/DC_CONNECTOR",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755087898/adit-products/DC_CONNECTOR.jpg",
+    "filename": "DC_CONNECTOR"
+  },
+  {
+    "public_id": "adit-products/DELL_ADAPATER_BIG_PIN",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163725/adit-products/DELL_ADAPATER_BIG_PIN.jpg",
+    "filename": "DELL_ADAPATER_BIG_PIN"
+  },
+  {
+    "public_id": "adit-products/DELL_SMALL_PIN_ADAPTER_45W19.5",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163723/adit-products/DELL_SMALL_PIN_ADAPTER_45W19.5.webp",
+    "filename": "DELL_SMALL_PIN_ADAPTER_45W19.5"
+  },
+  {
+    "public_id": "adit-products/DESKTOP_1TB_HDD",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755180397/adit-products/DESKTOP_1TB_HDD.webp",
+    "filename": "DESKTOP_1TB_HDD"
+  },
+  {
+    "public_id": "adit-products/DISPLAY_TO_VGA_ADAPTER",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163745/adit-products/DISPLAY_TO_VGA_ADAPTER.webp",
+    "filename": "DISPLAY_TO_VGA_ADAPTER"
+  },
+  {
+    "public_id": "adit-products/DR_LEE_EARPHONE",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755087899/adit-products/DR_LEE_EARPHONE.webp",
+    "filename": "DR_LEE_EARPHONE"
+  },
+  {
+    "public_id": "adit-products/dvbqsgal3krhzbkjxtkb",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1750506668/adit-products/dvbqsgal3krhzbkjxtkb.webp",
+    "filename": "dvbqsgal3krhzbkjxtkb"
+  },
+  {
+    "public_id": "Adit-products/edgythsahedzupxlywdl",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1753785547/Adit-products/edgythsahedzupxlywdl.jpg",
+    "filename": "edgythsahedzupxlywdl"
+  },
+  {
+    "public_id": "adit-products/EPSON_WASTE_INK_PAD_L3100_SERIES",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755164661/adit-products/EPSON_WASTE_INK_PAD_L3100_SERIES.webp",
+    "filename": "EPSON_WASTE_INK_PAD_L3100_SERIES"
+  },
+  {
+    "public_id": "adit-products/ESET_HOME_SECURITY_ESSENTIAL",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755175755/adit-products/ESET_HOME_SECURITY_ESSENTIAL.jpg",
+    "filename": "ESET_HOME_SECURITY_ESSENTIAL"
+  },
+  {
+    "public_id": "Adit-products/et0huaiphdh6xf0jt6yk",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1754990366/Adit-products/et0huaiphdh6xf0jt6yk.png",
+    "filename": "et0huaiphdh6xf0jt6yk"
+  },
+  {
+    "public_id": "adit-products/FLAME_CHARGER_NORMAL",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755155844/adit-products/FLAME_CHARGER_NORMAL.webp",
+    "filename": "FLAME_CHARGER_NORMAL"
+  },
+  {
+    "public_id": "adit-products/FOLDING_DESKTOP_PHONE_STAND",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755155847/adit-products/FOLDING_DESKTOP_PHONE_STAND.jpg",
+    "filename": "FOLDING_DESKTOP_PHONE_STAND"
+  },
+  {
+    "public_id": "adit-products/HDD_1TB_LAPTOP_SIZE",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755180401/adit-products/HDD_1TB_LAPTOP_SIZE.jpg",
+    "filename": "HDD_1TB_LAPTOP_SIZE"
+  },
+  {
+    "public_id": "adit-products/HDMI_CABLE_1.5M",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755155842/adit-products/HDMI_CABLE_1.5M.jpg",
+    "filename": "HDMI_CABLE_1.5M"
+  },
+  {
+    "public_id": "adit-products/HDMI_CABLE_5M",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163728/adit-products/HDMI_CABLE_5M.webp",
+    "filename": "HDMI_CABLE_5M"
+  },
+  {
+    "public_id": "adit-products/HDMI_SPLITTER_1X4",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163751/adit-products/HDMI_SPLITTER_1X4.webp",
+    "filename": "HDMI_SPLITTER_1X4"
+  },
+  {
+    "public_id": "adit-products/HDMI_TO_VGA_CABLE",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163737/adit-products/HDMI_TO_VGA_CABLE.webp",
+    "filename": "HDMI_TO_VGA_CABLE"
+  },
+  {
+    "public_id": "adit-products/HIK_VISION_CCTV_CAMERA_2MP",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755087896/adit-products/HIK_VISION_CCTV_CAMERA_2MP.jpg",
+    "filename": "HIK_VISION_CCTV_CAMERA_2MP"
+  },
+  {
+    "public_id": "adit-products/HIK_VISION_DVR_8_CHANNEL_PLAST",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755180407/adit-products/HIK_VISION_DVR_8_CHANNEL_PLAST.jpg",
+    "filename": "HIK_VISION_DVR_8_CHANNEL_PLAST"
+  },
+  {
+    "public_id": "adit-products/HIKSEMI_128GB_MEMORY_CARD",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163747/adit-products/HIKSEMI_128GB_MEMORY_CARD.png",
+    "filename": "HIKSEMI_128GB_MEMORY_CARD"
+  },
+  {
+    "public_id": "adit-products/HIKSEMI_2.5_SATA_256GB_SSD",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755175760/adit-products/HIKSEMI_2.5_SATA_256GB_SSD.webp",
+    "filename": "HIKSEMI_2.5_SATA_256GB_SSD"
+  },
+  {
+    "public_id": "adit-products/HIKSEMI_2.5_SATA_SSD_512GB",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755180404/adit-products/HIKSEMI_2.5_SATA_SSD_512GB.webp",
+    "filename": "HIKSEMI_2.5_SATA_SSD_512GB"
+  },
+  {
+    "public_id": "adit-products/HIKSEMI_32GB_USB_FLASHDISK",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163729/adit-products/HIKSEMI_32GB_USB_FLASHDISK.jpg",
+    "filename": "HIKSEMI_32GB_USB_FLASHDISK"
+  },
+  {
+    "public_id": "adit-products/HIKSEMI_64GB_MEMORY_CARD",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163739/adit-products/HIKSEMI_64GB_MEMORY_CARD.webp",
+    "filename": "HIKSEMI_64GB_MEMORY_CARD"
+  },
+  {
+    "public_id": "adit-products/HIKSEMI_USB_FLASHDISK_16GB",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163718/adit-products/HIKSEMI_USB_FLASHDISK_16GB.jpg",
+    "filename": "HIKSEMI_USB_FLASHDISK_16GB"
+  },
+  {
+    "public_id": "adit-products/HIKVISION_4_CHANNEL_DVR_PLASTIC",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755180403/adit-products/HIKVISION_4_CHANNEL_DVR_PLASTIC.webp",
+    "filename": "HIKVISION_4_CHANNEL_DVR_PLASTIC"
+  },
+  {
+    "public_id": "adit-products/HIKVISION_DVR_8_CHANNEL_METALIC",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755180409/adit-products/HIKVISION_DVR_8_CHANNEL_METALIC.jpg",
+    "filename": "HIKVISION_DVR_8_CHANNEL_METALIC"
+  },
+  {
+    "public_id": "adit-products/HIKVISION_N300_WIRELESS_ROUTER",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163743/adit-products/HIKVISION_N300_WIRELESS_ROUTER.webp",
+    "filename": "HIKVISION_N300_WIRELESS_ROUTER"
+  },
+  {
+    "public_id": "adit-products/HP_05A",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755175759/adit-products/HP_05A.webp",
+    "filename": "HP_05A"
+  },
+  {
+    "public_id": "adit-products/HP_12A",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755175757/adit-products/HP_12A.webp",
+    "filename": "HP_12A"
+  },
+  {
+    "public_id": "adit-products/HP_130A_BLACK",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755180390/adit-products/HP_130A_BLACK.jpg",
+    "filename": "HP_130A_BLACK"
+  },
+  {
+    "public_id": "adit-products/HP_17A",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755175749/adit-products/HP_17A.jpg",
+    "filename": "HP_17A"
+  },
+  {
+    "public_id": "adit-products/HP_19A",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755175758/adit-products/HP_19A.webp",
+    "filename": "HP_19A"
+  },
+  {
+    "public_id": "adit-products/HP_30A",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755180391/adit-products/HP_30A.webp",
+    "filename": "HP_30A"
+  },
+  {
+    "public_id": "adit-products/HP_35A",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755175739/adit-products/HP_35A.jpg",
+    "filename": "HP_35A"
+  },
+  {
+    "public_id": "adit-products/HP_49A",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755175742/adit-products/HP_49A.jpg",
+    "filename": "HP_49A"
+  },
+  {
+    "public_id": "adit-products/HP_53A_BLACK",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755175753/adit-products/HP_53A_BLACK.webp",
+    "filename": "HP_53A_BLACK"
+  },
+  {
+    "public_id": "adit-products/HP_83A",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755175743/adit-products/HP_83A.jpg",
+    "filename": "HP_83A"
+  },
+  {
+    "public_id": "adit-products/HP_85A",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755175744/adit-products/HP_85A.webp",
+    "filename": "HP_85A"
+  },
+  {
+    "public_id": "adit-products/HP_BROWN_BOX_MOUSE",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755155835/adit-products/HP_BROWN_BOX_MOUSE.jpg",
+    "filename": "HP_BROWN_BOX_MOUSE"
+  },
+  {
+    "public_id": "adit-products/HP_DESKJET_PRINTER_2320",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755180411/adit-products/HP_DESKJET_PRINTER_2320.png",
+    "filename": "HP_DESKJET_PRINTER_2320"
+  },
+  {
+    "public_id": "adit-products/HP_EARPHONES",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755155842/adit-products/HP_EARPHONES.jpg",
+    "filename": "HP_EARPHONES"
+  },
+  {
+    "public_id": "adit-products/HP_ELITEBOOK_850G4_SEALED_CI7",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755180415/adit-products/HP_ELITEBOOK_850G4_SEALED_CI7.webp",
+    "filename": "HP_ELITEBOOK_850G4_SEALED_CI7"
+  },
+  {
+    "public_id": "adit-products/HP_PRINTER_P1102_BOXED",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755180413/adit-products/HP_PRINTER_P1102_BOXED.jpg",
+    "filename": "HP_PRINTER_P1102_BOXED"
+  },
+  {
+    "public_id": "adit-products/HP_SPEAKERS_12W",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163746/adit-products/HP_SPEAKERS_12W.webp",
+    "filename": "HP_SPEAKERS_12W"
+  },
+  {
+    "public_id": "adit-products/HP_TYPE_C_45W_ADAPTER",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755175744/adit-products/HP_TYPE_C_45W_ADAPTER.jpg",
+    "filename": "HP_TYPE_C_45W_ADAPTER"
+  },
+  {
+    "public_id": "adit-products/HP_TYPE_C_65W_ADAPTER",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755175764/adit-products/HP_TYPE_C_65W_ADAPTER.jpg",
+    "filename": "HP_TYPE_C_65W_ADAPTER"
+  },
+  {
+    "public_id": "adit-products/HP_X360_1030_G3",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755180416/adit-products/HP_X360_1030_G3.png",
+    "filename": "HP_X360_1030_G3"
+  },
+  {
+    "public_id": "adit-products/HP_Z230_WORKSTATION_DESKTOP_CI5",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755155855/adit-products/HP_Z230_WORKSTATION_DESKTOP_CI5.jpg",
+    "filename": "HP_Z230_WORKSTATION_DESKTOP_CI5"
+  },
+  {
+    "public_id": "adit-products/HP_Z230_WORKSTATION_DESKTOP_CI52",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755155856/adit-products/HP_Z230_WORKSTATION_DESKTOP_CI52.jpg",
+    "filename": "HP_Z230_WORKSTATION_DESKTOP_CI52"
+  },
+  {
+    "public_id": "Adit-products/jirakusd5k8aj46kirst",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1753786826/Adit-products/jirakusd5k8aj46kirst.jpg",
+    "filename": "jirakusd5k8aj46kirst"
+  },
+  {
+    "public_id": "Adit-products/jmvf4tuenljnsxvkkw2w",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1754990733/Adit-products/jmvf4tuenljnsxvkkw2w.webp",
+    "filename": "jmvf4tuenljnsxvkkw2w"
+  },
+  {
+    "public_id": "Adit-products/kxfdqa8gmibihjegtacd",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1754990725/Adit-products/kxfdqa8gmibihjegtacd.webp",
+    "filename": "kxfdqa8gmibihjegtacd"
+  },
+  {
+    "public_id": "adit-products/KYOCERA_TK_1170",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163754/adit-products/KYOCERA_TK_1170.png",
+    "filename": "KYOCERA_TK_1170"
+  },
+  {
+    "public_id": "adit-products/KYOCERA_TK_3130",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755175747/adit-products/KYOCERA_TK_3130.webp",
+    "filename": "KYOCERA_TK_3130"
+  },
+  {
+    "public_id": "adit-products/KYOCERA_TK475",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755175756/adit-products/KYOCERA_TK475.jpg",
+    "filename": "KYOCERA_TK475"
+  },
+  {
+    "public_id": "adit-products/LAPTOP_RAM_2GB_PC3",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163739/adit-products/LAPTOP_RAM_2GB_PC3.webp",
+    "filename": "LAPTOP_RAM_2GB_PC3"
+  },
+  {
+    "public_id": "adit-products/LAPTOP_RAM_4GB_PC3",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163757/adit-products/LAPTOP_RAM_4GB_PC3.webp",
+    "filename": "LAPTOP_RAM_4GB_PC3"
+  },
+  {
+    "public_id": "adit-products/LAPTOP_RAM_8GB_PC3",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755180394/adit-products/LAPTOP_RAM_8GB_PC3.jpg",
+    "filename": "LAPTOP_RAM_8GB_PC3"
+  },
+  {
+    "public_id": "adit-products/LENOVO_BIG_PIN",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163722/adit-products/LENOVO_BIG_PIN.jpg",
+    "filename": "LENOVO_BIG_PIN"
+  },
+  {
+    "public_id": "adit-products/LIGHT_WAVE_201A_MAGENTA",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163753/adit-products/LIGHT_WAVE_201A_MAGENTA.webp",
+    "filename": "LIGHT_WAVE_201A_MAGENTA"
+  },
+  {
+    "public_id": "Adit-products/m5j6r7bek7am9eaf9prx",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1750658433/Adit-products/m5j6r7bek7am9eaf9prx.webp",
+    "filename": "m5j6r7bek7am9eaf9prx"
+  },
+  {
+    "public_id": "Adit-products/m7dvp9pyafmpqlajxccb",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1753794431/Adit-products/m7dvp9pyafmpqlajxccb.jpg",
+    "filename": "m7dvp9pyafmpqlajxccb"
+  },
+  {
+    "public_id": "adit-products/MERCURY_UPS_MAVERICK_850",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755180395/adit-products/MERCURY_UPS_MAVERICK_850.webp",
+    "filename": "MERCURY_UPS_MAVERICK_850"
+  },
+  {
+    "public_id": "adit-products/MOUSEPAD",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755155849/adit-products/MOUSEPAD.png",
+    "filename": "MOUSEPAD"
+  },
+  {
+    "public_id": "Adit-products/mrl68mnx1jwd5nnjokqp",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1753792548/Adit-products/mrl68mnx1jwd5nnjokqp.jpg",
+    "filename": "mrl68mnx1jwd5nnjokqp"
+  },
+  {
+    "public_id": "Adit-products/n4rx3plbqispumbljtmm",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1754990357/Adit-products/n4rx3plbqispumbljtmm.webp",
+    "filename": "n4rx3plbqispumbljtmm"
+  },
+  {
+    "public_id": "Adit-products/nhucniqrrfagyvsv30tw",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1750658518/Adit-products/nhucniqrrfagyvsv30tw.webp",
+    "filename": "nhucniqrrfagyvsv30tw"
+  },
+  {
+    "public_id": "adit-products/OFFICEPOINT_85A",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163748/adit-products/OFFICEPOINT_85A.jpg",
+    "filename": "OFFICEPOINT_85A"
+  },
+  {
+    "public_id": "Adit-products/ogtfsztrehks19rz2cnu",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1754990573/Adit-products/ogtfsztrehks19rz2cnu.webp",
+    "filename": "ogtfsztrehks19rz2cnu"
+  },
+  {
+    "public_id": "Adit-products/ohbk0aoyo68ixz1hznj4",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1754989774/Adit-products/ohbk0aoyo68ixz1hznj4.webp",
+    "filename": "ohbk0aoyo68ixz1hznj4"
+  },
+  {
+    "public_id": "Adit-products/onoaeibwo23pkjsn4yrl",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1754989640/Adit-products/onoaeibwo23pkjsn4yrl.jpg",
+    "filename": "onoaeibwo23pkjsn4yrl"
+  },
+  {
+    "public_id": "adit-products/ORAIMO_NORMAL_CABLE_ORIGINAL",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755155840/adit-products/ORAIMO_NORMAL_CABLE_ORIGINAL.jpg",
+    "filename": "ORAIMO_NORMAL_CABLE_ORIGINAL"
+  },
+  {
+    "public_id": "adit-products/ORAIMO_NORMAL_CABLE-COPIA",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755087903/adit-products/ORAIMO_NORMAL_CABLE-COPIA.jpg",
+    "filename": "ORAIMO_NORMAL_CABLE-COPIA"
+  },
+  {
+    "public_id": "adit-products/ORAIMO_TYPE_C_CABLE-COPIA",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755087904/adit-products/ORAIMO_TYPE_C_CABLE-COPIA.webp",
+    "filename": "ORAIMO_TYPE_C_CABLE-COPIA"
+  },
+  {
+    "public_id": "adit-products/OTG_NORMAL_DATA",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755155838/adit-products/OTG_NORMAL_DATA.jpg",
+    "filename": "OTG_NORMAL_DATA"
+  },
+  {
+    "public_id": "Adit-products/otlwsqrqyelzerdpzl1q",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1753353896/Adit-products/otlwsqrqyelzerdpzl1q.jpg",
+    "filename": "otlwsqrqyelzerdpzl1q"
+  },
+  {
+    "public_id": "Adit-products/otxr9foxyhbay1pvyicd",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755353931/Adit-products/otxr9foxyhbay1pvyicd.jpg",
+    "filename": "otxr9foxyhbay1pvyicd"
+  },
+  {
+    "public_id": "adit-products/PC_GAMING_PAD",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755155853/adit-products/PC_GAMING_PAD.jpg",
+    "filename": "PC_GAMING_PAD"
+  },
+  {
+    "public_id": "adit-products/POE_ADAPTER_48V",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163719/adit-products/POE_ADAPTER_48V.jpg",
+    "filename": "POE_ADAPTER_48V"
+  },
+  {
+    "public_id": "adit-products/POE_SWITCHES_DAHUA_4_PORT",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755180396/adit-products/POE_SWITCHES_DAHUA_4_PORT.webp",
+    "filename": "POE_SWITCHES_DAHUA_4_PORT"
+  },
+  {
+    "public_id": "adit-products/PREMIUM_26A",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163750/adit-products/PREMIUM_26A.jpg",
+    "filename": "PREMIUM_26A"
+  },
+  {
+    "public_id": "adit-products/PREMIUM_30A",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755175736/adit-products/PREMIUM_30A.jpg",
+    "filename": "PREMIUM_30A"
+  },
+  {
+    "public_id": "adit-products/PREMIUM_85A",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163749/adit-products/PREMIUM_85A.jpg",
+    "filename": "PREMIUM_85A"
+  },
+  {
+    "public_id": "adit-products/PREMUM_83A",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163750/adit-products/PREMUM_83A.jpg",
+    "filename": "PREMUM_83A"
+  },
+  {
+    "public_id": "adit-products/PRINT_HEAD_CABLE_EPSON_L382",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163738/adit-products/PRINT_HEAD_CABLE_EPSON_L382.webp",
+    "filename": "PRINT_HEAD_CABLE_EPSON_L382"
+  },
+  {
+    "public_id": "adit-products/PRINT_HEAD_CABLE_L3100",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163736/adit-products/PRINT_HEAD_CABLE_L3100.webp",
+    "filename": "PRINT_HEAD_CABLE_L3100"
+  },
+  {
+    "public_id": "adit-products/PRINTER_CABLE_1.5M",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755155838/adit-products/PRINTER_CABLE_1.5M.webp",
+    "filename": "PRINTER_CABLE_1.5M"
+  },
+  {
+    "public_id": "adit-products/PRINTER_CABLE_10M",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163731/adit-products/PRINTER_CABLE_10M.webp",
+    "filename": "PRINTER_CABLE_10M"
+  },
+  {
+    "public_id": "adit-products/PRINTER_CABLE_5M",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163721/adit-products/PRINTER_CABLE_5M.webp",
+    "filename": "PRINTER_CABLE_5M"
+  },
+  {
+    "public_id": "adit-products/PRINTER_POWER_CABLE_3M",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755155852/adit-products/PRINTER_POWER_CABLE_3M.jpg",
+    "filename": "PRINTER_POWER_CABLE_3M"
+  },
+  {
+    "public_id": "Adit-products/r4uetzrkj0tv01ghx5gr",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1753353913/Adit-products/r4uetzrkj0tv01ghx5gr.jpg",
+    "filename": "r4uetzrkj0tv01ghx5gr"
+  },
+  {
+    "public_id": "adit-products/RG59_COAXIAL_CABLE",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755175737/adit-products/RG59_COAXIAL_CABLE.webp",
+    "filename": "RG59_COAXIAL_CABLE"
+  },
+  {
+    "public_id": "adit-products/RJ45_CONNECTORSCOUPLERSJOINER",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755087902/adit-products/RJ45_CONNECTORSCOUPLERSJOINER.webp",
+    "filename": "RJ45_CONNECTORSCOUPLERSJOINER"
+  },
+  {
+    "public_id": "Adit-products/rjllx9y2lqz20fkyxijj",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1754990016/Adit-products/rjllx9y2lqz20fkyxijj.jpg",
+    "filename": "rjllx9y2lqz20fkyxijj"
+  },
+  {
+    "public_id": "adit-products/SAMSUNG_ADAPTER",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755155836/adit-products/SAMSUNG_ADAPTER.jpg",
+    "filename": "SAMSUNG_ADAPTER"
+  },
+  {
+    "public_id": "adit-products/SANDISK_32GB_FLASDISK_ULTRA",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163731/adit-products/SANDISK_32GB_FLASDISK_ULTRA.webp",
+    "filename": "SANDISK_32GB_FLASDISK_ULTRA"
+  },
+  {
+    "public_id": "adit-products/SANDISK_32GB_MEMORY_CARD",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163730/adit-products/SANDISK_32GB_MEMORY_CARD.webp",
+    "filename": "SANDISK_32GB_MEMORY_CARD"
+  },
+  {
+    "public_id": "adit-products/SANDISK_64GB_USB_FLASDISK_CRUZR",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163741/adit-products/SANDISK_64GB_USB_FLASDISK_CRUZR.webp",
+    "filename": "SANDISK_64GB_USB_FLASDISK_CRUZR"
+  },
+  {
+    "public_id": "Adit-products/sjgpasi24ucqfjc1pl4b",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755591439/Adit-products/sjgpasi24ucqfjc1pl4b.jpg",
+    "filename": "sjgpasi24ucqfjc1pl4b"
+  },
+  {
+    "public_id": "adit-products/SOUND_CARD_5.1",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755155851/adit-products/SOUND_CARD_5.1.jpg",
+    "filename": "SOUND_CARD_5.1"
+  },
+  {
+    "public_id": "adit-products/THERMAL_PASTE_SYRINGE",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755155834/adit-products/THERMAL_PASTE_SYRINGE.jpg",
+    "filename": "THERMAL_PASTE_SYRINGE"
+  },
+  {
+    "public_id": "adit-products/THERMAL_ROLL",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755155834/adit-products/THERMAL_ROLL.jpg",
+    "filename": "THERMAL_ROLL"
+  },
+  {
+    "public_id": "adit-products/TK_410",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755175751/adit-products/TK_410.jpg",
+    "filename": "TK_410"
+  },
+  {
+    "public_id": "adit-products/TK_4105",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755175746/adit-products/TK_4105.jpg",
+    "filename": "TK_4105"
+  },
+  {
+    "public_id": "adit-products/TK_5215",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755180398/adit-products/TK_5215.jpg",
+    "filename": "TK_5215"
+  },
+  {
+    "public_id": "adit-products/TOP_PLUG",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755087900/adit-products/TOP_PLUG.jpg",
+    "filename": "TOP_PLUG"
+  },
+  {
+    "public_id": "adit-products/TOSHIBA_USB_FLASHDISK_64GB",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163741/adit-products/TOSHIBA_USB_FLASHDISK_64GB.webp",
+    "filename": "TOSHIBA_USB_FLASHDISK_64GB"
+  },
+  {
+    "public_id": "Adit-products/txeoh5xfodf0egqowuge",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1753704037/Adit-products/txeoh5xfodf0egqowuge.webp",
+    "filename": "txeoh5xfodf0egqowuge"
+  },
+  {
+    "public_id": "adit-products/TYPE_C_OTG",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755155839/adit-products/TYPE_C_OTG.webp",
+    "filename": "TYPE_C_OTG"
+  },
+  {
+    "public_id": "Adit-products/u6evfzb8o2ixo6gdl9lo",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1754990578/Adit-products/u6evfzb8o2ixo6gdl9lo.webp",
+    "filename": "u6evfzb8o2ixo6gdl9lo"
+  },
+  {
+    "public_id": "Adit-products/umvzdqd9ogpqla1btxia",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1754990211/Adit-products/umvzdqd9ogpqla1btxia.jpg",
+    "filename": "umvzdqd9ogpqla1btxia"
+  },
+  {
+    "public_id": "adit-products/USB_EXTENSION_CABLE_10M",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163732/adit-products/USB_EXTENSION_CABLE_10M.jpg",
+    "filename": "USB_EXTENSION_CABLE_10M"
+  },
+  {
+    "public_id": "adit-products/USB_PRINTER_CABLE_3M",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755155845/adit-products/USB_PRINTER_CABLE_3M.jpg",
+    "filename": "USB_PRINTER_CABLE_3M"
+  },
+  {
+    "public_id": "Adit-products/v7qymvb66xcxgyqrgtyk",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1753360298/Adit-products/v7qymvb66xcxgyqrgtyk.png",
+    "filename": "v7qymvb66xcxgyqrgtyk"
+  },
+  {
+    "public_id": "adit-products/VGA_CABLE_1.5M",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755155840/adit-products/VGA_CABLE_1.5M.webp",
+    "filename": "VGA_CABLE_1.5M"
+  },
+  {
+    "public_id": "adit-products/VGA_CABLE_3M",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755155852/adit-products/VGA_CABLE_3M.jpg",
+    "filename": "VGA_CABLE_3M"
+  },
+  {
+    "public_id": "adit-products/VGA_SPLITER",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755155854/adit-products/VGA_SPLITER.jpg",
+    "filename": "VGA_SPLITER"
+  },
+  {
+    "public_id": "adit-products/VGA_TO_HDMI_WITH_AUDIO",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755163735/adit-products/VGA_TO_HDMI_WITH_AUDIO.webp",
+    "filename": "VGA_TO_HDMI_WITH_AUDIO"
+  },
+  {
+    "public_id": "Adit-products/vuwrxink8cbzmdrvw6iu",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1753787739/Adit-products/vuwrxink8cbzmdrvw6iu.jpg",
+    "filename": "vuwrxink8cbzmdrvw6iu"
+  },
+  {
+    "public_id": "Adit-products/w3mapsgqarugdl2thy64",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1753794332/Adit-products/w3mapsgqarugdl2thy64.png",
+    "filename": "w3mapsgqarugdl2thy64"
+  },
+  {
+    "public_id": "adit-products/WD_4TB_EXTERNAL_DRIVE",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755180412/adit-products/WD_4TB_EXTERNAL_DRIVE.webp",
+    "filename": "WD_4TB_EXTERNAL_DRIVE"
+  },
+  {
+    "public_id": "Adit-products/wkqmheadqdqv2wmyrjxw",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1753792542/Adit-products/wkqmheadqdqv2wmyrjxw.jpg",
+    "filename": "wkqmheadqdqv2wmyrjxw"
+  },
+  {
+    "public_id": "Adit-products/wqn1twumkqukymf34fnn",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1754990057/Adit-products/wqn1twumkqukymf34fnn.jpg",
+    "filename": "wqn1twumkqukymf34fnn"
+  },
+  {
+    "public_id": "Adit-products/ww9jhl7yaeeyyxwf2rt6",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1753703991/Adit-products/ww9jhl7yaeeyyxwf2rt6.jpg",
+    "filename": "ww9jhl7yaeeyyxwf2rt6"
+  },
+  {
+    "public_id": "Adit-products/wy92p5jb5l15hchmrdj6",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1753357608/Adit-products/wy92p5jb5l15hchmrdj6.jpg",
+    "filename": "wy92p5jb5l15hchmrdj6"
+  },
+  {
+    "public_id": "Adit-products/yakvnhoselfnyebgcriq",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1753353309/Adit-products/yakvnhoselfnyebgcriq.jpg",
+    "filename": "yakvnhoselfnyebgcriq"
+  },
+  {
+    "public_id": "Adit-products/ylcz1uigomfp4rm7mjm7",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1753377466/Adit-products/ylcz1uigomfp4rm7mjm7.jpg",
+    "filename": "ylcz1uigomfp4rm7mjm7"
+  },
+  {
+    "public_id": "Adit-products/yshlshwogpb7qqoli7sj",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1753786816/Adit-products/yshlshwogpb7qqoli7sj.webp",
+    "filename": "yshlshwogpb7qqoli7sj"
+  },
+  {
+    "public_id": "Adit-products/zkqa8a7to7k5ezj2fpk0",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1752906596/Adit-products/zkqa8a7to7k5ezj2fpk0.webp",
+    "filename": "zkqa8a7to7k5ezj2fpk0"
+  },
+  {
+    "public_id": "adit_products/207A-black",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755338541/adit_products/207A-black.jpg",
+    "filename": "207A-black"
+  },
+  {
+    "public_id": "adit_products/32434-24675-HP-410A-Cyan-CF411A-Original-LaserJet-Toner-Cartridge-",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755338536/adit_products/32434-24675-HP-410A-Cyan-CF411A-Original-LaserJet-Toner-Cartridge-.webp",
+    "filename": "32434-24675-HP-410A-Cyan-CF411A-Original-LaserJet-Toner-Cartridge-"
+  },
+  {
+    "public_id": "adit_products/59A_LIGHT_WAVE",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755338527/adit_products/59A_LIGHT_WAVE.png",
+    "filename": "59A_LIGHT_WAVE"
+  },
+  {
+    "public_id": "adit_products/ASTA_541A_CYAN",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755338533/adit_products/ASTA_541A_CYAN.jpg",
+    "filename": "ASTA_541A_CYAN"
+  },
+  {
+    "public_id": "adit_products/HP_80A",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755338531/adit_products/HP_80A.webp",
+    "filename": "HP_80A"
+  },
+  {
+    "public_id": "adit_products/HP_PRINTER_P1102",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755338526/adit_products/HP_PRINTER_P1102.webp",
+    "filename": "HP_PRINTER_P1102"
+  },
+  {
+    "public_id": "adit_products/hp-207a-cyan",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755338541/adit_products/hp-207a-cyan.jpg",
+    "filename": "hp-207a-cyan"
+  },
+  {
+    "public_id": "adit_products/hp-207a-yellow-1",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755338542/adit_products/hp-207a-yellow-1.jpg",
+    "filename": "hp-207a-yellow-1"
+  },
+  {
+    "public_id": "adit_products/HP-410A-Black-CF410A",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755338538/adit_products/HP-410A-Black-CF410A.jpg",
+    "filename": "HP-410A-Black-CF410A"
+  },
+  {
+    "public_id": "adit_products/HP-410A-Yellow-LaserJet-Toner-Cartridge-CF412A",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755338535/adit_products/HP-410A-Yellow-LaserJet-Toner-Cartridge-CF412A.webp",
+    "filename": "HP-410A-Yellow-LaserJet-Toner-Cartridge-CF412A"
+  },
+  {
+    "public_id": "adit_products/HP-59A-ORIGINAL",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755338530/adit_products/HP-59A-ORIGINAL.webp",
+    "filename": "HP-59A-ORIGINAL"
+  },
+  {
+    "public_id": "adit_products/HP-Laser-MFP-135a-A4-Mono-Multifunction-Printer-300x300-1",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755338524/adit_products/HP-Laser-MFP-135a-A4-Mono-Multifunction-Printer-300x300-1.webp",
+    "filename": "HP-Laser-MFP-135a-A4-Mono-Multifunction-Printer-300x300-1"
+  },
+  {
+    "public_id": "adit_products/HP-Original-Toner-410A-Magenta-CF413A-1200x675",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755338535/adit_products/HP-Original-Toner-410A-Magenta-CF413A-1200x675.jpg",
+    "filename": "HP-Original-Toner-410A-Magenta-CF413A-1200x675"
+  },
+  {
+    "public_id": "adit_products/levovo_yoga_11e",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755338525/adit_products/levovo_yoga_11e.jpg",
+    "filename": "levovo_yoga_11e"
+  },
+  {
+    "public_id": "adit_products/modio_tablet",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755338526/adit_products/modio_tablet.jpg",
+    "filename": "modio_tablet"
+  },
+  {
+    "public_id": "adit_products/Office-point-Laminator-A3-2",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755338537/adit_products/Office-point-Laminator-A3-2.webp",
+    "filename": "Office-point-Laminator-A3-2"
+  },
+  {
+    "public_id": "adit_products/printer",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755338528/adit_products/printer.png",
+    "filename": "printer"
+  },
+  {
+    "public_id": "adit_products/RAINBOW_HPCANON_REFILL_TONER",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755338533/adit_products/RAINBOW_HPCANON_REFILL_TONER.jpg",
+    "filename": "RAINBOW_HPCANON_REFILL_TONER"
+  },
+  {
+    "public_id": "adit_products/TK-675",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755338537/adit_products/TK-675.jpg",
+    "filename": "TK-675"
+  },
+  {
+    "public_id": "adit_products/TK-7105",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755338540/adit_products/TK-7105.webp",
+    "filename": "TK-7105"
+  },
+  {
+    "public_id": "adit_products/TK-7205-",
+    "secure_url": "https://res.cloudinary.com/dcywqtljq/image/upload/v1755338539/adit_products/TK-7205-.jpg",
+    "filename": "TK-7205-"
+  }
+]

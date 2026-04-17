@@ -3,10 +3,6 @@ import { excludeDeleted } from "../../config/db.js";
 
 export const getDashboardOverview = async (req, res) => {
   try {
-    if (req.user.role !== "superadmin") {
-      return res.status(403).json({ message: "Forbidden: Superadmin access only." });
-    }
-
     const db = req.app.locals.db;
 
     const usersCollection = db.collection("users");

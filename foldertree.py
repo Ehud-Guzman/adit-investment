@@ -17,7 +17,7 @@ def get_tree_lines(root_dir, prefix=""):
     return lines
 
 if __name__ == "__main__":
-    root_path = r"C:\Users\nyamu\Desktop\Websites\adit-investment"
+    root_path = r"C:\Users\nyamu\Desktop\GlimmerInk Creations\Websites\adit-investment"
     tree_lines = [root_path] + get_tree_lines(root_path)
     
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:

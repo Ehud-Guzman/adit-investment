@@ -21,7 +21,7 @@ export default function ProductController(productsCollection) {
         const query = {};
 
         if (category && category !== "all") {
-          query.category = category;
+          query.category = { $regex: new RegExp(`^${category}$`, "i") };
         }
 
         if (featured !== undefined) {

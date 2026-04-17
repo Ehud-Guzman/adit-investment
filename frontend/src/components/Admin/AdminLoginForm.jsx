@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { FiMail, FiLock, FiShield } from "react-icons/fi";
-import { toast } from "react-toastify";
 import PropTypes from "prop-types";
 
 export default function AdminLoginForm({ onLogin }) {
@@ -23,14 +22,12 @@ export default function AdminLoginForm({ onLogin }) {
       if (!user?.isAdmin) {
         throw new Error("Access denied. Admin privileges required.");
       }
-      toast.success(`Super Admin access granted, ${user.name || "Admin"} 👑`);
     } catch (err) {
       const message =
         err?.response?.data?.message ||
         err?.message ||
         "Super Admin login failed. Please check your credentials.";
       setError(message);
-      toast.error(message);
     } finally {
       setLoading(false);
     }

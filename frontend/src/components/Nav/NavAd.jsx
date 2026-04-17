@@ -89,7 +89,7 @@ export default function NavAd() {
           stiffness: 100,
           damping: 18
         }}
-        className="fixed right-4 top-20 z-[100] drop-shadow-xl"
+        className="fixed right-4 top-4 z-[100] drop-shadow-xl"
         style={{ perspective: "1000px" }}
       >
         <motion.div

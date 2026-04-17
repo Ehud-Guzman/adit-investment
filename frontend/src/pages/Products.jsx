@@ -10,7 +10,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { debounce } from "lodash";
 import {
   getProducts,
@@ -23,7 +23,6 @@ import {
 import { useCart } from "@/hooks/useCart";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useAuth } from "@/hooks/useAuth";
-import Navbar from "@/components/Navbar";
 import Header from "@/components/Header";
 import BenefitsBar from "@/components/BenefitsBar";
 import Filters from "@/components/Filters";
@@ -206,13 +205,6 @@ const Products = () => {
       <div className="relative min-h-screen bg-gray-50">
         {/* === Header/Nav === */}
         <div className="sticky top-0 z-[100] bg-white shadow-md transition-all duration-300">
-          <div
-            className={`${
-              isScrolled ? "h-0 opacity-0" : "h-auto opacity-100"
-            } transition-all duration-300`}
-          >
-            <Navbar />
-          </div>
           <Header
             currentUser={currentUser}
             cartCount={cartCount}
@@ -321,18 +313,7 @@ const Products = () => {
 
         <LipaNaMpesa />
 
-        <ToastContainer
-          position="bottom-right"
-          autoClose={2000}
-          hideProgressBar
-          closeOnClick
-          pauseOnHover={false}
-          pauseOnFocusLoss={false}
-          draggable={false}
-          newestOnTop
-          limit={2}
-          theme="colored"
-        />
+
       </div>
     </ErrorBoundary>
   );

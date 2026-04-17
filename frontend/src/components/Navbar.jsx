@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { FiShield } from "react-icons/fi";
 import Logo from "@components/Nav/Logo";
 import NavAd from "@components/Nav/NavAd";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const { isAdmin } = useAdminAuth();
 
   const navLinks = [
     { to: "/", label: "Home" },
@@ -15,7 +18,6 @@ export default function Navbar() {
     { to: "/services", label: "Services" },
     { to: "/about", label: "About" },
     { to: "/contact", label: "Contact" },
-    { to: "/admin", label: "Admin" },
   ];
 
   useEffect(() => {
@@ -59,6 +61,21 @@ export default function Navbar() {
                   </Link>
                 );
               })}
+
+              {/* Admin shortcut — only visible when authenticated as admin */}
+              {isAdmin && (
+                <Link
+                  to="/admin"
+                  title="Admin Dashboard"
+                  className={`p-2 rounded-md transition-all duration-200 ${
+                    location.pathname.startsWith("/admin")
+                      ? "text-indigo-600 bg-indigo-50"
+                      : "text-gray-400 hover:text-indigo-600 hover:bg-indigo-50"
+                  }`}
+                >
+                  <FiShield size={18} />
+                </Link>
+              )}
             </div>
 
             {/* Mobile Menu Button */}
@@ -132,6 +149,20 @@ export default function Navbar() {
                     </Link>
                   );
                 })}
+
+                {isAdmin && (
+                  <Link
+                    to="/admin"
+                    onClick={() => setIsOpen(false)}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-md font-medium text-sm ${
+                      location.pathname.startsWith("/admin")
+                        ? "bg-indigo-50 text-indigo-600"
+                        : "text-gray-500 hover:bg-indigo-50 hover:text-indigo-600"
+                    }`}
+                  >
+                    <FiShield size={15} /> Admin
+                  </Link>
+                )}
               </div>
             </motion.div>
           )}

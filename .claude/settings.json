@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c ' *)",
+      "Bash(ls -la backend/.env* backend/.env)",
+      "Bash(ls *.env .env*)",
+      "Bash(pip install *)",
+      "Bash(node -e ' *)",
+      "Bash(node -e \"const xlsx = require\\('./node_modules/xlsx'\\); const wb = xlsx.readFile\\('adit price list.xlsx'\\); console.log\\('Sheets:', wb.SheetNames\\); const ws = wb.Sheets[wb.SheetNames[0]]; const data = xlsx.utils.sheet_to_json\\(ws, {header:1}\\); console.log\\('Total rows:', data.length\\); for\\(let i=0;i<6;i++\\) console.log\\('Row',i,':',data[i]\\);\")",
+      "Bash(node listCloudinary.js)",
+      "Bash(FORCE_SEED=true node seed.js)",
+      "Bash(node -e \"require\\('xlsx'\\)\")",
+      "Bash(node exportProducts.js)",
+      "Bash(node downloadImages.js)"
+    ]
+  }
+}
