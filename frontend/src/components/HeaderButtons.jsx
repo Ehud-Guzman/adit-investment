@@ -21,7 +21,7 @@ const HeaderButtons = ({
   };
 
   return (
-    <div className="flex items-center gap-4 md:gap-5">
+    <div className="flex items-center gap-2 sm:gap-4 md:gap-5 shrink-0">
       {/* 🛒 Cart Button */}
       <motion.button
         onClick={handleCartClick}
@@ -101,7 +101,7 @@ const HeaderButtons = ({
           </Menu.Items>
         </Menu>
       ) : (
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-3">
           {/* 🔓 Login Button */}
           <motion.button
             onClick={() => {
@@ -110,7 +110,7 @@ const HeaderButtons = ({
             }}
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
-            className="text-gray-700 border border-gray-300 hover:border-blue-500 hover:text-blue-600 px-5 py-2.5 rounded-lg transition-all text-sm font-medium"
+            className="text-gray-700 border border-gray-300 hover:border-blue-500 hover:text-blue-600 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-lg transition-all text-xs sm:text-sm font-medium"
             aria-label="Login"
           >
             Login
@@ -124,7 +124,7 @@ const HeaderButtons = ({
             }}
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
-            className="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-all text-sm font-medium shadow-sm"
+            className="bg-blue-600 text-white px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-lg hover:bg-blue-700 transition-all text-xs sm:text-sm font-medium shadow-sm"
             aria-label="Register"
           >
             Register

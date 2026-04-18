@@ -131,7 +131,7 @@ const ProductList = ({
                     Showing {itemStart}–{itemEnd} of {pagination.total} products
                   </p>
 
-                  <nav className="flex items-center gap-1.5" aria-label="Pagination">
+                  <nav className="flex items-center flex-wrap justify-center gap-1.5" aria-label="Pagination">
                     <button
                       onClick={() => onPageChange(pagination.page - 1)}
                       disabled={!pagination.hasPrev || loading}
