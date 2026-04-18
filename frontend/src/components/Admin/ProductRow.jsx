@@ -136,14 +136,14 @@ export default function ProductRow({ product, onEdit, onDelete, refetch }) {
           <div className="flex justify-end gap-1">
             <button
               onClick={onEdit}
-              className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+              className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400"
               title="Edit"
             >
               <FiEdit size={16} />
             </button>
             <button
               onClick={() => setShowConfirm(true)}
-              className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+              className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-red-400"
               title="Delete"
             >
               <FiTrash2 size={16} />

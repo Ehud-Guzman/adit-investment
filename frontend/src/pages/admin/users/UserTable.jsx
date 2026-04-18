@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import adminApi from "@/services/api/adminApi"; // 👈 Use the correct Axios instance
+import adminApi from "@/services/api/adminApi";
 
 import RoleTag from "./RoleTag";
 import UserStatusBadge from "./UserStatusBadge";
@@ -8,7 +8,7 @@ import UserActions from "./UserActions";
 import UserFilters from "./UserFilters";
 import UserModal from "./UserModal";
 
-export default function UserTable() {
+export default function UserTable({ isSuperAdmin = false }) {
   const [filters, setFilters] = useState({
     search: "",
     role: "all",
@@ -29,99 +29,95 @@ export default function UserTable() {
     return clean;
   }, [filters]);
 
-  const {
-    data,
-    isLoading,
-    isError,
-    error,
-    refetch,
-  } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["adminUsers", queryFilters],
     queryFn: () =>
       adminApi
-        .get("/admin/users", {
-          params: queryFilters,
-        })
+        .get("/admin/users", { params: queryFilters })
         .then((res) => res.data),
     keepPreviousData: true,
     staleTime: 1000 * 60 * 5,
   });
 
   const users = data?.users || [];
-  const totalPages = useMemo(() => {
-    return data?.total ? Math.ceil(data.total / filters.limit) : 1;
-  }, [data, filters.limit]);
+  const totalPages = useMemo(
+    () => (data?.total ? Math.ceil(data.total / filters.limit) : 1),
+    [data, filters.limit]
+  );
 
-  const handlePageChange = (dir) => {
-    setFilters((prev) => ({
-      ...prev,
-      page: prev.page + dir,
-    }));
-  };
-
-  const openUser = (id) => setSelectedUser(id);
-  const closeUser = () => setSelectedUser(null);
+  const handlePageChange = (dir) =>
+    setFilters((prev) => ({ ...prev, page: prev.page + dir }));
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="space-y-4">
+      {/* Filters — owned by this component */}
+      <UserFilters filters={filters} setFilters={setFilters} />
+
       {/* Table */}
-      <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50 text-xs font-semibold text-left text-gray-600 uppercase tracking-wider">
+      <div className="overflow-x-auto rounded-lg border border-gray-200">
+        <table className="min-w-full divide-y divide-gray-200 text-sm">
+          <thead className="bg-gray-50">
             <tr>
               {["Name", "Email", "Role", "Status", "Joined", "Actions"].map((h) => (
-                <th key={h} className="px-6 py-3 whitespace-nowrap">
+                <th
+                  key={h}
+                  className="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap"
+                >
                   {h}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100 text-sm">
+          <tbody className="bg-white divide-y divide-gray-100">
             {isLoading ? (
-              <tr>
-                <td colSpan="6" className="text-center px-6 py-6 text-gray-500">
-                  Loading users...
-                </td>
-              </tr>
+              [...Array(5)].map((_, i) => (
+                <tr key={i}>
+                  {[...Array(6)].map((__, j) => (
+                    <td key={j} className="px-5 py-4">
+                      <div className="h-4 bg-gray-200 rounded animate-pulse" />
+                    </td>
+                  ))}
+                </tr>
+              ))
             ) : isError ? (
               <tr>
-                <td colSpan="6" className="text-center px-6 py-6 text-red-600">
-                  Error: {error?.message}
+                <td colSpan={6} className="px-5 py-8 text-center text-red-500 text-sm">
+                  {error?.message || "Failed to load users."}
                 </td>
               </tr>
             ) : users.length === 0 ? (
               <tr>
-                <td colSpan="6" className="text-center px-6 py-6 text-gray-500">
-                  No users found.
+                <td colSpan={6} className="px-5 py-10 text-center text-gray-400 text-sm">
+                  No users match your filters.
                 </td>
               </tr>
             ) : (
               users.map((user) => (
                 <tr
                   key={user._id}
-                  className="hover:bg-gray-50 cursor-pointer transition"
-                  onClick={() => openUser(user._id)}
+                  className="hover:bg-gray-50 cursor-pointer transition-colors"
+                  onClick={() => setSelectedUser(user._id)}
                 >
-                  <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-5 py-3.5 whitespace-nowrap font-medium text-gray-800">
+                    {user.name}
+                  </td>
+                  <td className="px-5 py-3.5 whitespace-nowrap text-gray-500">
+                    {user.email}
+                  </td>
+                  <td className="px-5 py-3.5 whitespace-nowrap">
                     <RoleTag role={user.role} />
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-5 py-3.5 whitespace-nowrap">
                     <UserStatusBadge status={user.status || "active"} />
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-5 py-3.5 whitespace-nowrap text-gray-500">
                     {new Date(user.createdAt).toLocaleDateString()}
                   </td>
                   <td
-                    className="px-6 py-4 whitespace-nowrap"
+                    className="px-5 py-3.5 whitespace-nowrap"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <UserActions
-                      user={user}
-                      refetch={refetch}
-                      isSuperAdmin={true}
-                    />
+                    <UserActions user={user} refetch={refetch} isSuperAdmin={isSuperAdmin} />
                   </td>
                 </tr>
               ))
@@ -131,33 +127,36 @@ export default function UserTable() {
       </div>
 
       {/* Pagination */}
-      {data?.total > filters.limit && (
-        <div className="flex justify-between items-center mt-4">
-          <button
-            onClick={() => handlePageChange(-1)}
-            disabled={filters.page <= 1}
-            className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded disabled:opacity-50 transition"
-          >
-            Previous
-          </button>
-          <span className="text-sm text-gray-600">
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between pt-1">
+          <span className="text-xs text-gray-500">
             Page {filters.page} of {totalPages}
+            {data?.total ? ` · ${data.total} users` : ""}
           </span>
-          <button
-            onClick={() => handlePageChange(1)}
-            disabled={filters.page >= totalPages}
-            className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded disabled:opacity-50 transition"
-          >
-            Next
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => handlePageChange(-1)}
+              disabled={filters.page <= 1}
+              className="px-3 py-1.5 text-xs font-medium bg-white border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            >
+              Previous
+            </button>
+            <button
+              onClick={() => handlePageChange(1)}
+              disabled={filters.page >= totalPages}
+              className="px-3 py-1.5 text-xs font-medium bg-white border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            >
+              Next
+            </button>
+          </div>
         </div>
       )}
 
-      {/* Modal */}
+      {/* User detail modal */}
       <UserModal
         isOpen={!!selectedUser}
         userId={selectedUser}
-        onRequestClose={closeUser}
+        onRequestClose={() => setSelectedUser(null)}
       />
     </div>
   );

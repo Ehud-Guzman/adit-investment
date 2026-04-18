@@ -1,11 +1,7 @@
 import React from "react";
 
-const SkeletonLoader = ({ className }) => {
-  return (
-    <div 
-      className={`bg-gray-100 animate-pulse ${className}`}
-    />
-  );
-};
+const SkeletonLoader = ({ className = "" }) => (
+  <div className={`bg-gray-200 animate-pulse rounded-lg ${className}`} />
+);
 
 export default SkeletonLoader;

@@ -95,25 +95,32 @@ const ProductList = ({
             <>
               <div className={gridClasses}>
                 <AnimatePresence>
-                  {products.map((product, index) => (
-                    <motion.div
-                      key={product._id}
-                      initial={{ opacity: 0, y: 16 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.25, delay: index * 0.03 }}
-                      className="h-full"
-                    >
-                      <ProductCard
-                        product={product}
-                        size={cardSize}
-                        onAddToCart={onAddToCart}
-                        onWishlistToggle={onWishlistToggle}
-                        onQuickView={onQuickView}
-                        isInWishlist={wishlistItems.some(item => item.productId === product._id)}
-                      />
-                    </motion.div>
-                  ))}
+                  {(() => {
+                    let featuredShown = 0;
+                    return products.map((product, index) => {
+                      const showFeatured = product.featured && featuredShown < 3;
+                      if (product.featured) featuredShown++;
+                      return (
+                        <motion.div
+                          key={product._id}
+                          initial={{ opacity: 0, y: 16 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.25, delay: index * 0.03 }}
+                          className="h-full"
+                        >
+                          <ProductCard
+                            product={{ ...product, featured: showFeatured }}
+                            size={cardSize}
+                            onAddToCart={onAddToCart}
+                            onWishlistToggle={onWishlistToggle}
+                            onQuickView={onQuickView}
+                            isInWishlist={wishlistItems.some(item => item.productId === product._id)}
+                          />
+                        </motion.div>
+                      );
+                    });
+                  })()}
                 </AnimatePresence>
               </div>
 

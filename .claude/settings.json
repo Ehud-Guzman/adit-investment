@@ -11,7 +11,8 @@
       "Bash(FORCE_SEED=true node seed.js)",
       "Bash(node -e \"require\\('xlsx'\\)\")",
       "Bash(node exportProducts.js)",
-      "Bash(node downloadImages.js)"
+      "Bash(node downloadImages.js)",
+      "Bash(xargs grep *)"
     ]
   }
 }

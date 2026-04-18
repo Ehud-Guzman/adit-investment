@@ -254,13 +254,8 @@ const DashboardCharts = ({
         </div>
       </div>
       
-      <div className="h-80">
-        <Line 
-          data={chartData} 
-          options={options}
-          aria-label="Weekly user signups chart"
-          role="img"
-        />
+      <div className="h-80" role="img" aria-label="Weekly user signups chart">
+        <Line data={chartData} options={options} />
       </div>
       
       <div className="mt-6 flex justify-center text-sm text-gray-500">

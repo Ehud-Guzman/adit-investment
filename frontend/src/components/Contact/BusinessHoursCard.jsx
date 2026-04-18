@@ -14,7 +14,7 @@ function getBusinessStatus() {
   const closeHour = 18;
 
   if (day === 0) {
-    const nextOpen = setHours(setMinutes(addDays(now, 1), openHour));
+    const nextOpen = setHours(setMinutes(addDays(now, 1), 0), openHour);
     const timeUntilOpen = formatDistanceStrict(now, nextOpen);
     return {
       open: false,
@@ -157,7 +157,7 @@ export default function BusinessHoursCard() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           {/* Current Time */}
           <div className="bg-gradient-to-br from-indigo-50 to-blue-50 p-3 sm:p-4 rounded-xl border border-indigo-100">
             <div className="text-xs text-indigo-600 font-medium mb-1">CURRENT TIME</div>
@@ -169,27 +169,29 @@ export default function BusinessHoursCard() {
             </div>
           </div>
 
-          {/* Days of Week - Responsive layout */}
+          {/* Days of Week */}
           <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-3 sm:p-4 rounded-xl border border-gray-200">
             <div className="text-xs text-gray-600 font-medium mb-2">WEEK SCHEDULE</div>
-            
-            <div className="flex justify-between">
+            <div className="grid grid-cols-7 gap-px">
               {days.map((day, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-xs sm:text-sm ${
-                    day.active 
-                      ? "bg-indigo-500 text-white shadow-sm" 
-                      : "text-gray-400 bg-gray-100"
-                  }`}>
+                <div key={index} className="flex flex-col items-center gap-0.5">
+                  <div
+                    className={`w-full max-w-[1.75rem] aspect-square rounded-full flex items-center justify-center text-[9px] font-semibold ${
+                      day.active
+                        ? "bg-indigo-500 text-white shadow-sm"
+                        : index === 0
+                        ? "bg-red-50 text-red-300 border border-red-100"
+                        : "bg-white text-gray-400 border border-gray-200"
+                    }`}
+                  >
                     {day.name.charAt(0)}
-                  </div>
-                  <div className={`text-[10px] mt-1 ${
-                    day.active ? "font-bold text-indigo-600" : "text-gray-400"
-                  }`}>
-                    {index === 0 || index === 6 ? day.name : day.name.substring(0,1)}
                   </div>
                 </div>
               ))}
+            </div>
+            <div className="flex justify-between mt-1.5 px-0.5 text-[9px] text-gray-400">
+              <span>Sun</span>
+              <span>Sat</span>
             </div>
           </div>
 
@@ -214,38 +216,43 @@ export default function BusinessHoursCard() {
             <span className="text-gray-800 font-medium">Business Hours</span>
             <span>6 PM</span>
           </div>
-          <div className="h-2.5 sm:h-3 bg-gray-200 rounded-full overflow-hidden relative">
-            <div className="absolute inset-0 flex">
-              <div className="w-1/3 bg-blue-100"></div>
-              <div className="w-1/3 bg-blue-200"></div>
-              <div className="w-1/3 bg-blue-300"></div>
+          {/* Outer wrapper: relative + defined height, NO overflow-hidden so markers are visible */}
+          <div className="relative h-2.5 sm:h-3">
+            {/* Bar track: overflow-hidden here only, for rounded pill fill */}
+            <div className="absolute inset-0 bg-gray-200 rounded-full overflow-hidden">
+              <div className="absolute inset-0 flex">
+                <div className="w-1/3 bg-blue-100"></div>
+                <div className="w-1/3 bg-blue-200"></div>
+                <div className="w-1/3 bg-blue-300"></div>
+              </div>
+              {status.open && (
+                <motion.div
+                  className="absolute inset-y-0 left-0 bg-gradient-to-r from-indigo-500 to-blue-500"
+                  initial={{ width: "0%" }}
+                  animate={{ width: `${progress}%` }}
+                  transition={{ duration: 1, ease: "easeOut" }}
+                />
+              )}
             </div>
+            {/* Tick dividers — siblings of bar, not clipped */}
+            <div className="absolute inset-y-0 w-px bg-gray-800/20 left-1/3" />
+            <div className="absolute inset-y-0 w-px bg-gray-800/20 left-2/3" />
+            {/* Now marker — not clipped, centered vertically on bar */}
             {status.open && (
-              <motion.div 
-                className="h-full bg-gradient-to-r from-indigo-500 to-blue-500 absolute top-0 left-0"
-                initial={{ width: "0%" }}
-                animate={{ width: `${progress}%` }}
-                transition={{ duration: 1, ease: "easeOut" }}
-              />
-            )}
-            <div className="absolute top-0 h-3 sm:h-4 w-0.5 bg-gray-800 left-1/3 -ml-px"></div>
-            <div className="absolute top-0 h-3 sm:h-4 w-0.5 bg-gray-800 left-2/3 -ml-px"></div>
-            
-            {status.open && (
-              <motion.div 
-                className="absolute top-0 h-4 w-1.5 bg-white border-2 border-gray-800 rounded-full -mt-1"
-                style={{ left: `${progress}%` }}
+              <motion.div
+                className="absolute top-1/2 -translate-y-1/2 h-4 w-1.5 bg-white border-2 border-gray-800 rounded-full shadow-sm"
+                style={{ marginLeft: "-3px" }}
                 initial={{ left: "0%" }}
                 animate={{ left: `${progress}%` }}
                 transition={{ duration: 1, ease: "easeOut" }}
               >
-                <div className="absolute top-4 left-1/2 -translate-x-1/2 mt-1 text-xs font-medium text-gray-700 bg-white px-2 py-0.5 rounded shadow whitespace-nowrap">
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 text-xs font-medium text-gray-700 bg-white px-2 py-0.5 rounded shadow whitespace-nowrap">
                   Now
                 </div>
               </motion.div>
             )}
           </div>
-          <div className="flex justify-between text-xs text-gray-500 mt-1">
+          <div className="flex justify-between text-xs text-gray-500 mt-6">
             <span>Morning</span>
             <span>Afternoon</span>
             <span>Evening</span>

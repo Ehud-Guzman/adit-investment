@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FiBox,
   FiUsers,
@@ -8,8 +8,10 @@ import {
   FiLogOut,
   FiArrowLeft,
   FiShoppingCart,
+  FiChevronLeft,
   FiChevronRight,
   FiHome,
+  FiUser,
 } from "react-icons/fi";
 
 const NAV_SECTIONS = [
@@ -26,12 +28,11 @@ const NAV_SECTIONS = [
   },
   {
     title: "People",
-    role: "admin",
     items: [{ label: "Users", value: "users", icon: FiUsers }],
   },
   {
     title: "System",
-    role: "admin",
+    superAdminOnly: true,
     items: [{ label: "Settings", value: "settings", icon: FiSettings }],
   },
 ];
@@ -40,8 +41,11 @@ export default function AdminNav({
   currentView = "dashboard",
   setView = () => {},
   onLogout = () => {},
+  userName = "Admin",
   userRole = "admin",
-  storeName = "Admin Panel",
+  isSuperAdmin = false,
+  mobileOpen = false,
+  onClose = () => {},
   badgeData = {},
 }) {
   const navigate = useNavigate();
@@ -50,140 +54,173 @@ export default function AdminNav({
   );
 
   useEffect(() => {
-    localStorage.setItem("adminSidebarExpanded", isExpanded);
+    localStorage.setItem("adminSidebarExpanded", String(isExpanded));
   }, [isExpanded]);
 
-  const isSidebarOpen = isExpanded;
+  const handleNavClick = (value) => {
+    setView(value);
+    onClose();
+  };
 
   return (
-    <aside
-      className={`sticky top-4 h-fit transition-all duration-300 border border-gray-100 rounded-2xl shadow-xl 
-        backdrop-blur bg-white/80 dark:bg-gray-900/60
-        ${isSidebarOpen ? "sm:w-64" : "sm:w-20"} px-3 sm:px-5 py-6`}
-    >
-      {/* === Header === */}
-      <div className="flex items-center justify-between mb-6">
-        {isSidebarOpen ? (
-          <div className="flex items-center gap-3 pl-1">
-            <div className="bg-gradient-to-br from-indigo-600 to-purple-600 p-2.5 rounded-xl shadow-md">
-              <FiHome className="text-white text-lg" />
-            </div>
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white truncate">
-              {storeName}
-            </h3>
-          </div>
-        ) : (
-          <div className="bg-gradient-to-br from-indigo-600 to-purple-600 p-2.5 rounded-xl shadow-md mx-auto">
-            <FiHome className="text-white text-lg" />
-          </div>
-        )}
+    <>
+      {/* Mobile backdrop */}
+      <div
+        className={`fixed inset-0 z-40 bg-black/60 lg:hidden transition-opacity duration-300 ${
+          mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={onClose}
+      />
 
-        {/* Toggle */}
-        <button
-          onClick={() => setIsExpanded((prev) => !prev)}
-          className="hidden sm:flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-500"
+      {/* Sidebar */}
+      <aside
+        className={`
+          fixed inset-y-0 left-0 z-50 flex flex-col
+          lg:static lg:z-auto lg:h-full
+          bg-gray-900 text-white
+          transition-all duration-300 ease-in-out
+          ${mobileOpen ? "translate-x-0" : "-translate-x-full"}
+          lg:translate-x-0
+          ${isExpanded ? "w-60" : "w-[72px]"}
+        `}
+      >
+        {/* Brand header */}
+        <div
+          className={`flex items-center h-14 border-b border-white/10 px-3 flex-shrink-0 ${
+            isExpanded ? "justify-between" : "justify-center"
+          }`}
         >
-          <FiChevronRight
-            className={`transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`}
-          />
-        </button>
-      </div>
+          {isExpanded ? (
+            <>
+              <div className="flex items-center gap-2.5">
+                <div className="bg-indigo-600 p-1.5 rounded-lg flex-shrink-0">
+                  <FiHome className="text-white text-sm" />
+                </div>
+                <span className="text-sm font-bold text-white tracking-tight truncate">
+                  Admin Panel
+                </span>
+              </div>
+              <button
+                onClick={() => setIsExpanded(false)}
+                className="hidden lg:flex p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors flex-shrink-0"
+                title="Collapse sidebar"
+              >
+                <FiChevronLeft size={15} />
+              </button>
+            </>
+          ) : (
+            <div className="flex flex-col items-center gap-1.5">
+              <div className="bg-indigo-600 p-1.5 rounded-lg">
+                <FiHome className="text-white text-sm" />
+              </div>
+              <button
+                onClick={() => setIsExpanded(true)}
+                className="hidden lg:flex p-1 rounded text-gray-500 hover:text-white transition-colors"
+                title="Expand sidebar"
+              >
+                <FiChevronRight size={13} />
+              </button>
+            </div>
+          )}
+        </div>
 
-      {/* === Navigation === */}
-      <nav className="flex flex-col gap-4 mb-6">
-        {NAV_SECTIONS.filter((section) => !section.role || section.role === userRole).map(
-          ({ title, items }) => (
-            <div key={title} className="space-y-1">
-              {isSidebarOpen && (
-                <p className="text-xs text-gray-400 font-semibold px-4 uppercase tracking-wider">
+        {/* Nav sections */}
+        <nav className="flex-1 overflow-y-auto py-3 space-y-4 px-2">
+          {NAV_SECTIONS.filter((s) => !s.superAdminOnly || isSuperAdmin).map(({ title, items }) => (
+            <div key={title}>
+              {isExpanded && (
+                <p className="text-[10px] text-gray-500 font-semibold uppercase tracking-widest px-3 mb-1">
                   {title}
                 </p>
               )}
-              {items.map(({ label, value, icon: Icon }) => {
-                const isActive = currentView === value;
-                const badge = badgeData?.[value];
-                return (
-                  <button
-                    key={value}
-                    title={!isSidebarOpen ? label : ""}
-                    onClick={() => setView(value)}
-                    className={`group flex items-center w-full text-left transition-all duration-200 
-                      ${isSidebarOpen ? "gap-3 px-4" : "justify-center px-0"}
-                      py-3 rounded-xl font-medium text-sm
-                      ${
-                        isActive
-                          ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg"
-                          : "text-gray-600 hover:bg-indigo-50 hover:text-indigo-700 dark:text-gray-300 dark:hover:bg-gray-800"
-                      }`}
-                  >
-                    <div
-                      className={`p-2 rounded-lg transition-colors duration-200 
+              <div className="space-y-0.5">
+                {items.map(({ label, value, icon: Icon }) => {
+                  const isActive = currentView === value;
+                  const badge = badgeData?.[value];
+                  return (
+                    <button
+                      key={value}
+                      title={!isExpanded ? label : undefined}
+                      onClick={() => handleNavClick(value)}
+                      className={`
+                        w-full flex items-center rounded-lg transition-all duration-200
+                        ${isExpanded ? "gap-3 px-3 py-2.5" : "justify-center p-3"}
                         ${
                           isActive
-                            ? "bg-white/20"
-                            : "bg-gray-100 dark:bg-gray-700 group-hover:bg-indigo-100 dark:group-hover:bg-gray-600"
-                        }`}
+                            ? "bg-indigo-600 text-white"
+                            : "text-gray-400 hover:text-white hover:bg-white/10"
+                        }
+                      `}
                     >
-                      <Icon className="text-base" />
-                    </div>
-
-                    {isSidebarOpen && (
-                      <div className="flex-1 flex items-center justify-between">
-                        <span className="truncate">{label}</span>
-                        {badge !== undefined && (
-                          <span
-                            className={`ml-auto text-xs font-semibold rounded-full px-2 py-0.5 
-                              ${
-                                isActive
-                                  ? "bg-white/30 text-white"
-                                  : "bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-100"
-                              }`}
-                          >
-                            {badge}
+                      <Icon size={17} className="flex-shrink-0" />
+                      {isExpanded && (
+                        <>
+                          <span className="flex-1 text-sm font-medium text-left truncate">
+                            {label}
                           </span>
-                        )}
-                        {isActive && (
-                          <span className="ml-2 w-2 h-2 rounded-full bg-white/90 animate-pulse" />
-                        )}
-                      </div>
-                    )}
-                  </button>
-                );
-              })}
+                          {badge !== undefined && (
+                            <span
+                              className={`text-xs font-semibold rounded-full px-1.5 py-0.5 ${
+                                isActive
+                                  ? "bg-white/20 text-white"
+                                  : "bg-gray-700 text-gray-300"
+                              }`}
+                            >
+                              {badge}
+                            </span>
+                          )}
+                        </>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-          )
-        )}
-      </nav>
+          ))}
+        </nav>
 
-      {/* === Divider === */}
-      <div className="border-t border-gray-200 dark:border-gray-700 mb-4" />
+        {/* Footer: back to site + user info + logout */}
+        <div className="border-t border-white/10 p-2 space-y-1 flex-shrink-0">
+          {/* Back to site */}
+          <button
+            onClick={() => navigate("/")}
+            title={!isExpanded ? "Back to Site" : undefined}
+            className={`w-full flex items-center rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors
+              ${isExpanded ? "gap-3 px-3 py-2" : "justify-center p-3"}`}
+          >
+            <FiArrowLeft size={17} className="flex-shrink-0" />
+            {isExpanded && <span className="text-sm font-medium">Back to Site</span>}
+          </button>
 
-      {/* === Actions === */}
-      <div className="space-y-2">
-        <button
-          onClick={() => navigate("/")}
-          className={`group w-full flex items-center 
-            ${isSidebarOpen ? "gap-3 px-4" : "justify-center px-0"}
-            py-3 rounded-xl text-indigo-700 hover:bg-indigo-50 dark:text-indigo-400 dark:hover:bg-gray-800 text-sm font-medium`}
-        >
-          <div className="p-2 rounded-lg bg-indigo-100 group-hover:bg-indigo-200 dark:bg-gray-700 dark:group-hover:bg-gray-600">
-            <FiArrowLeft className="text-base group-hover:-translate-x-0.5 transition-transform duration-200" />
-          </div>
-          {isSidebarOpen && <span>Back to Site</span>}
-        </button>
-
-        <button
-          onClick={onLogout}
-          className={`group w-full flex items-center 
-            ${isSidebarOpen ? "gap-3 px-4" : "justify-center px-0"}
-            py-3 rounded-xl text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-gray-800 text-sm font-medium`}
-        >
-          <div className="p-2 rounded-lg bg-red-100 group-hover:bg-red-200 dark:bg-gray-700 dark:group-hover:bg-gray-600">
-            <FiLogOut className="text-base" />
-          </div>
-          {isSidebarOpen && <span>Logout</span>}
-        </button>
-      </div>
-    </aside>
+          {/* User info row */}
+          {isExpanded ? (
+            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5">
+              <div className="w-7 h-7 rounded-full bg-indigo-600 flex items-center justify-center flex-shrink-0">
+                <FiUser size={13} className="text-white" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold text-white truncate">{userName}</p>
+                <p className="text-[10px] text-gray-400 capitalize">{userRole}</p>
+              </div>
+              <button
+                onClick={onLogout}
+                title="Logout"
+                className="p-1.5 rounded-lg text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-colors flex-shrink-0"
+              >
+                <FiLogOut size={14} />
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={onLogout}
+              title="Logout"
+              className="w-full flex justify-center p-3 rounded-lg text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+            >
+              <FiLogOut size={17} />
+            </button>
+          )}
+        </div>
+      </aside>
+    </>
   );
 }

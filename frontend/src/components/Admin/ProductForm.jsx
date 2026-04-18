@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { FiX, FiSave, FiPlus, FiImage, FiTrash } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import { CATEGORIES } from '@/constants/categories';
@@ -11,34 +11,20 @@ export default function ProductForm({
   isEditing = false,
   isLoading = false,
 }) {
-  const [form, setForm] = useState({
-    name: '',
-    price: '',
-    category: '',
-    description: '',
-    stock: '',
-    images: [],
-    featured: false,
-    approved: true,
-    vendor: '',
-  });
+  const [form, setForm] = useState(() => ({
+    name: initialData.name ?? '',
+    price: initialData.price?.toString() ?? '',
+    category: initialData.category ?? '',
+    description: initialData.description ?? '',
+    stock: initialData.stock?.toString() ?? '0',
+    images: initialData.images ?? [],
+    featured: initialData.featured ?? false,
+    approved: initialData.approved ?? true,
+    vendor: initialData.vendor ?? '',
+  }));
 
   const [errors, setErrors] = useState({});
   const [uploadingImage, setUploadingImage] = useState(false);
-
-  useEffect(() => {
-    setForm({
-      name: initialData.name ?? '',
-      price: initialData.price?.toString() ?? '',
-      category: initialData.category ?? '',
-      description: initialData.description ?? '',
-      stock: initialData.stock?.toString() ?? '0',
-      images: initialData.images ?? [],
-      featured: initialData.featured ?? false,
-      approved: initialData.approved ?? true,
-      vendor: initialData.vendor ?? '',
-    });
-  }, [initialData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -65,7 +51,7 @@ export default function ProductForm({
 
 const handleImageUpload = async (e) => {
   const file = e.target.files?.[0];
-  console.log("📁 Selected file:", file);
+  
   if (!file || !file.type.startsWith("image/")) {
     toast.error("🚫 Invalid image file");
     return;
@@ -139,7 +125,7 @@ const handleImageUpload = async (e) => {
             name="name"
             value={form.name}
             onChange={handleChange}
-            className={`w-full border p-3 rounded-lg focus:ring-2 ${
+            className={`w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
               errors.name ? 'border-red-500' : 'border-gray-300'
             }`}
             placeholder="Premium Headphones"
@@ -154,7 +140,7 @@ const handleImageUpload = async (e) => {
             name="price"
             value={form.price}
             onChange={handleChange}
-            className={`w-full border p-3 rounded-lg focus:ring-2 ${
+            className={`w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
               errors.price ? 'border-red-500' : 'border-gray-300'
             }`}
             placeholder="0.00"
@@ -170,7 +156,7 @@ const handleImageUpload = async (e) => {
             name="category"
             value={form.category}
             onChange={handleChange}
-            className={`w-full border p-3 rounded-lg focus:ring-2 ${
+            className={`w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
               errors.category ? 'border-red-500' : 'border-gray-300'
             }`}
           >
@@ -191,7 +177,7 @@ const handleImageUpload = async (e) => {
             name="stock"
             value={form.stock}
             onChange={handleChange}
-            className={`w-full border p-3 rounded-lg focus:ring-2 ${
+            className={`w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
               errors.stock ? 'border-red-500' : 'border-gray-300'
             }`}
             min="0"
@@ -204,7 +190,7 @@ const handleImageUpload = async (e) => {
           <label className="block font-medium text-gray-700 mb-1">Images</label>
           <div className="flex flex-wrap gap-3 mb-3">
             {form.images.map((url, index) => (
-              <div key={index} className="relative group">
+              <div key={`${url}-${index}`} className="relative group">
                 <img
                   src={url}
                   alt={`Uploaded product image ${index + 1}`}
@@ -221,13 +207,16 @@ const handleImageUpload = async (e) => {
             ))}
           </div>
 
-          <label className="cursor-pointer inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg">
-            <input type="file" accept="image/*" hidden onChange={handleImageUpload} />
+          <label className={`cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-lg text-white text-sm font-medium transition-colors ${uploadingImage ? "bg-indigo-400 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700"}`}>
+            <input type="file" accept="image/*" hidden onChange={handleImageUpload} disabled={uploadingImage} />
             {uploadingImage ? (
-              <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
+              <>
+                <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white flex-shrink-0" />
+                Uploading…
+              </>
             ) : (
               <>
-                <FiImage size={18} className="inline" /> Upload Image
+                <FiImage size={16} /> Upload Image
               </>
             )}
           </label>
@@ -241,7 +230,7 @@ const handleImageUpload = async (e) => {
             value={form.description}
             onChange={handleChange}
             rows={3}
-            className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2"
+            className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
             placeholder="Product features..."
           />
         </div>
@@ -275,7 +264,7 @@ const handleImageUpload = async (e) => {
             name="vendor"
             value={form.vendor}
             onChange={handleChange}
-            className="w-full border p-3 rounded-lg"
+            className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
             <option value="">Select Vendor</option>
             <option value="vendor1">Vendor One</option>

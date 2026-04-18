@@ -10,12 +10,13 @@ import {
   XCircle,
 } from "lucide-react";
 import { format } from "date-fns";
+import { toast } from "react-toastify";
 import OrderItemCard from "./OrderItemCard";
 import PaymentBadge from "./PaymentBadge";
 import OrderDetailSection from "./OrderDetailSection";
 import { Skeleton } from "@/components/ui/skeleton";
 import { normalizeCartItems } from "@/utils/cartNormalizer";
-import { cancelOrder } from "@/services/api/orders"; // <-- add this API call
+import { cancelOrder } from "@/services/api/orders";
 
 export default function OrderDetails({ order, onOrderUpdate }) {
   const [enrichedItems, setEnrichedItems] = useState([]);
@@ -59,7 +60,7 @@ export default function OrderDetails({ order, onOrderUpdate }) {
       if (onOrderUpdate) onOrderUpdate(updated); // let parent refresh
     } catch (err) {
       console.error("Failed to cancel order", err);
-      alert("Failed to cancel order. Try again.");
+      toast.error(err?.response?.data?.message || "Failed to cancel order. Try again.");
     } finally {
       setCancelling(false);
     }
@@ -197,8 +198,8 @@ export default function OrderDetails({ order, onOrderUpdate }) {
               </ul>
             </OrderDetailSection>
 
-            {/* 🔥 New Admin Actions Section */}
-            {order.status !== "cancelled" && (
+            {/* Admin Actions */}
+            {order.orderStatus !== "cancelled" && (
               <OrderDetailSection
                 icon={<XCircle className="w-5 h-5 text-red-600" />}
                 title="Actions"
