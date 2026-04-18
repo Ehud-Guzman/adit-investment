@@ -100,9 +100,16 @@ export default function Admin() {
       toast.success(`Import done: ${result.inserted} added, ${result.updated} updated`);
       await fetchProducts();
     } catch (err) {
-      const msg = err?.response?.data?.message || err.message || "Import failed";
-      toast.error(msg);
-      setImportResult({ success: false, message: msg });
+      const isTimeout = err.code === 'ECONNABORTED' || err.message?.toLowerCase().includes('timeout');
+      if (isTimeout) {
+        toast.info("Import is taking longer than expected — refresh in a moment to see the results.");
+        setImportResult({ success: true, message: "Import running in background — please refresh to confirm." });
+        await fetchProducts();
+      } else {
+        const msg = err?.response?.data?.message || err.message || "Import failed";
+        toast.error(msg);
+        setImportResult({ success: false, message: msg });
+      }
     } finally {
       setImporting(false);
       setImportFile(null);

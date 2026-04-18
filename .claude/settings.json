@@ -12,7 +12,13 @@
       "Bash(node -e \"require\\('xlsx'\\)\")",
       "Bash(node exportProducts.js)",
       "Bash(node downloadImages.js)",
-      "Bash(xargs grep *)"
+      "Bash(xargs grep *)",
+      "Bash(python -c \"import pandas as pd; df = pd.read_excel\\('Adit-raw-products.xlsx'\\); print\\(df.shape\\); print\\(df.columns.tolist\\(\\)\\); print\\(df.head\\(3\\).to_string\\(\\)\\)\")",
+      "Bash(python -c \"import pandas as pd; df = pd.read_excel\\('Adit-raw-products.xlsx'\\); print\\('Shape:', df.shape\\); print\\('Columns:', df.columns.tolist\\(\\)\\); print\\(\\); print\\(df.head\\(5\\).to_string\\(\\)\\)\")",
+      "Bash(node upload-and-merge-products.mjs)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\nyamu\\Desktop\\GlimmerInk Creations\\Websites\\adit-investment\\Exported products"
     ]
   }
 }
